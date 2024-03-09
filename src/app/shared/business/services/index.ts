@@ -1,1 +1,2 @@
-export * from './categories.service';
+export * from './categories-http.service';
+export * from './suppliers-http.service';

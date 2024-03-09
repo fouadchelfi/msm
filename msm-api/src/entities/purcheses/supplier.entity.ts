@@ -16,9 +16,6 @@ export class SupplierEntity {
     debt: number;
 
     @Column({ nullable: true })
-    address: string;
-
-    @Column({ nullable: true })
     postalCode: string;
 
     @Column({ nullable: true })
@@ -26,6 +23,9 @@ export class SupplierEntity {
 
     @Column({ nullable: true })
     city: string;
+
+    @Column({ nullable: true })
+    address: string;
 
     @Column({ nullable: true })
     phoneNumberOne: string;

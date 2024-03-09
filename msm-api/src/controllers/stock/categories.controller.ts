@@ -109,11 +109,12 @@ export class CategoriesController {
 async function validateCategory(category) {
     let errors = [];
 
-    let categoryDb = await repo(CategoryEntity).createQueryBuilder('category').where("TRIM(LOWER(category.label)) LIKE :label", { label: `%${(<string>category.label).toLowerCase().trim()}%` }).getOne();
-    if (categoryDb && categoryDb.id != category.id)
+    let categoryDbLabel = await repo(CategoryEntity).createQueryBuilder('category').where("TRIM(LOWER(category.label)) LIKE :label", { label: `%${(<string>category.label).toLowerCase().trim()}%` }).getOne();
+    if (categoryDbLabel && categoryDbLabel.id != category.id)
         errors.push("Libellé existe déjà");
 
-    if (isNotEmpty(category.code) && await (repo(CategoryEntity).createQueryBuilder('categories').where("TRIM(categories.code) = TRIM(:code)", { code: category.code })).getExists())
+    let categoryDbCode = await repo(CategoryEntity).createQueryBuilder('category').where("TRIM(LOWER(category.code)) LIKE :code", { code: `%${(<string>category.code).toLowerCase().trim()}%` }).getOne();
+    if (categoryDbCode && categoryDbCode.id != category.id)
         errors.push("Code existe déjà");
 
     return errors.length == 0 ? null : errors;

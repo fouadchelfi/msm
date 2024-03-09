@@ -94,12 +94,12 @@ import { appConfig } from '../../../../app.config';
                 
                 <ng-container matColumnDef="code">
                   <th mat-header-cell *matHeaderCellDef >Code </th>
-                  <td mat-cell *matCellDef="let row">{{ row.code|myLimitTextLength:30 }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.code }}</td>
                 </ng-container>
                 
                 <ng-container matColumnDef="label">
                   <th mat-header-cell *matHeaderCellDef >Libellé </th>
-                  <td mat-cell *matCellDef="let row">{{ row.label|myLimitTextLength:30 }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.label }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="notes">

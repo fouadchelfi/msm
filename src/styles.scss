@@ -5,3 +5,10 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; color: theme('colors.color-txt'); }
+
+
+@layer components {
+  .inline-fields {
+    @apply flex flex-row items-center justify-between gap-x-3;
+  }
+}

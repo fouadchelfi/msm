@@ -129,11 +129,12 @@ export class SuppliersController {
 async function validateSupplier(supplier) {
     let errors = [];
 
-    let supplierDb = await repo(SupplierEntity).createQueryBuilder('supplier').where("TRIM(LOWER(supplier.name)) LIKE :name", { name: `%${(<string>supplier.name).toLowerCase().trim()}%` }).getOne();
-    if (supplierDb && supplierDb.id != supplier.id)
+    let supplierDbName = await repo(SupplierEntity).createQueryBuilder('supplier').where("TRIM(LOWER(supplier.name)) LIKE :name", { name: `%${(<string>supplier.name).toLowerCase().trim()}%` }).getOne();
+    if (supplierDbName && supplierDbName.id != supplier.id)
         errors.push("Nom existe déjà");
 
-    if (isNotEmpty(supplier.code) && await (repo(SupplierEntity).createQueryBuilder('suppliers').where("TRIM(suppliers.code) = TRIM(:code)", { code: supplier.code })).getExists())
+    let supplierDbCode = await repo(SupplierEntity).createQueryBuilder('supplier').where("TRIM(LOWER(supplier.code)) LIKE :code", { code: `%${(<string>supplier.code).toLowerCase().trim()}%` }).getOne();
+    if (supplierDbCode && supplierDbCode.id != supplier.id)
         errors.push("Code existe déjà");
 
     return errors.length == 0 ? null : errors;
@@ -144,5 +145,24 @@ function queryAll() {
         .createQueryBuilder('supplier')
         .leftJoinAndSelect('supplier.createdBy', 'createdBy')
         .leftJoinAndSelect('supplier.lastUpdateBy', 'lastUpdateBy')
-        .select(['supplier.id', 'supplier.code', 'supplier.name', 'supplier.debt', 'phoneNumberOne', 'phoneNumberTow', 'supplier.notes', 'supplier.createdAt', 'supplier.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
+        .select([
+            'supplier.id',
+            'supplier.code',
+            'supplier.name',
+            'supplier.debt',
+            'supplier.phoneNumberOne',
+            'supplier.phoneNumberTow',
+            'supplier.postalCode',
+            'supplier.province',
+            'supplier.city',
+            'supplier.address',
+            'supplier.fax',
+            'supplier.email',
+            'supplier.website',
+            'supplier.notes',
+            'supplier.createdAt',
+            'supplier.lastUpdateAt',
+            'createdBy',
+            'lastUpdateBy'
+        ]);
 }

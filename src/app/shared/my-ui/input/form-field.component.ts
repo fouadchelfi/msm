@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'my-form-field',
@@ -7,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
             <ng-content></ng-content>
         </div>
     `,
+    encapsulation: ViewEncapsulation.None,
+    styles: [`
+      my-form-field { width:100%; }
+    `],
 })
 
 export class MyFormFieldComponent implements OnInit {
