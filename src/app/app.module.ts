@@ -8,6 +8,7 @@ import { SharedModule, getFrenchPaginatorIntl } from './shared';
 import { routes } from './app.routes';
 import { JwtInterceptor } from './core';
 import { BrowserModule } from '@angular/platform-browser';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 @NgModule({
     imports: [
@@ -28,6 +29,8 @@ import { BrowserModule } from '@angular/platform-browser';
             useClass: JwtInterceptor,
             multi: true
         },
+        DatePipe,
+        DecimalPipe
     ]
 })
 export class AppModule { }

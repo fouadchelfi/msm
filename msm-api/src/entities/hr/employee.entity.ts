@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
 
-@Entity({ name: 'suppliers' })
-export class SupplierEntity {
+@Entity({ name: 'employees' })
+export class EmployeeEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -11,6 +11,9 @@ export class SupplierEntity {
 
     @Column({ unique: true })
     name: string;
+
+    @Column({ default: 0, type: 'decimal' })
+    salary: number;
 
     @Column({ default: 0, type: 'decimal' })
     debt: number;
@@ -48,7 +51,7 @@ export class SupplierEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdSuppliers)
+    @ManyToOne(() => UserEntity, user => user.createdEmployees)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -56,7 +59,7 @@ export class SupplierEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedSuppliers)
+    @ManyToOne(() => UserEntity, user => user.updatedEmployees)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion

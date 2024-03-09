@@ -5,7 +5,7 @@ import { HttpResponse } from '../common';
 import { CONFIG } from '../../env';
 
 @Injectable({ providedIn: 'root' })
-export class UserHttpService {
+export class UsersHttpService {
 
     constructor(private httpClient: HttpClient) { }
 

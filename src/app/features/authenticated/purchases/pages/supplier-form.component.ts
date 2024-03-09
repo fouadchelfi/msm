@@ -8,10 +8,9 @@ import { ALGERIA_PROVINCES, SuppliersHttpService } from '../../../../shared';
   selector: 'app-supplier-form',
   template: `
         <div class="flex flex-col pt-7 pb-4 px-2">
-          <div class="flex flex-row items-center justify-between !px-6">
+          <div class="flex flex-row items-center justify-between px-6 py-2">
             <div class="text-xl font-medium">
-              {{ data.mode == 'creation' ? 'Nouvelle' : 'Modifier' }}
-              fournisseur
+              {{ data.mode == 'creation' ? 'Nouveau' : 'Modifier' }} fournisseur
             </div>
             <button (click)="closeDialog()">
               <i class="ri-close-line text-xl"></i>
@@ -85,7 +84,6 @@ import { ALGERIA_PROVINCES, SuppliersHttpService } from '../../../../shared';
                 <input formControlName="postalCode" type="text" myInput>
               </my-form-field>
               <div class="inline-fields">
-              
                 <my-form-field>
                   <my-label>Email</my-label>
                   <input formControlName="email" type="email" myInput>
@@ -101,7 +99,7 @@ import { ALGERIA_PROVINCES, SuppliersHttpService } from '../../../../shared';
               </my-form-field>
             </form>
           </mat-dialog-content>
-          <mat-dialog-actions class="!flex !justify-between !px-6">
+          <mat-dialog-actions class="!flex !justify-between !px-6 !py-3 !max-h-16">
             <button mat-stroked-button (click)="create()">Nouveau </button>
             <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
           </mat-dialog-actions>

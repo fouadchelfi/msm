@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
-import { SuppliersHttpService, TimeZoneService, isEmpty, isNotEmpty } from '../../../../shared';
+import { SuppliersHttpService, TimeZoneService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
 import { SupplierFormComponent } from './supplier-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -122,12 +122,12 @@ import { appConfig } from '../../../../app.config';
                   <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
                 </ng-container>
 
-
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
                   <th mat-header-cell *matHeaderCellDef class="!text-center w-20 ">Action</th>
                   <td mat-cell *matCellDef="let item, let i = index">
                   <div class="flex flex-row items-center space-x-2">
+                    <button mat-icon-button [matTooltip]="getTracabilityInfo(item)"><i class="ri-information-line"></i></button>
                     <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button>
                     <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button>
                   </div>    
@@ -201,7 +201,7 @@ export class SuppliersGridComponent implements OnInit {
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
     private matDialog: MatDialog,
-    private timezone: TimeZoneService
+    private traceability: TraceabilityService,
   ) {
     this.supplierFilterFormGroup = this.fb.group({
       'name': [''],
@@ -240,7 +240,13 @@ export class SuppliersGridComponent implements OnInit {
   }
 
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
-    this.matDialog.open(SupplierFormComponent, { data: { id: id, mode: action }, minWidth: '512px' }).afterClosed().subscribe({
+    this.matDialog.open(SupplierFormComponent, {
+      data: { id: id, mode: action },
+      minWidth: '512px',
+      minHeight: '90vh',
+      disableClose: true,
+      autoFocus: false,
+    }).afterClosed().subscribe({
       next: res => this.refreshGrid.emit()
     });
   }
@@ -314,5 +320,9 @@ export class SuppliersGridComponent implements OnInit {
     if (isNotEmpty(qry.label)) urlParams.append('name', qry.label);
 
     return `?${urlParams.toString()}`;
+  }
+
+  getTracabilityInfo(item: any) {
+    return this.traceability.info(item);
   }
 }

@@ -1,6 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { CategoryEntity } from "../stock";
 import { SupplierEntity } from "../purcheses";
+import { CustomerEntity } from "../sales";
+import { EmployeeEntity } from "../hr";
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -22,7 +24,6 @@ export class UserEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-
     @ManyToOne(() => UserEntity, (user) => user.createdBy)
     @JoinColumn({ name: "createdBy" })
     createdBy: number;
@@ -31,7 +32,6 @@ export class UserEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-
     @ManyToOne(() => UserEntity, (user) => user.lastUpdateBy)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: number;
@@ -47,4 +47,14 @@ export class UserEntity {
     createdSuppliers: SupplierEntity[];
     @OneToMany(() => SupplierEntity, supplier => supplier.lastUpdateBy)
     updatedSuppliers: SupplierEntity[];
-}    
+
+    @OneToMany(() => CustomerEntity, customer => customer.createdBy)
+    createdCustomers: CustomerEntity[];
+    @OneToMany(() => CustomerEntity, customer => customer.lastUpdateBy)
+    updatedCustomers: CustomerEntity[];
+
+    @OneToMany(() => EmployeeEntity, employee => employee.createdBy)
+    createdEmployees: EmployeeEntity[];
+    @OneToMany(() => EmployeeEntity, employee => employee.lastUpdateBy)
+    updatedEmployees: EmployeeEntity[];
+}
