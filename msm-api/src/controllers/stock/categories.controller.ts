@@ -58,8 +58,8 @@ export class CategoriesController {
         if (errors) return { success: false, errors: errors, data: null };
 
         let creation = {
-            label: body.label,
             code: body.code,
+            label: body.label,
             notes: body.notes,
             createdAt: currentDateTime(),
             createdBy: 1,
@@ -124,5 +124,5 @@ function queryAll() {
         .createQueryBuilder('category')
         .leftJoinAndSelect('category.createdBy', 'createdBy')
         .leftJoinAndSelect('category.lastUpdateBy', 'lastUpdateBy')
-        .select(['category.id', 'category.label', 'category.code', 'category.notes', 'category.createdAt', 'category.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
+        .select(['category.id', 'category.code', 'category.label', 'category.notes', 'category.createdAt', 'category.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
 }

@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { CategoryEntity } from "../stock";
+import { SupplierEntity } from "../purcheses";
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -39,7 +40,11 @@ export class UserEntity {
 
     @OneToMany(() => CategoryEntity, category => category.createdBy)
     createdCategories: CategoryEntity[];
-
     @OneToMany(() => CategoryEntity, category => category.lastUpdateBy)
     updatedCategories: CategoryEntity[];
+
+    @OneToMany(() => SupplierEntity, supplier => supplier.createdBy)
+    createdSuppliers: SupplierEntity[];
+    @OneToMany(() => SupplierEntity, supplier => supplier.lastUpdateBy)
+    updatedSuppliers: SupplierEntity[];
 }    
