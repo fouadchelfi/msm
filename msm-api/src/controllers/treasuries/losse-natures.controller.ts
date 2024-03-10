@@ -68,7 +68,7 @@ export class LosseNaturesController {
         };
         let dbLosseNature = await repo(LosseNatureEntity).save(creation);
 
-        if (isEmpty(dbLosseNature.code)) await repo(LosseNatureEntity).update(dbLosseNature.id, { ...creation, code: code('NPRT', dbLosseNature.id) });
+        if (isEmpty(dbLosseNature.code)) await repo(LosseNatureEntity).update(dbLosseNature.id, { ...creation, code: code('NPR', dbLosseNature.id) });
 
         return {
             success: true,

@@ -68,7 +68,7 @@ export class ChargeNaturesController {
         };
         let dbChargeNature = await repo(ChargeNatureEntity).save(creation);
 
-        if (isEmpty(dbChargeNature.code)) await repo(ChargeNatureEntity).update(dbChargeNature.id, { ...creation, code: code('NPRT', dbChargeNature.id) });
+        if (isEmpty(dbChargeNature.code)) await repo(ChargeNatureEntity).update(dbChargeNature.id, { ...creation, code: code('NCH', dbChargeNature.id) });
 
         return {
             success: true,
@@ -84,7 +84,7 @@ export class ChargeNaturesController {
 
         await repo(ChargeNatureEntity).update(body.id, {
             id: body.id,
-            code: isEmpty(body.code) ? code('NPR', id) : body.code,
+            code: isEmpty(body.code) ? code('NCH', id) : body.code,
             label: body.label,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),

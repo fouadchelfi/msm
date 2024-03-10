@@ -252,12 +252,12 @@ export class CustomersGridComponent implements OnInit {
   }
 
   deleteItem(item: any): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette client?")) {
+    if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany([item]);
     }
   }
   deleteSeleted(): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette clients?")) {
+    if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany(this.selection.selected);
     }
   }

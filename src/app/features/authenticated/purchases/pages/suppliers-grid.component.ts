@@ -252,12 +252,12 @@ export class SuppliersGridComponent implements OnInit {
   }
 
   deleteItem(item: any): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette fournisseur?")) {
+    if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany([item]);
     }
   }
   deleteSeleted(): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette fournisseurs?")) {
+    if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany(this.selection.selected);
     }
   }

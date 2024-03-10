@@ -237,12 +237,12 @@ export class CategoriesGridComponent implements OnInit {
   }
 
   deleteItem(item: any): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette catégorie?")) {
+    if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany([item]);
     }
   }
   deleteSeleted(): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette catégories?")) {
+    if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany(this.selection.selected);
     }
   }
