@@ -4,8 +4,10 @@
 @tailwind utilities;
 
 html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; color: theme('colors.color-txt'); }
-
+body { margin: 0; color: theme('colors.color-txt'); }
+*{
+  font-family: 'Poppins', sans-serif;
+}
 
 @layer components {
   .inline-fields {

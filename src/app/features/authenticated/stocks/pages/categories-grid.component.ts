@@ -16,7 +16,7 @@ import { appConfig } from '../../../../app.config';
   template: `
         <div class="flex flex-1 flex-col p-3 bg-secondary-50 gap-y-2">
           <div class="flex flex-col">
-            <h3 class="text-2xl">Stock / Catégories</h3>
+            <h3>Stock / Catégories</h3>
           </div>
           <div class="flex flex-row justify-between items-center ">
             <div class="relative">

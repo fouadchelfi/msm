@@ -3,6 +3,7 @@ import { CategoryEntity, StockEntity } from "../stock";
 import { SupplierEntity } from "../purcheses";
 import { CustomerEntity } from "../sales";
 import { EmployeeEntity } from "../hr";
+import { IngredientEntity } from "../production";
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -62,4 +63,9 @@ export class UserEntity {
     createdStocks: StockEntity[];
     @OneToMany(() => StockEntity, stock => stock.lastUpdateBy)
     updatedStocks: StockEntity[];
+
+    @OneToMany(() => IngredientEntity, ingredient => ingredient.createdBy)
+    createdIngredients: IngredientEntity[];
+    @OneToMany(() => IngredientEntity, ingredient => ingredient.lastUpdateBy)
+    updatedIngredients: IngredientEntity[];
 }
