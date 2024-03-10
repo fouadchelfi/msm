@@ -1,4 +1,4 @@
 export * from './services';
 export * from './models';
-export * from './helpers.functions';
+export * from './functions';
 export * from './data';

@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
 import { CategoriesHttpService, TimeZoneService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
-import { CategoryformComponent } from './category-form.component';
+import { CategoryFormComponent } from './category-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { appConfig } from '../../../../app.config';
 
@@ -226,7 +226,7 @@ export class CategoriesGridComponent implements OnInit {
   }
 
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
-    this.matDialog.open(CategoryformComponent, {
+    this.matDialog.open(CategoryFormComponent, {
       data: { id: id, mode: action },
       minWidth: '512px',
       disableClose: true,

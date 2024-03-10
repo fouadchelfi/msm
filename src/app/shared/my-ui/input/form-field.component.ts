@@ -3,7 +3,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 @Component({
     selector: 'my-form-field',
     template: `
-        <div class="relative flex flex-col h-[72px]">
+        <div class="relative flex flex-col min-h-20">
             <ng-content></ng-content>
         </div>
     `,

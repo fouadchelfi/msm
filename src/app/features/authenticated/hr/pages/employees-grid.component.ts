@@ -248,7 +248,6 @@ export class EmployeesGridComponent implements OnInit {
     this.matDialog.open(EmployeeFormComponent, {
       data: { id: id, mode: action },
       minWidth: '512px',
-      minHeight: '90vh',
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({

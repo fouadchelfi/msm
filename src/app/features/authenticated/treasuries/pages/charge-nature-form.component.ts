@@ -7,8 +7,8 @@ import { ChargeNaturesHttpService } from '../../../../shared';
 @Component({
   selector: 'app-charge-nature-form',
   template: `
-        <div class="flex flex-col pt-7 pb-4 px-2">
-            <div class="flex flex-row items-center justify-between px-6 py-2">
+        <div class="dialog-container">
+            <div class="dialog-header">
                 <div class="text-xl font-medium">
                     {{data.mode == 'creation' ? 'Nouvelle' : 'Modifier'}} nature charge 
                 </div>
@@ -16,10 +16,8 @@ import { ChargeNaturesHttpService } from '../../../../shared';
                   <i class="ri-close-line text-xl"></i>
                 </button>
             </div>
+        <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
             <mat-dialog-content>
-                <div *ngIf="errors.length" class="flex flex-col space-y-2 p-3 rounded-sm bg-red-100">
-                  <ng-container *ngFor="let error of errors"><li class="text-red-600 text-sm">{{error}}</li></ng-container>
-                </div>
                 <form [formGroup]="chargeNatureFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
                     <input formControlName="id" type="number" class="!hidden">
                     <my-form-field>
@@ -35,7 +33,7 @@ import { ChargeNaturesHttpService } from '../../../../shared';
                       </my-form-field>
                 </form>
             </mat-dialog-content>
-            <mat-dialog-actions class="!flex !justify-between !px-6 !py-3 !max-h-16">
+            <mat-dialog-actions>
                 <button mat-stroked-button (click)="create()">Nouvelle </button>
                 <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
             </mat-dialog-actions>

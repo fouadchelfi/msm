@@ -145,5 +145,26 @@ export class DbService {
                 CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
             );
         `);
+
+        await AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS stocks (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                "categoryId" INT,
+                "salePrice" NUMERIC(10, 2),
+                "quantity" REAL,
+                "amount" NUMERIC(10, 2),
+                "status" VARCHAR(10),                
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_category_id FOREIGN KEY("categoryId") REFERENCES categories(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
     }
 }

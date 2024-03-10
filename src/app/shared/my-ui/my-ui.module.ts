@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { MyInputModule } from './input';
+import { MyErrorsModule } from './errors';
 
-const MODULES = [MyInputModule];
+const MODULES = [MyInputModule, MyErrorsModule];
 
 @NgModule({
     imports: [MODULES],

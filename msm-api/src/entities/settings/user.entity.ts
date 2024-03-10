@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { CategoryEntity } from "../stock";
+import { CategoryEntity, StockEntity } from "../stock";
 import { SupplierEntity } from "../purcheses";
 import { CustomerEntity } from "../sales";
 import { EmployeeEntity } from "../hr";
@@ -57,4 +57,9 @@ export class UserEntity {
     createdEmployees: EmployeeEntity[];
     @OneToMany(() => EmployeeEntity, employee => employee.lastUpdateBy)
     updatedEmployees: EmployeeEntity[];
+
+    @OneToMany(() => StockEntity, stock => stock.createdBy)
+    createdStocks: StockEntity[];
+    @OneToMany(() => StockEntity, stock => stock.lastUpdateBy)
+    updatedStocks: StockEntity[];
 }

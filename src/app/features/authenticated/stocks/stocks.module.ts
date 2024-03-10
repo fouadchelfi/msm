@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { StocksRoutingModule } from './stocks-routing.module';
 import { SharedModule } from '../../../shared';
-import { CategoriesGridComponent, CategoryformComponent } from './pages';
+import { CategoriesGridComponent, CategoryFormComponent, StockFormComponent, StocksGridComponent } from './pages';
 
-const COMPONENTS = [CategoryformComponent, CategoriesGridComponent];
+const COMPONENTS = [CategoryFormComponent, CategoriesGridComponent, StockFormComponent, StocksGridComponent];
 
 @NgModule({
   declarations: [COMPONENTS],
