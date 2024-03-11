@@ -6,3 +6,5 @@ export * from './charge-natures-http.service';
 export * from './employees-http.service';
 export * from './stocks-http.service';
 export * from './ingredients-http.service';
+export * from './charges-http.service';
+export * from './losses-http.service';

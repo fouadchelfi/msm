@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-production-form',
+  selector: 'app-batch-form',
   template: `
     <p>
-      production-form works!
+      batch-form works!
     </p>
   `,
   styles: ``
 })
-export class ProductionFormComponent {
+export class BatchFormComponent {
 
 }

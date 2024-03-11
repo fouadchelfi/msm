@@ -182,5 +182,43 @@ export class DbService {
             );
         `);
 
+        await AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS charges (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                "chargeNatureId" INT,
+                amount NUMERIC(10,2),
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_charge_nature_id FOREIGN KEY("chargeNatureId") REFERENCES charge_natures(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+
+        await AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS losses (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                "losseNatureId" INT,
+                amount NUMERIC(10,2),
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_losse_nature_id FOREIGN KEY("losseNatureId") REFERENCES losse_natures(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+
     }
 }

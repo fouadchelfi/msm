@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
+import { LosseEntity } from "./losse.entity";
 
 @Entity({ name: 'losse_natures' })
 export class LosseNatureEntity {
@@ -31,4 +32,7 @@ export class LosseNatureEntity {
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
+
+    @OneToMany(() => LosseEntity, losse => losse.losseNatureId)
+    losses: LosseEntity[];
 }    

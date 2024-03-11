@@ -1,9 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
-import { ChargeEntity } from "./charge.entity";
+import { ChargeNatureEntity } from "./charge-nature.entity";
 
-@Entity({ name: 'charge_natures' })
-export class ChargeNatureEntity {
+@Entity({ name: 'charges' })
+export class ChargeEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -13,6 +13,16 @@ export class ChargeNatureEntity {
 
     @Column({ unique: true })
     label: string;
+
+    @ManyToOne(() => ChargeNatureEntity, charge_nature => charge_nature.charges)
+    @JoinColumn({ name: "chargeNatureId" })
+    chargeNatureId: ChargeNatureEntity;
+
+    @Column({ default: 0, type: 'decimal' })
+    amount: number;
+
+    @Column()
+    date: Date;
 
     @Column({ nullable: true })
     notes: string;
@@ -32,7 +42,4 @@ export class ChargeNatureEntity {
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
-
-    @OneToMany(() => ChargeEntity, charge => charge.chargeNatureId)
-    charges: ChargeEntity[];
 }    

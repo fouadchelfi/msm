@@ -9,7 +9,7 @@ import { ALGERIA_PROVINCES, CustomersHttpService } from '../../../../shared';
   template: `
         <div class="dialog-container">
           <div class="dialog-header">
-            <div class="text-xl font-medium">
+            <div class="text-lg font-medium">
               {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} client
             </div>
             <button (click)="closeDialog()">

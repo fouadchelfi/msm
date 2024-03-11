@@ -1,4 +1,4 @@
 export * from './ingredient-form.component';
 export * from './ingredients-grid.component';
-export * from './production-form.component';
-export * from './productions-grid.component';
+export * from './batch-form.component';
+export * from './batches-grid.component';

@@ -9,14 +9,14 @@ import { IngredientsHttpService } from '../../../../shared';
     template: `
       <div class="dialog-container">
             <div class="dialog-header">
-                <div class="text-xl font-medium">
+                <div class="text-lg font-medium">
                     {{data.mode == 'creation' ? 'Nouveau' : 'Modifier'}} ingrédient
                 </div>
                 <button (click)="closeDialog()">
                   <i class="ri-close-line text-xl"></i>
                 </button>
               </div>
-        <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
+            <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
               <mat-dialog-content>
                 <form [formGroup]="ingredientFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
                     <input formControlName="id" type="number" class="!hidden">

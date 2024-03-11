@@ -59,7 +59,7 @@ import { appConfig } from '../../../../app.config';
                   <i class="ri-delete-bin-6-line text-lg"></i>
                   <span>Supprimer ({{ selection.selected.length }})</span>
                 </div>
-              </button>
+              </button> 
             <button mat-flat-button color="primary" (click)="newItem()">
               <div class="!flex !flex-row !items-center !space-x-2">
                 <i class="ri-add-line text-lg"></i>

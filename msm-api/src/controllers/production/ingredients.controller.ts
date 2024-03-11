@@ -68,7 +68,7 @@ export class IngredientsController {
         };
         let dbIngredient = await repo(IngredientEntity).save(creation);
 
-        if (isEmpty(dbIngredient.code)) await repo(IngredientEntity).update(dbIngredient.id, { ...creation, code: code('CAT', dbIngredient.id) });
+        if (isEmpty(dbIngredient.code)) await repo(IngredientEntity).update(dbIngredient.id, { ...creation, code: code('ING', dbIngredient.id) });
 
         return {
             success: true,
@@ -84,7 +84,7 @@ export class IngredientsController {
 
         await repo(IngredientEntity).update(body.id, {
             id: body.id,
-            code: isEmpty(body.code) ? code('CAT', id) : body.code,
+            code: isEmpty(body.code) ? code('ING', id) : body.code,
             label: body.label,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),

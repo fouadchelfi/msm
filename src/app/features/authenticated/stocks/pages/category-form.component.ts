@@ -9,7 +9,7 @@ import { CategoriesHttpService } from '../../../../shared';
   template: `
       <div class="dialog-container">
             <div class="dialog-header">
-                <div class="text-xl font-medium">
+                <div class="text-lg font-medium">
                     {{data.mode == 'creation' ? 'Nouvelle' : 'Modifier'}} catégorie
                 </div>
                 <button (click)="closeDialog()">

@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-productions-grid',
+  selector: 'app-batches-grid',
   template: `
     <p>
-      productions-grid works!
+      batches-grid works!
     </p>
   `,
   styles: ``
 })
-export class ProductionsGridComponent {
+export class BatchesGridComponent {
 
 }
