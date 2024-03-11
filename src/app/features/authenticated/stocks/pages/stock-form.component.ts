@@ -79,7 +79,7 @@ import { CategoriesHttpService, StocksHttpService, amount } from '../../../../sh
               </my-form-field>
               <my-form-field>
                 <my-label [required]="true">Montant</my-label>
-                <input formControlName="amount" type="number" myInput>
+                <input formControlName="amount" type="number" myInput myCalculableField>
                 <my-error
                   *ngIf="stockFormGroup.get('amount')?.invalid && (stockFormGroup.get('amount')?.dirty || stockFormGroup.get('amount')?.touched) && stockFormGroup.get('amount')?.getError('required')">
                   Veuillez remplir ce champ.

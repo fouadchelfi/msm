@@ -1,1 +1,1 @@
-export * from './stats.component';
+export * from './turnover.component';

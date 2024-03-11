@@ -6,6 +6,7 @@ import { TextHandlerModule } from './text-handler';
 import { BrandingModule } from './branding';
 import { AngularMaterialModule } from './material';
 import { RouterModule } from '@angular/router';
+import { SharedBusinessModule } from './business';
 
 const MODULES = [
     CommonModule,
@@ -15,8 +16,8 @@ const MODULES = [
     MyUiModule,
     TextHandlerModule,
     BrandingModule,
+    SharedBusinessModule
 ];
-
 
 const COMPONENTS = [];
 const DIRECTIVES = [];
