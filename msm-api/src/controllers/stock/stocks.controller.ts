@@ -60,6 +60,7 @@ export class StocksController {
         let creation = {
             code: body.code,
             label: body.label,
+            familyId: body.familyId,
             categoryId: body.categoryId,
             salePrice: body.salePrice,
             quantity: body.quantity,
@@ -91,6 +92,7 @@ export class StocksController {
             id: body.id,
             code: isEmpty(body.code) ? code('STK', id) : body.code,
             label: body.label,
+            familyId: body.familyId,
             categoryId: body.categoryId,
             salePrice: body.salePrice,
             quantity: body.quantity,
@@ -136,5 +138,6 @@ function queryAll() {
         .leftJoinAndSelect('stock.createdBy', 'createdBy')
         .leftJoinAndSelect('stock.lastUpdateBy', 'lastUpdateBy')
         .leftJoinAndSelect('stock.categoryId', 'categoryId')
-        .select(['stock.id', 'stock.code', 'stock.label', 'stock.salePrice', 'stock.quantity', 'stock.amount', 'stock.status', 'stock.notes', 'stock.createdAt', 'stock.lastUpdateAt', 'categoryId', 'createdBy', 'lastUpdateBy']);
+        .leftJoinAndSelect('stock.familyId', 'familyId')
+        .select(['stock.id', 'stock.code', 'stock.label', 'stock.salePrice', 'stock.quantity', 'stock.amount', 'stock.status', 'stock.notes', 'stock.createdAt', 'stock.lastUpdateAt', 'categoryId', 'familyId', 'createdBy', 'lastUpdateBy']);
 }

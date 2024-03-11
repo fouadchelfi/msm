@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DbService } from './db';
-import { AuthController, CategoriesController, ChargeNaturesController, ChargesController, CustomersController, IngredientsController, LosseNaturesController, LossesController, StocksController, SuppliersController, UsersController } from './controllers';
+import { AuthController, CategoriesController, ChargeNaturesController, ChargesController, CustomersController, FamiliesController, IngredientsController, LosseNaturesController, LossesController, StocksController, SuppliersController, UsersController } from './controllers';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from './utils';
 import { EmployeesController } from './controllers/hr';
@@ -29,6 +29,7 @@ import { EmployeesController } from './controllers/hr';
     UsersController,
     AuthController,
     CategoriesController,
+    FamiliesController,
     SuppliersController,
     CustomersController,
     EmployeesController,

@@ -23,6 +23,7 @@ import { Component, OnInit } from '@angular/core';
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stocks/quantity-corrections"
                       [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Corrections quantité</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stocks/categories" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Catégories</a>
+                    <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stocks/families" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Familles</a>
                   </nav>
                 </div> 
                 <div class="relative group">

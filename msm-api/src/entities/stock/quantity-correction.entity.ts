@@ -1,10 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
 import { CategoryEntity } from "./category.entity";
-import { FamilyEntity } from "./family.entity";
 
-@Entity({ name: 'stocks' })
-export class StockEntity {
+@Entity({ name: 'quantity_corrections' })
+export class QuantityCorrectionEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -14,8 +13,9 @@ export class StockEntity {
     @Column({ unique: true })
     label: string;
 
-    @Column({ type: 'decimal' })
-    salePrice: number;
+    //--------------------------------
+    @Column({ type: 'real' })
+    stockId: number;
 
     @Column({ type: 'real' })
     quantity: number;
@@ -32,10 +32,6 @@ export class StockEntity {
     @ManyToOne(() => CategoryEntity, category => category.stocks)
     @JoinColumn({ name: "categoryId" })
     categoryId: CategoryEntity;
-
-    @ManyToOne(() => FamilyEntity, family => family.stocks)
-    @JoinColumn({ name: "familyId" })
-    familyId: FamilyEntity;
 
     //#region Creation Area
     @Column({ update: false })

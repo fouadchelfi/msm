@@ -1,4 +1,6 @@
+export * from './families-grid.component';
 export * from './categories-grid.component';
+export * from './family-form.component';
 export * from './category-form.component';
 export * from './quantity-correction-form.component';
 export * from './quantity-corrections-grid.component';
