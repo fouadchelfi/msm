@@ -7,20 +7,18 @@ import { CategoriesHttpService } from '../../../../shared';
 @Component({
   selector: 'app-category-form',
   template: `
-        <div class="flex flex-col pt-7 pb-4 px-2">
-            <div class="flex flex-row items-center justify-between !px-6">
-                <div class="text-xl font-medium">
+      <div class="dialog-container">
+            <div class="dialog-header">
+                <div class="text-lg font-medium">
                     {{data.mode == 'creation' ? 'Nouvelle' : 'Modifier'}} catégorie
                 </div>
                 <button (click)="closeDialog()">
                   <i class="ri-close-line text-xl"></i>
                 </button>
-            </div>
-            <mat-dialog-content>
-                <div *ngIf="errors.length" class="flex flex-col space-y-2 p-3 rounded-sm bg-red-100">
-                  <ng-container *ngFor="let error of errors"><li class="text-red-600 text-sm">{{error}}</li></ng-container>
-                </div>
-                <form [formGroup]="categoryFormGroup" class="flex flex-col gap-y-5 mt-3">
+              </div>
+        <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
+              <mat-dialog-content>
+                <form [formGroup]="categoryFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
                     <input formControlName="id" type="number" class="!hidden">
                     <my-form-field>
                         <my-label [required]="true">Libellé</my-label>
@@ -34,8 +32,8 @@ import { CategoriesHttpService } from '../../../../shared';
                         <textarea formControlName="notes" myTextarea type="text"></textarea>
                       </my-form-field>
                 </form>
-            </mat-dialog-content>
-            <mat-dialog-actions class="!flex !justify-between !px-6">
+              </mat-dialog-content>
+        <mat-dialog-actions>
                 <button mat-stroked-button (click)="create()">Nouvelle </button>
                 <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
             </mat-dialog-actions>
@@ -43,7 +41,7 @@ import { CategoriesHttpService } from '../../../../shared';
     `
 })
 
-export class CategoryformComponent implements OnInit, AfterViewInit {
+export class CategoryFormComponent implements OnInit, AfterViewInit {
 
   categoryFormGroup: FormGroup;
   @ViewChild('firstFocused') firstFocused: ElementRef;
@@ -51,7 +49,7 @@ export class CategoryformComponent implements OnInit, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<CategoryformComponent>,
+    private dialogRef: MatDialogRef<CategoryFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private categoriesHttp: CategoriesHttpService,
     private snackBar: MatSnackBar,

@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
-
 import { SharedModule } from '../../../shared';
 import { ProductionRoutingModule } from './production-routing.module';
-import { IngredientFormComponent, IngredientsGridComponent, ProductionFormComponent, ProductionsGridComponent } from './pages';
+import { IngredientFormComponent, IngredientsGridComponent, BatchFormComponent, BatchesGridComponent } from './pages';
 
 const COMPONENTS = [
-    ProductionsGridComponent,
-    ProductionFormComponent,
+    BatchesGridComponent,
+    BatchFormComponent,
     IngredientFormComponent,
     IngredientsGridComponent,
 ];

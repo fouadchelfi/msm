@@ -58,8 +58,8 @@ export class CategoriesController {
         if (errors) return { success: false, errors: errors, data: null };
 
         let creation = {
-            label: body.label,
             code: body.code,
+            label: body.label,
             notes: body.notes,
             createdAt: currentDateTime(),
             createdBy: 1,
@@ -109,12 +109,13 @@ export class CategoriesController {
 async function validateCategory(category) {
     let errors = [];
 
-    let categoryDb = await repo(CategoryEntity).createQueryBuilder('category').where("TRIM(LOWER(category.label)) LIKE :label", { label: `%${(<string>category.label).toLowerCase().trim()}%` }).getOne();
-    if (categoryDb && categoryDb.id != category.id)
-        errors.push("Libellé existe déjà");
-
-    if (isNotEmpty(category.code) && await (repo(CategoryEntity).createQueryBuilder('categories').where("TRIM(categories.code) = TRIM(:code)", { code: category.code })).getExists())
+    let categoryDbCode = await repo(CategoryEntity).createQueryBuilder('category').where("category.code = :code", { code: `${(<string>category.code)}` }).getOne();
+    if (categoryDbCode && categoryDbCode.id != category.id)
         errors.push("Code existe déjà");
+
+    let categoryDbLabel = await repo(CategoryEntity).createQueryBuilder('category').where("TRIM(LOWER(category.label)) = :label", { label: `${(<string>category.label).toLowerCase().trim()}` }).getOne();
+    if (categoryDbLabel && categoryDbLabel.id != category.id)
+        errors.push("Libellé existe déjà");
 
     return errors.length == 0 ? null : errors;
 }
@@ -124,5 +125,5 @@ function queryAll() {
         .createQueryBuilder('category')
         .leftJoinAndSelect('category.createdBy', 'createdBy')
         .leftJoinAndSelect('category.lastUpdateBy', 'lastUpdateBy')
-        .select(['category.id', 'category.label', 'category.code', 'category.notes', 'category.createdAt', 'category.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
+        .select(['category.id', 'category.code', 'category.label', 'category.notes', 'category.createdAt', 'category.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
 }

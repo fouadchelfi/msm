@@ -5,9 +5,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
-import { CategoriesHttpService, TimeZoneService, isEmpty, isNotEmpty } from '../../../../shared';
+import { CategoriesHttpService, TimeZoneService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
-import { CategoryformComponent } from './category-form.component';
+import { CategoryFormComponent } from './category-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { appConfig } from '../../../../app.config';
 
@@ -16,7 +16,7 @@ import { appConfig } from '../../../../app.config';
   template: `
         <div class="flex flex-1 flex-col p-3 bg-secondary-50 gap-y-2">
           <div class="flex flex-col">
-            <h3 class="text-2xl">Stock / Catégories</h3>
+            <h3>Stock / Catégories</h3>
           </div>
           <div class="flex flex-row justify-between items-center ">
             <div class="relative">
@@ -94,12 +94,12 @@ import { appConfig } from '../../../../app.config';
                 
                 <ng-container matColumnDef="code">
                   <th mat-header-cell *matHeaderCellDef >Code </th>
-                  <td mat-cell *matCellDef="let row">{{ row.code|myLimitTextLength:30 }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.code }}</td>
                 </ng-container>
                 
                 <ng-container matColumnDef="label">
                   <th mat-header-cell *matHeaderCellDef >Libellé </th>
-                  <td mat-cell *matCellDef="let row">{{ row.label|myLimitTextLength:30 }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.label }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="notes">
@@ -113,6 +113,7 @@ import { appConfig } from '../../../../app.config';
                   <th mat-header-cell *matHeaderCellDef class="!text-center w-20 ">Action</th>
                   <td mat-cell *matCellDef="let item, let i = index">
                   <div class="flex flex-row items-center space-x-2">
+                    <button mat-icon-button [matTooltip]="getTracabilityInfo(item)"><i class="ri-information-line"></i></button>
                     <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button>
                     <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button>
                   </div>    
@@ -186,7 +187,7 @@ export class CategoriesGridComponent implements OnInit {
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
     private matDialog: MatDialog,
-    private timezone: TimeZoneService
+    private traceability: TraceabilityService,
   ) {
     this.categoryFilterFormGroup = this.fb.group({
       'label': [''],
@@ -225,18 +226,23 @@ export class CategoriesGridComponent implements OnInit {
   }
 
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
-    this.matDialog.open(CategoryformComponent, { data: { id: id, mode: action }, minWidth: '512px' }).afterClosed().subscribe({
+    this.matDialog.open(CategoryFormComponent, {
+      data: { id: id, mode: action },
+      minWidth: '512px',
+      disableClose: true,
+      autoFocus: false,
+    }).afterClosed().subscribe({
       next: res => this.refreshGrid.emit()
     });
   }
 
   deleteItem(item: any): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette catégorie?")) {
+    if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany([item]);
     }
   }
   deleteSeleted(): void {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette catégories?")) {
+    if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany(this.selection.selected);
     }
   }
@@ -299,5 +305,9 @@ export class CategoriesGridComponent implements OnInit {
     if (isNotEmpty(qry.label)) urlParams.append('label', qry.label);
 
     return `?${urlParams.toString()}`;
+  }
+
+  getTracabilityInfo(item: any) {
+    return this.traceability.info(item);
   }
 }

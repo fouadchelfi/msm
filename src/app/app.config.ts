@@ -1,6 +1,6 @@
 export const appConfig = {
     pagination: {
-        pageSize: 1,
+        pageSize: 20,
         showFirstLastButtons: true,
     }
 };

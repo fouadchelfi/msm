@@ -23,7 +23,6 @@ import { Component, OnInit } from '@angular/core';
                     <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stocks/quantity-corrections"
                       [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Corrections quantité</a>
                     <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stocks/categories" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Catégories</a>
-                    <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stocks/partitions" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Partitions</a>
                   </nav>
                 </div> 
                 <div class="relative group">
@@ -43,7 +42,7 @@ import { Component, OnInit } from '@angular/core';
                     <i class="ri-building-3-line text-lg"></i>
                     <span>Production</span></button>
                   <nav class="absolute left-[127px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
-                    <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/production/productions" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Productions</a>
+                    <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/production/bacthes" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Lots</a>
                     <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/production/ingredients" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Ingrédients</a>
                   </nav>
                 </div>
@@ -75,15 +74,16 @@ import { Component, OnInit } from '@angular/core';
                     <i class="ri-cash-line text-lg"></i>
                     <span>Trésoreries</span></button>
                   <nav class="absolute left-[127px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
-                    <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/fences" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Clôtures</a>
+                  <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/money-sources" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Sources
+                      d'argent</a>
+                  <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/fences" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Clôtures</a>
                     <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/charges" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Charges</a>
                     <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/charge-natures" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Natures
                       charge</a>
                     <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/losses" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Pertes</a>
                     <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/losse-natures" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Natures
                       Perte</a>
-                    <a class="px-4 py-1 text-base text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/money-sources" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Sources
-                      d'argent</a>
+                    
                   </nav>
                 </div>
                 <div class="relative group">
