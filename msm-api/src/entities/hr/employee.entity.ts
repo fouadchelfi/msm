@@ -1,5 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
+import { PuncheEntity } from "./punche.entity";
+import { EmployeeAccountEntity } from "./employee-account.entity";
+import { EmployeePaymentEntity } from "./employee-payment.entity";
 
 @Entity({ name: 'employees' })
 export class EmployeeEntity {
@@ -63,4 +66,13 @@ export class EmployeeEntity {
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
+
+    @OneToMany(() => PuncheEntity, punche => punche.employeeId)
+    punches: PuncheEntity[];
+
+    @OneToMany(() => EmployeeAccountEntity, employeeAccount => employeeAccount.employeeId)
+    employeeAccounts: EmployeeAccountEntity[];
+
+    @OneToMany(() => EmployeePaymentEntity, employeePayment => employeePayment.employeeId)
+    employeePayments: EmployeePaymentEntity[];
 }    

@@ -3,8 +3,8 @@ import { UserEntity } from "../settings";
 import { CategoryEntity } from "./category.entity";
 import { StockEntity } from "./stock.entity";
 
-@Entity({ name: 'quantity_corrections' })
-export class QuantityCorrectionEntity {
+@Entity({ name: 'status_transfer' })
+export class StatusTransferEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -14,17 +14,30 @@ export class QuantityCorrectionEntity {
     @Column({ unique: true })
     label: string;
 
-    @ManyToOne(() => StockEntity, stock => stock.quantityCorrections)
-    @JoinColumn({ name: "stockId" })
-    stockId: StockEntity;
+    @ManyToOne(() => StockEntity, stock => stock.freeStocks)
+    @JoinColumn({ name: "freeStockId" })
+    freeStockId: StockEntity;
+
+    @ManyToOne(() => StockEntity, stock => stock.frozenStocks)
+    @JoinColumn({ name: "frozenStockId" })
+    frozenStockId: StockEntity;
 
     @Column({ type: 'real' })
-    oldQuantity: number;
+    transferedQuantity: number;
 
     @Column({ type: 'real' })
-    newQuantity: number;
+    oldFreeQuantity: number;
 
-    @Column()
+    @Column({ type: 'real' })
+    newFreeQuantity: number;
+
+    @Column({ type: 'real' })
+    oldFrozenQuantity: number;
+
+    @Column({ type: 'real' })
+    newFrozenQuantity: number;
+
+    @Column({ type: 'date' })
     date: Date;
 
     @Column({ nullable: true })
@@ -45,4 +58,4 @@ export class QuantityCorrectionEntity {
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
-}    
+}

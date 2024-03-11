@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
+import { UserEntity } from 'src/entities';
+import { currentDateTime, repo } from 'src/utils';
 
 @Injectable()
 export class DbService {
     constructor() { }
 
-    checkSchema() {
+    checkDb() {
         this.createTables();
+        this.createAdminUser();
     }
 
     async createTables() {
@@ -617,5 +620,22 @@ export class DbService {
                 CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
             );
         `);
+    }
+
+    async createAdminUser() {
+        let exists = await repo(UserEntity).createQueryBuilder('user').where('user.name = :name', { name: 'admin' }).getExists();
+        if (!exists) {
+            let creation = {
+                name: 'admin',
+                password: 'admin',
+                code: 'admin',
+                notes: 'Créé par défaut.',
+                createdAt: currentDateTime(),
+                createdBy: 1,
+                lastUpdateAt: currentDateTime(),
+                lastUpdateBy: 1
+            };
+            await repo(UserEntity).save(creation);
+        }
     }
 }

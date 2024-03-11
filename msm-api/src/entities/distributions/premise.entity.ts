@@ -1,10 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
-import { StockEntity } from "./stock.entity";
-import { FenceEntity } from "../treasuries";
+import { DistributionEntity } from "./distribution.entity";
 
-@Entity({ name: 'categories' })
-export class CategoryEntity {
+@Entity({ name: 'premises' })
+export class PremiseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -20,7 +19,7 @@ export class CategoryEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdCategories)
+    @ManyToOne(() => UserEntity, user => user.createdPremises)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -28,14 +27,12 @@ export class CategoryEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedCategories)
+    @ManyToOne(() => UserEntity, user => user.updatedPremises)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
 
-    @OneToMany(() => StockEntity, stock => stock.categoryId)
-    stocks: StockEntity[];
 
-    @OneToMany(() => FenceEntity, stock => stock.categoryId)
-    fences: StockEntity[];
+    @OneToMany(() => DistributionEntity, distribution => distribution.distributionItems)
+    distributions: DistributionEntity[];
 }    

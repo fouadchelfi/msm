@@ -1,31 +1,27 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
-import { CategoryEntity } from "./category.entity";
-import { StockEntity } from "./stock.entity";
+import { EmployeeEntity } from "./employee.entity";
 
-@Entity({ name: 'quantity_corrections' })
-export class QuantityCorrectionEntity {
+@Entity({ name: 'punches' })
+export class PuncheEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ nullable: true })
     code: string;
 
-    @Column({ unique: true })
-    label: string;
+    @ManyToOne(() => EmployeeEntity, employee => employee.punches)
+    @JoinColumn({ name: "employeeId" })
+    employeeId: EmployeeEntity;
 
-    @ManyToOne(() => StockEntity, stock => stock.quantityCorrections)
-    @JoinColumn({ name: "stockId" })
-    stockId: StockEntity;
-
-    @Column({ type: 'real' })
-    oldQuantity: number;
+    @Column({ type: 'date' })
+    date: Date;
 
     @Column({ type: 'real' })
-    newQuantity: number;
+    hourlyCoefficient: number;
 
     @Column()
-    date: Date;
+    paymentStatus: string;
 
     @Column({ nullable: true })
     notes: string;
@@ -33,7 +29,7 @@ export class QuantityCorrectionEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdStocks)
+    @ManyToOne(() => UserEntity, user => user.createdPunches)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -41,7 +37,7 @@ export class QuantityCorrectionEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedStocks)
+    @ManyToOne(() => UserEntity, user => user.updatedPunches)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion

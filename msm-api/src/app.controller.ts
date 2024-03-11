@@ -7,6 +7,6 @@ export class AppController {
 
   @Get('check-at-startup')
   checkAtStartup() {
-    this.dbSchema.checkSchema();
+    this.dbSchema.checkDb();
   }
 }

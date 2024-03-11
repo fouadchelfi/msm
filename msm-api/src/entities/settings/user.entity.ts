@@ -1,9 +1,13 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { CategoryEntity, FamilyEntity, StockEntity } from "../stock";
-import { SupplierEntity } from "../purcheses";
-import { CustomerEntity } from "../sales";
-import { EmployeeEntity } from "../hr";
-import { IngredientEntity } from "../production";
+import { SupplierEntity } from "../purchases";
+import { CustomerEntity, SaleEntity } from "../sales";
+import { EmployeeEntity, PuncheEntity } from "../hr";
+import { BatchEntity, IngredientEntity } from "../production";
+import { MoneySourceEntity } from "../treasuries";
+import { PurchaseEntity } from "../purchases/purchase.entity";
+import { DistributionEntity } from "../distributions/distribution.entity";
+import { PremiseEntity } from "../distributions";
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -44,6 +48,11 @@ export class UserEntity {
     @OneToMany(() => CategoryEntity, category => category.lastUpdateBy)
     updatedCategories: CategoryEntity[];
 
+    @OneToMany(() => PremiseEntity, premise => premise.createdBy)
+    createdPremises: PremiseEntity[];
+    @OneToMany(() => PremiseEntity, premise => premise.lastUpdateBy)
+    updatedPremises: PremiseEntity[];
+
     @OneToMany(() => FamilyEntity, family => family.createdBy)
     createdFamilies: FamilyEntity[];
     @OneToMany(() => FamilyEntity, family => family.lastUpdateBy)
@@ -73,4 +82,34 @@ export class UserEntity {
     createdIngredients: IngredientEntity[];
     @OneToMany(() => IngredientEntity, ingredient => ingredient.lastUpdateBy)
     updatedIngredients: IngredientEntity[];
+
+    @OneToMany(() => MoneySourceEntity, ingredient => ingredient.createdBy)
+    createdMoneySources: MoneySourceEntity[];
+    @OneToMany(() => MoneySourceEntity, ingredient => ingredient.lastUpdateBy)
+    updatedMoneySources: MoneySourceEntity[];
+
+    @OneToMany(() => PuncheEntity, punche => punche.createdBy)
+    createdPunches: PuncheEntity[];
+    @OneToMany(() => PuncheEntity, punche => punche.lastUpdateBy)
+    updatedPunches: PuncheEntity[];
+
+    @OneToMany(() => PurchaseEntity, purchase => purchase.createdBy)
+    createdPurchases: PurchaseEntity[];
+    @OneToMany(() => PurchaseEntity, purchase => purchase.lastUpdateBy)
+    updatedPurchases: PurchaseEntity[];
+
+    @OneToMany(() => SaleEntity, sale => sale.createdBy)
+    createdSales: SaleEntity[];
+    @OneToMany(() => SaleEntity, sale => sale.lastUpdateBy)
+    updatedSales: SaleEntity[];
+
+    @OneToMany(() => DistributionEntity, distribution => distribution.createdBy)
+    createdDistributions: DistributionEntity[];
+    @OneToMany(() => DistributionEntity, distribution => distribution.lastUpdateBy)
+    updatedDistributions: DistributionEntity[];
+
+    @OneToMany(() => BatchEntity, batch => batch.createdBy)
+    createdBatches: BatchEntity[];
+    @OneToMany(() => BatchEntity, batch => batch.lastUpdateBy)
+    updatedBatches: BatchEntity[];
 }
