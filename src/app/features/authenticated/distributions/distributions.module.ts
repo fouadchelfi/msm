@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { DistributionsRoutingModule } from './distributions-routing.module';
 import { SharedModule } from '../../../shared';
+import { PremiseFormComponent, PremisesGridComponent } from './pages';
+
+const COMPONENTS = [PremiseFormComponent, PremisesGridComponent]
 
 @NgModule({
-  declarations: [],
+  declarations: [COMPONENTS],
   imports: [
     SharedModule,
     DistributionsRoutingModule
