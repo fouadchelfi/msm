@@ -11,3 +11,5 @@ export * from './charges-http.service';
 export * from './losses-http.service';
 export * from './quantity-corrections-http.service';
 export * from './status-transfers-http.service';
+export * from './premises-http.service';
+export * from './money-sources-http.service';
