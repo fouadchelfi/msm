@@ -1,18 +1,14 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
-import { CategoryEntity } from "./category.entity";
 import { StockEntity } from "./stock.entity";
 
-@Entity({ name: 'status_transfer' })
+@Entity({ name: 'status_transfers' })
 export class StatusTransferEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ nullable: true })
     code: string;
-
-    @Column({ unique: true })
-    label: string;
 
     @ManyToOne(() => StockEntity, stock => stock.freeStocks)
     @JoinColumn({ name: "freeStockId" })
@@ -46,7 +42,7 @@ export class StatusTransferEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdStocks)
+    @ManyToOne(() => UserEntity, user => user.createdStatusTransferStocks)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -54,7 +50,7 @@ export class StatusTransferEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedStocks)
+    @ManyToOne(() => UserEntity, user => user.updatedStatusTransferStocks)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion

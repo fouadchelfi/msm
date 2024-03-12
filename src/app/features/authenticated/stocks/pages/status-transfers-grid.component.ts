@@ -5,18 +5,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
-import { CategoriesHttpService, TimeZoneService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
+import { StatusTransfersHttpService, StocksHttpService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
-import { CategoryFormComponent } from './category-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { appConfig } from '../../../../app.config';
+import { StatusTransferFormComponent } from './status-transfer-form.component';
 
 @Component({
-  selector: 'app-categories-grid',
+  selector: 'app-status-transfers-grid',
   template: `
         <div class="flex flex-1 flex-col p-3 bg-secondary-50 gap-y-2">
           <div class="flex flex-col">
-            <h3>Stock / Catégories</h3>
+            <h3>Stocks / Transfers d'état</h3>
           </div>
           <div class="flex flex-row justify-between items-center ">
             <div class="relative">
@@ -37,13 +37,14 @@ import { appConfig } from '../../../../app.config';
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="categoryFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="stockFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
                       <my-form-field>
-                        <my-label>Libellé</my-label>
-                        <input #firstFocused formControlName="label" type="text" myInput >
-                        <my-error *ngIf="categoryFilterFormGroup.get('label')?.invalid && (categoryFilterFormGroup.get('label')?.dirty || categoryFilterFormGroup.get('label')?.touched) && categoryFilterFormGroup.get('label')?.getError('required')">
-                            Veuillez remplir ce champ.
-                        </my-error>
+                        <my-label>Stock</my-label>
+                        <select formControlName="freeStockId" myInput>
+                          <ng-container *ngFor="let stock of stocks">
+                            <option [value]="stock.id">{{ stock.label }}</option>
+                          </ng-container>
+                        </select>
                       </my-form-field>
                     </form>
                     <div class="flex flex-row justify-between p-6">
@@ -63,7 +64,7 @@ import { appConfig } from '../../../../app.config';
             <button mat-flat-button color="primary" (click)="newItem()">
               <div class="!flex !flex-row !items-center !space-x-2">
                 <i class="ri-add-line text-lg"></i>
-                <span class="text-white">Catégorie</span>
+                <span class="text-white">Transfer</span>
               </div>
             </button>
             </div>
@@ -97,16 +98,52 @@ import { appConfig } from '../../../../app.config';
                   <td mat-cell *matCellDef="let row">{{ row.code }}</td>
                 </ng-container>
                 
-                <ng-container matColumnDef="label">
-                  <th mat-header-cell *matHeaderCellDef >Libellé </th>
-                  <td mat-cell *matCellDef="let row">{{ row.label }}</td>
+                <ng-container matColumnDef="freeStockId.label">
+                  <th mat-header-cell *matHeaderCellDef >Stock (Free) </th>
+                  <td mat-cell *matCellDef="let row">{{ row.freeStockId.label|myLimitTextLength:30 }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="frozenStockId.label">
+                  <th mat-header-cell *matHeaderCellDef >Stock (Congelé) </th>
+                  <td mat-cell *matCellDef="let row">{{ row.frozenStockId.label|myLimitTextLength:30 }}</td>
+                </ng-container>
+      
+                <ng-container matColumnDef="transferedQuantity">
+                  <th mat-header-cell *matHeaderCellDef >Quantité transférée</th>
+                  <td mat-cell *matCellDef="let row">{{ row.transferedQuantity }}</td>
+                </ng-container>
+      
+                <ng-container matColumnDef="freeQuantity">
+                  <th mat-header-cell *matHeaderCellDef >Quantité (Free) </th>
+                  <td mat-cell *matCellDef="let row">
+                    <div class="font-medium">
+                      {{ row.oldFreeQuantity }}
+                      <i class="ri-arrow-right-line text-sm text-orange-500"></i>
+                      {{ row.newFreeQuantity }}
+                    </div>
+                  </td>
+                </ng-container>
+      
+                <ng-container matColumnDef="frozenQuantity">
+                  <th mat-header-cell *matHeaderCellDef >Quantité (Congelé) </th>
+                  <td mat-cell *matCellDef="let row">
+                    <div class="font-medium">
+                      {{ row.oldFrozenQuantity }}
+                      <i class="ri-arrow-right-line text-sm text-blue-500"></i>
+                      {{ row.newFrozenQuantity }}
+                    </div>
+                  </td>
+                </ng-container>
+      
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef >Date </th>
+                  <td mat-cell *matCellDef="let row">{{ row.date|date:'dd/MM/yyyy' }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="notes">
                   <th mat-header-cell *matHeaderCellDef >Notes</th>
                   <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
                 </ng-container>
-
 
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
@@ -115,11 +152,10 @@ import { appConfig } from '../../../../app.config';
                   <div class="flex flex-row items-center space-x-2">
                     <button mat-icon-button [matTooltip]="getTracabilityInfo(item)"><i class="ri-information-line"></i></button>
                     <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button>
-                    <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button>
+                    <!-- <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button> -->
                   </div>    
                 </td>
                 </ng-container>
-
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" class="!bg-gray-50"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer" (dblclick)="newItem('edit', row.id)">
                 </tr>
@@ -135,25 +171,25 @@ import { appConfig } from '../../../../app.config';
     `,
   encapsulation: ViewEncapsulation.None,
   styles: [`
-      app-categories-grid { display: flex; flex: 1; }
+      app-status-transfers-grid { display: flex; flex: 1; }
     `],
 })
-export class CategoriesGridComponent implements OnInit {
+export class StatusTransfersGridComponent implements OnInit {
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['select', 'code', 'label', 'notes', 'actions'];
+  displayedColumns: string[] = ['select', 'code', 'freeStockId.label', 'frozenStockId.label', 'transferedQuantity', 'freeQuantity', 'frozenQuantity', 'date', 'actions'];
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
   isFilterMenuOpen: boolean = false;
-  categoryFilterFormGroup: FormGroup;
+  stockFilterFormGroup: FormGroup;
   refreshGrid = new EventEmitter();
-  categoryFilterChanged = new EventEmitter();
+  stockFilterChanged = new EventEmitter();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('firstFocused') firstFocused: ElementRef;
   pageSize = appConfig.pagination.pageSize;
-  categories: any[] = [];
+  stocks: any[] = [];
   selection = new SelectionModel<any>(true, []);
   showFirstLastButtons: boolean = appConfig.pagination.showFirstLastButtons;
 
@@ -183,17 +219,22 @@ export class CategoriesGridComponent implements OnInit {
   }
 
   constructor(
-    private categoriesHttp: CategoriesHttpService,
+    private stocksHttp: StocksHttpService,
+    private statusTransfersHttp: StatusTransfersHttpService,
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
     private matDialog: MatDialog,
     private traceability: TraceabilityService,
   ) {
-    this.categoryFilterFormGroup = this.fb.group({
-      'label': [''],
+    this.stockFilterFormGroup = this.fb.group({
+      'freeStockId': [undefined],
     });
   }
-  ngOnInit() { }
+  ngOnInit() {
+    this.stocksHttp.getAll().subscribe({
+      next: stocks => this.stocks = stocks
+    });
+  }
 
 
   ngAfterViewInit() {
@@ -202,12 +243,12 @@ export class CategoriesGridComponent implements OnInit {
       next: () => this.paginator.pageIndex = 0
     });
 
-    merge(this.sort.sortChange, this.paginator.page, this.refreshGrid, this.categoryFilterChanged)
+    merge(this.sort.sortChange, this.paginator.page, this.refreshGrid, this.stockFilterChanged)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.categoriesHttp
+          return this.statusTransfersHttp
             .paginate(this.getFilterQuery)
             .pipe(catchError(() => observableOf(null)));
         }),
@@ -226,9 +267,9 @@ export class CategoriesGridComponent implements OnInit {
   }
 
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
-    this.matDialog.open(CategoryFormComponent, {
+    this.matDialog.open(StatusTransferFormComponent, {
       data: { id: id, mode: action },
-      minWidth: '512px',
+      minWidth: '1000px',
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({
@@ -248,14 +289,14 @@ export class CategoriesGridComponent implements OnInit {
   }
 
   filterItems(): void {
-    this.categoryFilterChanged.emit();
+    this.stockFilterChanged.emit();
   }
 
   resetItemsFilterForm(): void {
-    this.categoryFilterFormGroup.reset({
-      'label': '',
+    this.stockFilterFormGroup.reset({
+      'freeStockId': undefined,
     });
-    this.categoryFilterChanged.emit();
+    this.stockFilterChanged.emit();
   }
 
   toggleFilterMenu(): void {
@@ -279,7 +320,7 @@ export class CategoriesGridComponent implements OnInit {
     items.forEach(item => { urlParams.append('id', item.id.toString()) });
     let query = `?${urlParams.toString()}`;
 
-    this.categoriesHttp.deleteMany(query).subscribe({
+    this.statusTransfersHttp.deleteMany(query).subscribe({
       next: (res: any) => {
         if (res.success) {
           this.snackBar.open("Opération réussie", '✔', { duration: 7000 });
@@ -296,13 +337,13 @@ export class CategoriesGridComponent implements OnInit {
     const qry: any = {
       pageIndex: this.paginator.pageIndex,
       pageSize: this.pageSize,
-      label: this.categoryFilterFormGroup.get('label')?.value,
+      freeStockId: this.stockFilterFormGroup.get('freeStockId')?.value,
     }
 
     if (isNotEmpty(qry.pageIndex)) urlParams.append('pageIndex', qry.pageIndex.toString());
     if (isNotEmpty(qry.pageSize)) urlParams.append('pageSize', qry.pageSize.toString());
     urlParams.append('order', 'DESC');
-    if (isNotEmpty(qry.label)) urlParams.append('label', qry.label);
+    if (isNotEmpty(qry.freeStockId)) urlParams.append('freeStockId', qry.freeStockId);
 
     return `?${urlParams.toString()}`;
   }

@@ -8,11 +8,11 @@ export class DbService {
     constructor() { }
 
     checkDb() {
-        this.createTables();
-        this.createAdminUser();
+        this.checkTables();
+        this.checkAdminUser();
     }
 
-    async createTables() {
+    async checkTables() {
         //Users
         await AppDataSource.manager.query(`
             CREATE TABLE IF NOT EXISTS users (
@@ -280,14 +280,13 @@ export class DbService {
             CREATE TABLE IF NOT EXISTS quantity_corrections (
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
-                label VARCHAR(100),
                 "stockId" INT,
                 "oldQuantity" REAL,
                 "newQuantity" REAL,
                 date DATE,
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
-                "createdBy" INT,
+                "createdBy" INT, 
                 "lastUpdateAt" TIMESTAMP,
                 "lastUpdateBy" INT,
                 CONSTRAINT fk_stock_id FOREIGN KEY("stockId") REFERENCES stocks(id),
@@ -301,7 +300,6 @@ export class DbService {
             CREATE TABLE IF NOT EXISTS status_transfers (
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
-                label VARCHAR(100),
                 "freeStockId" INT,
                 "frozenStockId" INT,
                 "transferedQuantity" REAL,
@@ -622,7 +620,7 @@ export class DbService {
         `);
     }
 
-    async createAdminUser() {
+    async checkAdminUser() {
         let exists = await repo(UserEntity).createQueryBuilder('user').where('user.name = :name', { name: 'admin' }).getExists();
         if (!exists) {
             let creation = {

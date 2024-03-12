@@ -1,6 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
-import { CategoryEntity } from "./category.entity";
 import { StockEntity } from "./stock.entity";
 
 @Entity({ name: 'quantity_corrections' })
@@ -10,9 +9,6 @@ export class QuantityCorrectionEntity {
 
     @Column({ nullable: true })
     code: string;
-
-    @Column({ unique: true })
-    label: string;
 
     @ManyToOne(() => StockEntity, stock => stock.quantityCorrections)
     @JoinColumn({ name: "stockId" })
@@ -33,7 +29,7 @@ export class QuantityCorrectionEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdStocks)
+    @ManyToOne(() => UserEntity, user => user.createdQuantityCorrections)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -41,7 +37,7 @@ export class QuantityCorrectionEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedStocks)
+    @ManyToOne(() => UserEntity, user => user.updatedQuantityCorrections)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion

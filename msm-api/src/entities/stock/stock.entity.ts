@@ -59,14 +59,19 @@ export class StockEntity {
     lastUpdateBy: UserEntity;
     //#endregion
 
+    //Quantity-correction
     @OneToMany(() => QuantityCorrectionEntity, quantityCorrection => quantityCorrection.stockId)
     quantityCorrections: QuantityCorrectionEntity[];
+    //End Quantity-correction
 
+    //Status-transfer
     @OneToMany(() => StatusTransferEntity, statusTransfer => statusTransfer.freeStockId)
     freeStocks: StatusTransferEntity[];
 
     @OneToMany(() => StatusTransferEntity, statusTransfer => statusTransfer.frozenStockId)
     frozenStocks: StatusTransferEntity[];
+    //End Status-transfer
+
 
     @OneToMany(() => PurchaseItemEntity, item => item.stockId)
     purchaseItems: PurchaseItemEntity[];
