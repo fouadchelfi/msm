@@ -10,5 +10,5 @@ export * from './losse-nature-form.component';
 export * from './losse-natures-grid.component';
 export * from './money-source-form.component';
 export * from './money-sources-grid.component';
-export * from './transferts-grid.component';
-export * from './transfert-form.component';
+export * from './transfers-grid.component';
+export * from './transfer-form.component';

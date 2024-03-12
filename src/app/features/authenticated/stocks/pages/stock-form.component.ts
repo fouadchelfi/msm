@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild, ViewEn
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CategoriesHttpService, StocksHttpService, amount } from '../../../../shared';
+import { CategoriesHttpService, FamiliesHttpService, StocksHttpService, amount } from '../../../../shared';
 
 @Component({
   selector: 'app-stock-form',
@@ -36,6 +36,18 @@ import { CategoriesHttpService, StocksHttpService, amount } from '../../../../sh
               </my-form-field>
             </div>
             <div class="inline-fields">
+              <my-form-field>
+                <my-label [required]="true">Famille</my-label>
+                <select formControlName="familyId" myInput>
+                  <ng-container *ngFor="let family of families">
+                    <option [value]="family.id">{{ family.label }}</option>
+                  </ng-container>
+                </select>
+                <my-error
+                  *ngIf="stockFormGroup.get('familyId')?.invalid && (stockFormGroup.get('familyId')?.dirty || stockFormGroup.get('familyId')?.touched) && stockFormGroup.get('familyId')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
+              </my-form-field>
               <my-form-field>
                 <my-label [required]="true">Catégorie</my-label>
                 <select formControlName="categoryId" myInput>
@@ -79,7 +91,7 @@ import { CategoriesHttpService, StocksHttpService, amount } from '../../../../sh
               </my-form-field>
               <my-form-field>
                 <my-label [required]="true">Montant</my-label>
-                <input formControlName="amount" type="number" myInput>
+                <input formControlName="amount" type="number" myInput myCalculableField>
                 <my-error
                   *ngIf="stockFormGroup.get('amount')?.invalid && (stockFormGroup.get('amount')?.dirty || stockFormGroup.get('amount')?.touched) && stockFormGroup.get('amount')?.getError('required')">
                   Veuillez remplir ce champ.
@@ -109,6 +121,7 @@ export class StockFormComponent implements OnInit, AfterViewInit {
   stockFormGroup: FormGroup;
   @ViewChild('firstFocused') firstFocused: ElementRef;
   errors: any[] = [];
+  families: any[] = [];
   categories: any[] = [];
 
   constructor(
@@ -118,11 +131,13 @@ export class StockFormComponent implements OnInit, AfterViewInit {
     private snackBar: MatSnackBar,
     private stocksHttp: StocksHttpService,
     private categoriesHttp: CategoriesHttpService,
+    private familiesHttp: FamiliesHttpService,
   ) {
     this.stockFormGroup = this.fb.group({//Initialize the form and it's validations.
       'id': [undefined],
       'code': [''],
       'label': ['', [Validators.required]],
+      'familyId': [undefined, [Validators.required]],
       'categoryId': [undefined, [Validators.required]],
       'salePrice': [0, [Validators.required]],
       'quantity': [0, [Validators.required]],
@@ -134,12 +149,17 @@ export class StockFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     //Load form data
-    this.categoriesHttp.getAll().subscribe({
-      next: res => {
-        this.categories = res;
-        if (this.data.mode == 'edit') {
-          this.loadData(this.data.id);
-        }
+    this.familiesHttp.getAll().subscribe({
+      next: families => {
+        this.categoriesHttp.getAll().subscribe({
+          next: categories => {
+            this.families = families;
+            this.categories = categories;
+            if (this.data.mode == 'edit') {
+              this.loadData(this.data.id);
+            }
+          }
+        });
       }
     });
     this.handleFormChanged();
@@ -153,6 +173,7 @@ export class StockFormComponent implements OnInit, AfterViewInit {
             'id': res.id,
             'code': res.code,
             'label': res.label,
+            'familyId': res.familyId.id,
             'categoryId': res.categoryId.id,
             'salePrice': res.salePrice,
             'quantity': res.quantity,
@@ -216,6 +237,7 @@ export class StockFormComponent implements OnInit, AfterViewInit {
       'id': undefined,
       'code': '',
       'label': '',
+      'familyId': undefined,
       'categoryId': undefined,
       'salePrice': 0,
       'quantity': 0,

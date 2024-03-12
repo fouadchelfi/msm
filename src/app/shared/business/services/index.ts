@@ -1,4 +1,5 @@
 export * from './categories-http.service';
+export * from './families-http.service';
 export * from './suppliers-http.service';
 export * from './customers-http.service';
 export * from './losse-natures-http.service';
@@ -8,3 +9,5 @@ export * from './stocks-http.service';
 export * from './ingredients-http.service';
 export * from './charges-http.service';
 export * from './losses-http.service';
+export * from './quantity-corrections-http.service';
+export * from './status-transfers-http.service';

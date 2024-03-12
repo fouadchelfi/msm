@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
 import { StockEntity } from "../stock";
+import { BatchIngredientEntity } from "./batch-ingredient.entity";
 
 @Entity({ name: 'ingredients' })
 export class IngredientEntity {
@@ -32,4 +33,7 @@ export class IngredientEntity {
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
+
+    @OneToMany(() => BatchIngredientEntity, b => b.ingredientId)
+    batchIngredients: BatchIngredientEntity[];
 }    

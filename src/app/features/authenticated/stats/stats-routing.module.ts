@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StatsComponent } from './pages';
+import { TurnoverComponent } from './pages';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'stats', pathMatch: 'full' },
-  { path: 'stats', component: StatsComponent },
+  { path: '', redirectTo: 'turnover', pathMatch: 'full' },
+  { path: 'turnover', component: TurnoverComponent },
 ];
 
 @NgModule({

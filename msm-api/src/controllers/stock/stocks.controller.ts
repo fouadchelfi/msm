@@ -12,7 +12,7 @@ export class StocksController {
     }
 
     @Get('one/:id')
-    async getOneCategoyById(@Param('id') id: number) {
+    async getOneStockById(@Param('id') id: number) {
         return await queryAll()
             .where('stock.id = :id', { id })
             .getOne();
@@ -60,6 +60,7 @@ export class StocksController {
         let creation = {
             code: body.code,
             label: body.label,
+            familyId: body.familyId,
             categoryId: body.categoryId,
             salePrice: body.salePrice,
             quantity: body.quantity,
@@ -78,7 +79,7 @@ export class StocksController {
         return {
             success: true,
             errors: [],
-            data: await this.getOneCategoyById(dbStock.id)
+            data: await this.getOneStockById(dbStock.id)
         };
     }
 
@@ -91,6 +92,7 @@ export class StocksController {
             id: body.id,
             code: isEmpty(body.code) ? code('STK', id) : body.code,
             label: body.label,
+            familyId: body.familyId,
             categoryId: body.categoryId,
             salePrice: body.salePrice,
             quantity: body.quantity,
@@ -104,7 +106,7 @@ export class StocksController {
         return {
             success: true,
             errors: [],
-            data: await this.getOneCategoyById(body.id)
+            data: await this.getOneStockById(body.id)
         };
     }
 
@@ -113,6 +115,23 @@ export class StocksController {
         let ids = Object.values(query.id).map(id => parseInt(<any>id));
         await repo(StockEntity).delete(ids);
         return { success: true };
+    }
+
+    @Get('many/by-status/:status')
+    async getStocksByStatus(@Param('status') status) {
+        return await queryAll()
+            .where('stock.status = :status', { status: status })
+            .getMany();
+    }
+
+    @Get('one/frozen/:stockId')
+    async getFrozenStockByStockId(@Param('stockId') stockId: number) {
+        let freeStock = await this.getOneStockById(stockId);
+        return await queryAll()
+            .where('stock.familyId = :familyId', { familyId: freeStock.familyId.id })
+            .andWhere('stock.categoryId = :categoryId', { categoryId: freeStock.categoryId.id })
+            .andWhere('stock.status = :status', { status: 'frozen' })
+            .getOne();
     }
 }
 
@@ -123,7 +142,7 @@ async function validateStock(stock) {
     if (stockDbCode && stockDbCode.id != stock.id)
         errors.push("Code existe déjà");
 
-    let stockDbLabel = await repo(StockEntity).createQueryBuilder('stock').where("TRIM(LOWER(stock.label)) = :label", { label: `${(<string>stock.label).toLowerCase().trim()}` }).getOne();
+    let stockDbLabel = await repo(StockEntity).createQueryBuilder('stock').where("TRIM(LOWER(stock.label)) = :label", { label: `${(<string>stock.label)?.toLowerCase().trim()}` }).getOne();
     if (stockDbLabel && stockDbLabel.id != stock.id)
         errors.push("Libellé existe déjà");
 
@@ -136,5 +155,6 @@ function queryAll() {
         .leftJoinAndSelect('stock.createdBy', 'createdBy')
         .leftJoinAndSelect('stock.lastUpdateBy', 'lastUpdateBy')
         .leftJoinAndSelect('stock.categoryId', 'categoryId')
-        .select(['stock.id', 'stock.code', 'stock.label', 'stock.salePrice', 'stock.quantity', 'stock.amount', 'stock.status', 'stock.notes', 'stock.createdAt', 'stock.lastUpdateAt', 'categoryId', 'createdBy', 'lastUpdateBy']);
+        .leftJoinAndSelect('stock.familyId', 'familyId')
+        .select(['stock.id', 'stock.code', 'stock.label', 'stock.salePrice', 'stock.quantity', 'stock.amount', 'stock.status', 'stock.notes', 'stock.createdAt', 'stock.lastUpdateAt', 'categoryId', 'familyId', 'createdBy', 'lastUpdateBy']);
 }

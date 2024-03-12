@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-transfert-form',
+  selector: 'app-transfers-grid',
   template: `
     <p>
-      Transfert-form works!
+      Transfers-grid works!
     </p>
   `,
   styles: ``
 })
-export class TransfertFormComponent {
+export class TransfersGridComponent {
 
 }

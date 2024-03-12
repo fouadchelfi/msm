@@ -33,4 +33,12 @@ export class StocksHttpService {
     public deleteMany(query: string): Observable<any> {
         return this.httpClient.delete<any>(`${this.stockUrl}/many${query}`);
     }
+
+    public getStocksByStatus(status: string): Observable<any> {
+        return this.httpClient.get<any>(`${this.stockUrl}/many/by-status/${status}`);
+    }
+
+    public getFrozenStockByStockId(stockId: number): Observable<any> {
+        return this.httpClient.get<any>(`${this.stockUrl}/one/frozen/${stockId}`);
+    }
 }

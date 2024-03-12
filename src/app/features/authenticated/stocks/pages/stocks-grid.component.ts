@@ -31,9 +31,9 @@ import { appConfig } from '../../../../app.config';
                 (backdropClick)="toggleFilterMenu()">
                 <div
                   class="flex flex-col min-w-[400px] max-h-[80vh] overflow-auto bg-white shadow-lg border border-gray-200 rounded-sm">
-                    <div class="flex flex-row items-center justify-between px-4 py-1 bg-slate-100">
+                    <div class="flex flex-row items-center justify-between px-4 py-2 bg-slate-100">
                         <span>Filtrer</span>
-                        <button mat-icon-button (click)="toggleFilterMenu()">
+                        <button (click)="toggleFilterMenu()">
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
@@ -107,8 +107,13 @@ import { appConfig } from '../../../../app.config';
                   <td mat-cell *matCellDef="let row">{{ row.categoryId.label }}</td>
                 </ng-container>
       
+                <ng-container matColumnDef="familyId.label">
+                  <th mat-header-cell *matHeaderCellDef >Famille </th>
+                  <td mat-cell *matCellDef="let row">{{ row.familyId.label }}</td>
+                </ng-container>
+      
                 <ng-container matColumnDef="salePrice">
-                  <th mat-header-cell *matHeaderCellDef >Dette </th>
+                  <th mat-header-cell *matHeaderCellDef >Prix de vente </th>
                   <td mat-cell *matCellDef="let row">{{ row.salePrice }}</td>
                 </ng-container>
     
@@ -116,17 +121,12 @@ import { appConfig } from '../../../../app.config';
                   <th mat-header-cell *matHeaderCellDef >Quantité (KG)</th>
                   <td mat-cell *matCellDef="let row">{{ row.quantity }}</td>
                 </ng-container>
-    
-                <ng-container matColumnDef="amount">
-                  <th mat-header-cell *matHeaderCellDef>Montant</th>
-                  <td mat-cell *matCellDef="let row">{{ row.amount }}</td>
-                </ng-container>
 
                 <ng-container matColumnDef="status">
                   <th mat-header-cell *matHeaderCellDef>Étate</th>
                   <td mat-cell *matCellDef="let row">
-                      <div *ngIf="row.status == 'free'" class="px-2 py-1 rounded w-fit bg-orange-100 text-orange-500">Free</div>
-                      <div *ngIf="row.status == 'frozen'" class="px-2 py-1 rounded w-fit bg-blue-100 text-blue-500">Congelée</div>
+                      <div *ngIf="row.status == 'free'" class="px-2 py-1 rounded font-medium w-fit bg-orange-100 text-orange-500">Free</div>
+                      <div *ngIf="row.status == 'frozen'" class="px-2 py-1 rounded font-medium w-fit bg-blue-100 text-blue-500">Congelée</div>
                   </td>
                 </ng-container>
 
@@ -167,7 +167,7 @@ import { appConfig } from '../../../../app.config';
 export class StocksGridComponent implements OnInit {
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['select', 'code', 'label', 'categoryId.label', 'salePrice', 'quantity', 'amount', 'status', 'actions'];
+  displayedColumns: string[] = ['select', 'code', 'label', 'familyId.label', 'categoryId.label', 'status', 'salePrice', 'quantity', 'actions'];
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;

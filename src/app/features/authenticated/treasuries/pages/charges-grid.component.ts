@@ -31,9 +31,9 @@ import { appConfig } from '../../../../app.config';
                 (backdropClick)="toggleFilterMenu()">
                 <div
                   class="flex flex-col min-w-[400px] max-h-[80vh] overflow-auto bg-white shadow-lg border border-gray-200 rounded-sm">
-                    <div class="flex flex-row items-center justify-between px-4 py-1 bg-slate-100">
+                    <div class="flex flex-row items-center justify-between px-4 py-2 bg-slate-100">
                         <span>Filtrer</span>
-                        <button mat-icon-button (click)="toggleFilterMenu()">
+                        <button (click)="toggleFilterMenu()">
                             <i class="ri-close-line"></i>
                         </button>
                     </div>

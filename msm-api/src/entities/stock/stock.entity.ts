@@ -1,6 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
 import { CategoryEntity } from "./category.entity";
+import { FamilyEntity } from "./family.entity";
+import { QuantityCorrectionEntity } from "./quantity-correction.entity";
+import { StatusTransferEntity } from "./status-transfer.entity";
+import { PurchaseItemEntity } from "../purchases";
+import { SaleItemEntity } from "../sales";
+import { DistributionItemEntity, PremiseReturnItemEntity } from "../distributions";
+import { BatchStockItemEntity } from "../production";
 
 @Entity({ name: 'stocks' })
 export class StockEntity {
@@ -32,6 +39,10 @@ export class StockEntity {
     @JoinColumn({ name: "categoryId" })
     categoryId: CategoryEntity;
 
+    @ManyToOne(() => FamilyEntity, family => family.stocks)
+    @JoinColumn({ name: "familyId" })
+    familyId: FamilyEntity;
+
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
@@ -47,4 +58,33 @@ export class StockEntity {
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
+
+    //Quantity-correction
+    @OneToMany(() => QuantityCorrectionEntity, quantityCorrection => quantityCorrection.stockId)
+    quantityCorrections: QuantityCorrectionEntity[];
+    //End Quantity-correction
+
+    //Status-transfer
+    @OneToMany(() => StatusTransferEntity, statusTransfer => statusTransfer.freeStockId)
+    freeStocks: StatusTransferEntity[];
+
+    @OneToMany(() => StatusTransferEntity, statusTransfer => statusTransfer.frozenStockId)
+    frozenStocks: StatusTransferEntity[];
+    //End Status-transfer
+
+
+    @OneToMany(() => PurchaseItemEntity, item => item.stockId)
+    purchaseItems: PurchaseItemEntity[];
+
+    @OneToMany(() => SaleItemEntity, item => item.stockId)
+    saleItems: SaleItemEntity[];
+
+    @OneToMany(() => DistributionItemEntity, item => item.stockId)
+    distributionItems: DistributionItemEntity[];
+
+    @OneToMany(() => PremiseReturnItemEntity, item => item.stockId)
+    premiseReturnItems: PremiseReturnItemEntity[];
+
+    @OneToMany(() => BatchStockItemEntity, item => item.stockId)
+    batchStockItems: BatchStockItemEntity[];
 }    

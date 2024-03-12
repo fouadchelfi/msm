@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
 import { StockEntity } from "./stock.entity";
+import { FenceEntity } from "../treasuries";
 
 @Entity({ name: 'categories' })
 export class CategoryEntity {
@@ -15,9 +16,6 @@ export class CategoryEntity {
 
     @Column({ nullable: true })
     notes: string;
-
-    @OneToMany(() => StockEntity, stock => stock.categoryId)
-    stocks: StockEntity[];
 
     //#region Creation Area
     @Column({ update: false })
@@ -34,4 +32,10 @@ export class CategoryEntity {
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
+
+    @OneToMany(() => StockEntity, stock => stock.categoryId)
+    stocks: StockEntity[];
+
+    @OneToMany(() => FenceEntity, stock => stock.categoryId)
+    fences: StockEntity[];
 }    

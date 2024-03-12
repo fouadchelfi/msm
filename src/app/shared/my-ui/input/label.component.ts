@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 @Component({
     selector: 'my-label',
     template: `
-        <label [for]="for">
+        <label [for]="for" class="text-sm">
             <ng-content></ng-content>
             <span *ngIf="required" class="font-medium text-red-600 mx-1">*</span>
         </label>

@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
+import { PurchaseEntity } from "./purchase.entity";
 
 @Entity({ name: 'suppliers' })
 export class SupplierEntity {
@@ -60,4 +61,7 @@ export class SupplierEntity {
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion
+
+    @OneToMany(() => PurchaseEntity, purchase => purchase.supplierId)
+    purchases: PurchaseEntity[];
 }    

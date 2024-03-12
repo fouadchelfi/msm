@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MoneySourcesGridComponent } from './pages/money-sources-grid.component';
-import { ChargeNaturesGridComponent, ChargesGridComponent, FencesGridComponent, LosseNaturesGridComponent, LossesGridComponent, TransfertsGridComponent } from './pages';
+import { ChargeNaturesGridComponent, ChargesGridComponent, FencesGridComponent, LosseNaturesGridComponent, LossesGridComponent, TransfersGridComponent } from './pages';
 
 const routes: Routes = [
   { path: '', redirectTo: 'money-sources', pathMatch: 'full' },
@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'losses', component: LossesGridComponent },
   { path: 'losse-natures', component: LosseNaturesGridComponent },
   { path: 'fences', component: FencesGridComponent },
-  { path: 'transferts', component: TransfertsGridComponent },
+  { path: 'transfers', component: TransfersGridComponent },
 ];
 
 @NgModule({
