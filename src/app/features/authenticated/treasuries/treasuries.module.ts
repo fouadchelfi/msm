@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { TreasuriesRoutingModule } from './treasuries-routing.module';
 import { SharedModule } from '../../../shared';
-import { ChargeFormComponent, ChargeNatureFormComponent, ChargeNaturesGridComponent, ChargesGridComponent, LosseFormComponent, LosseNatureFormComponent, LosseNaturesGridComponent, LossesGridComponent, MoneySourceFormComponent, MoneySourcesGridComponent, TransferFormComponent, TransfersGridComponent } from './pages';
+import { ChargeFormComponent, ChargeNatureFormComponent, ChargeNaturesGridComponent, ChargesGridComponent, LosseFormComponent, LosseNatureFormComponent, LosseNaturesGridComponent, LossesGridComponent, MoneySourceFormComponent, MoneySourceTransferFormComponent, MoneySourceTransfersGridComponent, MoneySourcesGridComponent } from './pages';
 
 const COMPONENTS = [
   ChargeNatureFormComponent,
@@ -12,8 +12,8 @@ const COMPONENTS = [
   ChargeFormComponent,
   LosseFormComponent,
   LossesGridComponent,
-  TransfersGridComponent,
-  TransferFormComponent,
+  MoneySourceTransfersGridComponent,
+  MoneySourceTransferFormComponent,
   MoneySourcesGridComponent,
   MoneySourceFormComponent,
 ];

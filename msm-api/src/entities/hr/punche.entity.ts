@@ -14,14 +14,11 @@ export class PuncheEntity {
     @JoinColumn({ name: "employeeId" })
     employeeId: EmployeeEntity;
 
-    @Column({ type: 'date' })
-    date: Date;
-
     @Column({ type: 'real' })
     hourlyCoefficient: number;
 
-    @Column()
-    paymentStatus: string;
+    @Column({ type: 'date' })
+    date: Date;
 
     @Column({ nullable: true })
     notes: string;

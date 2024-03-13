@@ -74,6 +74,11 @@ export class UserEntity {
     @OneToMany(() => EmployeeEntity, entity => entity.lastUpdateBy)
     updatedEmployees: EmployeeEntity[];
 
+    @OneToMany(() => MoneySourceEntity, entity => entity.createdBy)
+    createdMoneySourceTransfers: MoneySourceEntity[];
+    @OneToMany(() => MoneySourceEntity, entity => entity.lastUpdateBy)
+    updatedMoneySourceTransfers: MoneySourceEntity[];
+
     @OneToMany(() => StockEntity, entity => entity.createdBy)
     createdStocks: StockEntity[];
     @OneToMany(() => StockEntity, entity => entity.lastUpdateBy)
