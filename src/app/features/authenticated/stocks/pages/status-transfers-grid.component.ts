@@ -157,7 +157,7 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                 </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" class="!bg-gray-50"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer" (dblclick)="newItem('edit', row.id)">
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer">
                 </tr>
               </table>
               <div class="flex flex-row items-center space-x-1 p-4" *ngIf="dataSource.data.length == 0">
