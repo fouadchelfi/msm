@@ -5,18 +5,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
-import { MoneySourcesHttpService, TimeZoneService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
+import { MoneySourcesHttpService, TraceabilityService, isEmpty, isNotEmpty, MoneySourceTransfersHttpService } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { appConfig } from '../../../../app.config';
-import { MoneySourceFormComponent } from './money-source-form.component';
+import { MoneySourceTransferFormComponent } from './money-source-transfer-form.component';
 
 @Component({
-  selector: 'app-money-sources-grid',
+  selector: 'app-money-source-transfers-grid',
   template: `
         <div class="flex flex-1 flex-col p-3 bg-secondary-50 gap-y-2">
           <div class="flex flex-col">
-            <h3>Trésoreries / Sources</h3>
+            <h3>Trésoreries / Transferts d'argent</h3>
           </div>
           <div class="flex flex-row justify-between items-center ">
             <div class="relative">
@@ -30,21 +30,35 @@ import { MoneySourceFormComponent } from './money-source-form.component';
                 [cdkConnectedOverlayOpen]="isFilterMenuOpen" [cdkConnectedOverlayHasBackdrop]="true"
                 (backdropClick)="toggleFilterMenu()">
                 <div
-                  class="flex flex-col min-w-[400px] max-h-[80vh] overflow-auto bg-white shadow-lg border border-gray-200 rounded-sm">
+                  class="flex flex-col min-w-[500px] max-h-[80vh] overflow-auto bg-white shadow-lg border border-gray-200 rounded-sm">
                     <div class="flex flex-row items-center justify-between px-4 py-2 bg-slate-100">
                         <span>Filtrer</span>
                         <button (click)="toggleFilterMenu()">
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="sourceFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
-                      <my-form-field>
-                        <my-label>Libellé</my-label>
-                        <input #firstFocused formControlName="label" type="text" myInput >
-                        <my-error *ngIf="sourceFilterFormGroup.get('label')?.invalid && (sourceFilterFormGroup.get('label')?.dirty || sourceFilterFormGroup.get('label')?.touched) && sourceFilterFormGroup.get('label')?.getError('required')">
-                            Veuillez remplir ce champ.
-                        </my-error>
+                    <form [formGroup]="transferFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                      <div class="inline-fields">
+                        <my-form-field>
+                        <my-label>Source (Crédit)</my-label>
+                        <select formControlName="fromMoneySourceId" myInput>
+                          <ng-container *ngFor="let source of sources">
+                            <option [value]="source.id">{{ source.label }}</option>
+                          </ng-container>
+                        </select>
                       </my-form-field>
+                      <div class="mt-9">
+                        <i class="ri-arrow-right-line text-xl text-blue-500"></i>
+                      </div>
+                      <my-form-field>
+                        <my-label>Source (Débit)</my-label>
+                        <select formControlName="toMoneySourceId" myInput>
+                          <ng-container *ngFor="let source of sources">
+                            <option [value]="source.id">{{ source.label }}</option>
+                          </ng-container>
+                        </select>
+                      </my-form-field>
+                      </div>
                     </form>
                     <div class="flex flex-row justify-between p-6">
                         <button (click)="resetItemsFilterForm()" mat-stroked-button color="secondary">Réinitialiser</button>
@@ -63,7 +77,7 @@ import { MoneySourceFormComponent } from './money-source-form.component';
             <button mat-flat-button color="primary" (click)="newItem()">
               <div class="!flex !flex-row !items-center !space-x-2">
                 <i class="ri-add-line text-lg"></i>
-                <span class="text-white">Source</span>
+                <span class="text-white">Transfer</span>
               </div>
             </button>
             </div>
@@ -97,19 +111,52 @@ import { MoneySourceFormComponent } from './money-source-form.component';
                   <td mat-cell *matCellDef="let row">{{ row.code }}</td>
                 </ng-container>
                 
-                <ng-container matColumnDef="label">
-                  <th mat-header-cell *matHeaderCellDef >Libellé </th>
-                  <td mat-cell *matCellDef="let row">{{ row.label }}</td>
+                <ng-container matColumnDef="transfer">
+                  <th mat-header-cell *matHeaderCellDef >Transfert</th>
+                  <td mat-cell *matCellDef="let row">
+                    <div class="font-medium">
+                      {{ row.fromMoneySourceId.label }}
+                      <i class="ri-arrow-right-line text-sm text-blue-500"></i>
+                      {{ row.toMoneySourceId.label }}
+                    </div>
+                  </td>
                 </ng-container>
-                
-                <ng-container matColumnDef="nature">
-                  <th mat-header-cell *matHeaderCellDef >Nature </th>
-                  <td mat-cell *matCellDef="let row">{{ row.nature|mySourceNature }}</td>
-                </ng-container>
-                
+         
                 <ng-container matColumnDef="amount">
-                  <th mat-header-cell *matHeaderCellDef >Montant </th>
+                  <th mat-header-cell *matHeaderCellDef >Montant</th>
                   <td mat-cell *matCellDef="let row">{{ row.amount }}</td>
+                </ng-container>
+      
+                <ng-container matColumnDef="fromMoneySourceAmount">
+                  <th mat-header-cell *matHeaderCellDef >Source (Crédit) </th>
+                  <td mat-cell *matCellDef="let row">
+                    <div class="font-medium">
+                      {{ row.oldFromMoneySourceAmount }}
+                      <i class="ri-arrow-right-line text-sm text-blue-500"></i>
+                      {{ row.newFromMoneySourceAmount }}
+                    </div>
+                  </td>
+                </ng-container>
+      
+                <ng-container matColumnDef="toMoneySourceAmount">
+                  <th mat-header-cell *matHeaderCellDef >Source (Débit)</th>
+                  <td mat-cell *matCellDef="let row">
+                    <div class="font-medium">
+                      {{ row.oldToMoneySourceAmount }}
+                      <i class="ri-arrow-right-line text-sm text-blue-500"></i>
+                      {{ row.newToMoneySourceAmount }}
+                    </div>
+                  </td>
+                </ng-container>
+      
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef >Date </th>
+                  <td mat-cell *matCellDef="let row">{{ row.date|date:'dd/MM/yyyy' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="notes">
+                  <th mat-header-cell *matHeaderCellDef >Notes</th>
+                  <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
                 </ng-container>
 
                 <!-- Actions Column -->
@@ -118,14 +165,13 @@ import { MoneySourceFormComponent } from './money-source-form.component';
                   <td mat-cell *matCellDef="let item, let i = index">
                   <div class="flex flex-row items-center space-x-2">
                     <button mat-icon-button [matTooltip]="getTracabilityInfo(item)"><i class="ri-information-line"></i></button>
-                    <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button>
-                    <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button>
+                    <!-- <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button> -->
+                    <!-- <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button> -->
                   </div>    
                 </td>
                 </ng-container>
-
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" class="!bg-gray-50"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer" (dblclick)="newItem('edit', row.id)">
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer">
                 </tr>
               </table>
               <div class="flex flex-row items-center space-x-1 p-4" *ngIf="dataSource.data.length == 0">
@@ -139,27 +185,27 @@ import { MoneySourceFormComponent } from './money-source-form.component';
     `,
   encapsulation: ViewEncapsulation.None,
   styles: [`
-      app-money-sources-grid { display: flex; flex: 1; }
+      app-money-source-transfers-grid { display: flex; flex: 1; }
     `],
 })
-export class MoneySourcesGridComponent implements OnInit {
+export class MoneySourceTransfersGridComponent implements OnInit {
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['select', 'code', 'label', 'nature', 'amount', 'actions'];
+  displayedColumns: string[] = ['select', 'code', 'transfer', 'amount', 'fromMoneySourceAmount', 'toMoneySourceAmount', 'date', 'actions'];
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
   isFilterMenuOpen: boolean = false;
-  sourceFilterFormGroup: FormGroup;
   refreshGrid = new EventEmitter();
-  sourceFilterChanged = new EventEmitter();
+  stockFilterChanged = new EventEmitter();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('firstFocused') firstFocused: ElementRef;
   pageSize = appConfig.pagination.pageSize;
-  sources: any[] = [];
   selection = new SelectionModel<any>(true, []);
   showFirstLastButtons: boolean = appConfig.pagination.showFirstLastButtons;
+  transferFilterFormGroup: FormGroup;
+  sources: any[] = [];
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -192,13 +238,18 @@ export class MoneySourcesGridComponent implements OnInit {
     private matDialog: MatDialog,
     private traceability: TraceabilityService,
     private sourcesHttp: MoneySourcesHttpService,
+    private moneySourceTransfersHttp: MoneySourceTransfersHttpService,
   ) {
-    this.sourceFilterFormGroup = this.fb.group({
-      'label': [''],
+    this.transferFilterFormGroup = this.fb.group({
+      'fromMoneySourceId': [undefined],
+      'toMoneySourceId': [undefined],
     });
   }
-  ngOnInit() { }
-
+  ngOnInit() {
+    this.sourcesHttp.getAll().subscribe({
+      next: sources => this.sources = sources
+    });
+  }
 
   ngAfterViewInit() {
     // If the user change the sort order, reset back to the first page.
@@ -206,12 +257,12 @@ export class MoneySourcesGridComponent implements OnInit {
       next: () => this.paginator.pageIndex = 0
     });
 
-    merge(this.sort.sortChange, this.paginator.page, this.refreshGrid, this.sourceFilterChanged)
+    merge(this.sort.sortChange, this.paginator.page, this.refreshGrid, this.stockFilterChanged)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.sourcesHttp
+          return this.moneySourceTransfersHttp
             .paginate(this.getFilterQuery)
             .pipe(catchError(() => observableOf(null)));
         }),
@@ -230,11 +281,10 @@ export class MoneySourcesGridComponent implements OnInit {
   }
 
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
-    this.matDialog.open(MoneySourceFormComponent, {
+    this.matDialog.open(MoneySourceTransferFormComponent, {
       data: { id: id, mode: action },
-      minWidth: '512px',
+      minWidth: '1000px',
       disableClose: true,
-      minHeight: '90vh',
       autoFocus: false,
     }).afterClosed().subscribe({
       next: res => this.refreshGrid.emit()
@@ -246,6 +296,7 @@ export class MoneySourcesGridComponent implements OnInit {
       this.deleteMany([item]);
     }
   }
+
   deleteSeleted(): void {
     if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany(this.selection.selected);
@@ -253,14 +304,15 @@ export class MoneySourcesGridComponent implements OnInit {
   }
 
   filterItems(): void {
-    this.sourceFilterChanged.emit();
+    this.stockFilterChanged.emit();
   }
 
   resetItemsFilterForm(): void {
-    this.sourceFilterFormGroup.reset({
-      'label': '',
+    this.transferFilterFormGroup.reset({
+      'fromMoneySourceId': undefined,
+      'toMoneySourceId': undefined,
     });
-    this.sourceFilterChanged.emit();
+    this.stockFilterChanged.emit();
   }
 
   toggleFilterMenu(): void {
@@ -284,7 +336,7 @@ export class MoneySourcesGridComponent implements OnInit {
     items.forEach(item => { urlParams.append('id', item.id.toString()) });
     let query = `?${urlParams.toString()}`;
 
-    this.sourcesHttp.deleteMany(query).subscribe({
+    this.moneySourceTransfersHttp.deleteMany(query).subscribe({
       next: (res: any) => {
         if (res.success) {
           this.snackBar.open("Opération réussie", '✔', { duration: 7000 });
@@ -301,13 +353,15 @@ export class MoneySourcesGridComponent implements OnInit {
     const qry: any = {
       pageIndex: this.paginator.pageIndex,
       pageSize: this.pageSize,
-      label: this.sourceFilterFormGroup.get('label')?.value,
+      fromMoneySourceId: this.transferFilterFormGroup.get('fromMoneySourceId')?.value,
+      toMoneySourceId: this.transferFilterFormGroup.get('toMoneySourceId')?.value,
     }
 
     if (isNotEmpty(qry.pageIndex)) urlParams.append('pageIndex', qry.pageIndex.toString());
     if (isNotEmpty(qry.pageSize)) urlParams.append('pageSize', qry.pageSize.toString());
     urlParams.append('order', 'DESC');
-    if (isNotEmpty(qry.label)) urlParams.append('label', qry.label);
+    if (isNotEmpty(qry.fromMoneySourceId)) urlParams.append('fromMoneySourceId', qry.fromMoneySourceId);
+    if (isNotEmpty(qry.toMoneySourceId)) urlParams.append('toMoneySourceId', qry.toMoneySourceId);
 
     return `?${urlParams.toString()}`;
   }

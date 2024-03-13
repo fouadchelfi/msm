@@ -10,7 +10,8 @@ import { ALGERIA_PROVINCES, SuppliersHttpService } from '../../../../shared';
       <div class="dialog-container">
         <div class="dialog-header">
           <div class="text-lg font-medium">
-            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} fournisseur
+            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }}
+            fournisseur
           </div>
           <button (click)="closeDialog()">
             <i class="ri-close-line text-xl"></i>
@@ -74,11 +75,12 @@ import { ALGERIA_PROVINCES, SuppliersHttpService } from '../../../../shared';
                 <input formControlName="fax" type="text" myInput>
               </my-form-field>
             </div>
-            <my-form-field>
-              <my-label>Code postal</my-label>
-              <input formControlName="postalCode" type="text" myInput>
-            </my-form-field>
+
             <div class="inline-fields">
+              <my-form-field>
+                <my-label>Code postal</my-label>
+                <input formControlName="postalCode" type="text" myInput>
+              </my-form-field>
               <my-form-field>
                 <my-label>Email</my-label>
                 <input formControlName="email" type="email" myInput>

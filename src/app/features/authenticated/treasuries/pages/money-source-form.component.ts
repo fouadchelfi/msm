@@ -33,19 +33,19 @@ import { MoneySourcesHttpService } from '../../../../shared';
                 Veuillez remplir ce champ.
               </my-error>
             </my-form-field>
-
             <my-form-field>
-                <my-label [required]="true">nature</my-label>
+                <my-label [required]="true">Nature</my-label>
                 <select formControlName="nature" myInput>
                     <option value="coffer">Coffre</option>
                     <option value="crate">Caisse</option>
+                    <option value="bank">Banque</option>
+                    <option value="poste">Poste</option>
                 </select>
                 <my-error
                   *ngIf="sourceFormGroup.get('nature')?.invalid && (sourceFormGroup.get('nature')?.dirty || sourceFormGroup.get('nature')?.touched) && sourceFormGroup.get('nature')?.getError('required')">
                   Veuillez remplir ce champ.
                 </my-error>
               </my-form-field>
-
             <my-form-field>
               <my-label [required]="true">Montant</my-label>
               <input formControlName="amount" type="number" myInput>

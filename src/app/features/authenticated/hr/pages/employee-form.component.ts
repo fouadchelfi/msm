@@ -10,7 +10,8 @@ import { ALGERIA_PROVINCES, EmployeesHttpService } from '../../../../shared';
         <div class="dialog-container">
           <div class="dialog-header">
             <div class="text-lg font-medium">
-              {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} employée
+              {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }}
+              employée
             </div>
             <button (click)="closeDialog()">
               <i class="ri-close-line text-xl"></i>
@@ -54,7 +55,7 @@ import { ALGERIA_PROVINCES, EmployeesHttpService } from '../../../../shared';
               <div class="inline-fields">
                 <my-form-field>
                   <my-label>Wilaya</my-label>
-                  <select formControlName="province"  myInput>
+                  <select formControlName="province" myInput>
                     <ng-container *ngFor="let province of provinces">
                       <option [value]="province.code">{{ province.name }}</option>
                     </ng-container>
@@ -83,11 +84,11 @@ import { ALGERIA_PROVINCES, EmployeesHttpService } from '../../../../shared';
                   <input formControlName="fax" type="text" myInput>
                 </my-form-field>
               </div>
-              <my-form-field>
-                <my-label>Code postal</my-label>
-                <input formControlName="postalCode" type="text" myInput>
-              </my-form-field>
               <div class="inline-fields">
+                <my-form-field>
+                  <my-label>Code postal</my-label>
+                  <input formControlName="postalCode" type="text" myInput>
+                </my-form-field>
                 <my-form-field>
                   <my-label>Email</my-label>
                   <input formControlName="email" type="email" myInput>

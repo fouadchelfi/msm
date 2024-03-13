@@ -344,7 +344,6 @@ export class DbService {
                 "employeeId" INT,
                 date DATE,
                 "hourlyCoefficient" REAL,
-                "paymentStatus" VARCHAR(15),
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
                 "createdBy" INT,

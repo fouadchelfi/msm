@@ -100,12 +100,12 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                 
                 <ng-container matColumnDef="freeStockId.label">
                   <th mat-header-cell *matHeaderCellDef >Stock (Free) </th>
-                  <td mat-cell *matCellDef="let row">{{ row.freeStockId.label|myLimitTextLength:30 }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.freeStockId?.label|myLimitTextLength:30 }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="frozenStockId.label">
                   <th mat-header-cell *matHeaderCellDef >Stock (Congelé) </th>
-                  <td mat-cell *matCellDef="let row">{{ row.frozenStockId.label|myLimitTextLength:30 }}</td>
+                  <td mat-cell *matCellDef="let row">{{ row.frozenStockId?.label|myLimitTextLength:30 }}</td>
                 </ng-container>
       
                 <ng-container matColumnDef="transferedQuantity">
@@ -151,13 +151,13 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                   <td mat-cell *matCellDef="let item, let i = index">
                   <div class="flex flex-row items-center space-x-2">
                     <button mat-icon-button [matTooltip]="getTracabilityInfo(item)"><i class="ri-information-line"></i></button>
-                    <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button>
+                    <!-- <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button> -->
                     <!-- <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button> -->
                   </div>    
                 </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" class="!bg-gray-50"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer" (dblclick)="newItem('edit', row.id)">
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer">
                 </tr>
               </table>
               <div class="flex flex-row items-center space-x-1 p-4" *ngIf="dataSource.data.length == 0">
@@ -219,12 +219,12 @@ export class StatusTransfersGridComponent implements OnInit {
   }
 
   constructor(
-    private stocksHttp: StocksHttpService,
-    private statusTransfersHttp: StatusTransfersHttpService,
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
     private matDialog: MatDialog,
     private traceability: TraceabilityService,
+    private stocksHttp: StocksHttpService,
+    private statusTransfersHttp: StatusTransfersHttpService,
   ) {
     this.stockFilterFormGroup = this.fb.group({
       'freeStockId': [undefined],

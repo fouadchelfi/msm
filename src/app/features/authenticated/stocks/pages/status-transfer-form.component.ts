@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild, ViewEn
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StatusTransfersHttpService, StocksHttpService, currentDateForHtmlField, dateForHtmlField, isEmpty, isNotEmpty } from '../../../../shared';
+import { StatusTransfersHttpService, StocksHttpService, currentDateForHtmlField, dateForHtmlField, isEmpty, isNotEmpty, parseFloatOrZero } from '../../../../shared';
 
 @Component({
   selector: 'app-status-transfer-form',
@@ -321,10 +321,11 @@ export class StatusTransferFormComponent implements OnInit, AfterViewInit {
     });
     this.statusTransferFormGroup.get('transferedQuantity')?.valueChanges.subscribe({
       next: transferedQuantity => {
-        let oldQty = this.statusTransferFormGroup.get('oldFreeQuantity')?.value;
-        let newQty = this.statusTransferFormGroup.get('oldFrozenQuantity')?.value;
-        this.statusTransferFormGroup.get('newFreeQuantity')?.setValue(oldQty - transferedQuantity);
-        this.statusTransferFormGroup.get('newFrozenQuantity')?.setValue(newQty + transferedQuantity);
+        let qty = parseFloatOrZero(transferedQuantity);
+        let oldQty = parseFloatOrZero(this.statusTransferFormGroup.get('oldFreeQuantity')?.value);
+        let newQty = parseFloatOrZero(this.statusTransferFormGroup.get('oldFrozenQuantity')?.value);
+        this.statusTransferFormGroup.get('newFreeQuantity')?.setValue(oldQty - qty);
+        this.statusTransferFormGroup.get('newFrozenQuantity')?.setValue(newQty + qty);
       }
     });
 

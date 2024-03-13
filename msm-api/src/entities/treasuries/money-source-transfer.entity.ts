@@ -18,10 +18,6 @@ export class MoneySourceTransferEntity {
     @JoinColumn({ name: "toMoneySourceId" })
     toMoneySourceId: MoneySourceEntity;
 
-    @ManyToOne(() => MoneySourceEntity, moneySource => moneySource.employeeAccounts)
-    @JoinColumn({ name: "moneySourceId" })
-    moneySource: MoneySourceEntity;
-
     @Column({ default: 0, type: 'decimal' })
     amount: number;
 
@@ -46,7 +42,7 @@ export class MoneySourceTransferEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdEmployees)
+    @ManyToOne(() => UserEntity, user => user.createdMoneySourceTransfers)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -54,7 +50,7 @@ export class MoneySourceTransferEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedEmployees)
+    @ManyToOne(() => UserEntity, user => user.updatedMoneySourceTransfers)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion

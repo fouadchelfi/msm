@@ -129,13 +129,13 @@ import { QuantityCorrectionFormComponent } from './quantity-correction-form.comp
                   <td mat-cell *matCellDef="let item, let i = index">
                   <div class="flex flex-row items-center space-x-2">
                     <button mat-icon-button [matTooltip]="getTracabilityInfo(item)"><i class="ri-information-line"></i></button>
-                    <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button>
-                    <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button>
+                    <!-- <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button> -->
+                    <!-- <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button> -->
                   </div>    
                 </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" class="!bg-gray-50"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer" (dblclick)="newItem('edit', row.id)">
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer">
                 </tr>
               </table>
               <div class="flex flex-row items-center space-x-1 p-4" *ngIf="dataSource.data.length == 0">
