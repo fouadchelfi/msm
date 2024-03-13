@@ -25,7 +25,7 @@ export class StatusTransfersController {
         let result = queryAll();
 
         if (isNotEmpty(query.freeStockId))
-            result = result.where("statustransfer.freeStockId = :stockId", { stockId: `${query.stockId}` });
+            result = result.where("statustransfer.freeStockId.id = :freeStockId", { freeStockId: `${query.freeStockId}` });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
             result = result.where('statustransfer.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
