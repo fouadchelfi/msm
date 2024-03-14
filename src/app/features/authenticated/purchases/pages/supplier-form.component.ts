@@ -247,13 +247,13 @@ export class SupplierFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.supplierFormGroup.value,
+      ...this.supplierFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.supplierFormGroup.value,
+      ...this.supplierFormGroup.getRawValue(),
     };
   }
 

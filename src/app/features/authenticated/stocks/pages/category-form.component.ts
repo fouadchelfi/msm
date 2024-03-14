@@ -150,13 +150,13 @@ export class CategoryFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.categoryFormGroup.value,
+      ...this.categoryFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.categoryFormGroup.value,
+      ...this.categoryFormGroup.getRawValue(),
     };
   }
 

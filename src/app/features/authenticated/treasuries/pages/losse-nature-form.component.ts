@@ -151,13 +151,13 @@ export class LosseNatureFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.losseNatureFormGroup.value,
+      ...this.losseNatureFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.losseNatureFormGroup.value,
+      ...this.losseNatureFormGroup.getRawValue(),
     };
   }
 

@@ -150,13 +150,13 @@ export class ChargeNatureFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.chargeNatureFormGroup.value,
+      ...this.chargeNatureFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.chargeNatureFormGroup.value,
+      ...this.chargeNatureFormGroup.getRawValue(),
     };
   }
 

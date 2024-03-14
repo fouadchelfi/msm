@@ -261,13 +261,13 @@ export class StockFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.stockFormGroup.value,
+      ...this.stockFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.stockFormGroup.value,
+      ...this.stockFormGroup.getRawValue(),
     };
   }
 

@@ -36,7 +36,7 @@ import { ALGERIA_PROVINCES, EmployeesHttpService } from '../../../../shared';
                 </my-form-field>
                 <my-form-field>
                   <my-label [required]="true">Dette</my-label>
-                  <input formControlName="debt" type="number" myInput>
+                  <input formControlName="debt" type="number" myInput myCalculableField>
                   <my-error
                     *ngIf="employeeFormGroup.get('debt')?.invalid && (employeeFormGroup.get('debt')?.dirty || employeeFormGroup.get('debt')?.touched) && employeeFormGroup.get('debt')?.getError('required')">
                     Veuillez remplir ce champ.
@@ -132,7 +132,7 @@ export class EmployeeFormComponent implements OnInit, AfterViewInit {
       'code': [''],
       'name': ['', [Validators.required]],
       'salary': [0, [Validators.required]],
-      'debt': [0, [Validators.required]],
+      'debt': [{ value: 0, disabled: true }, [Validators.required]],
       'postalCode': [''],
       'province': [''],
       'city': [''],
@@ -259,13 +259,13 @@ export class EmployeeFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.employeeFormGroup.value,
+      ...this.employeeFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.employeeFormGroup.value,
+      ...this.employeeFormGroup.getRawValue(),
     };
   }
 

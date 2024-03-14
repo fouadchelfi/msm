@@ -31,3 +31,27 @@ body { margin: 0; color: theme('colors.color-txt'); }
     padding: 16px !important;
   }
 }
+
+/* Style pour le défilement vertical */
+::-webkit-scrollbar {
+  width: 7px; /* largeur de la barre de défilement */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 7px; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: theme('colors.primary'); 
+  border-radius: 7px; 
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1; 
+}
+
+::selection {
+  background-color: theme('colors.primary'); 
+  color: #ffffff; 
+}

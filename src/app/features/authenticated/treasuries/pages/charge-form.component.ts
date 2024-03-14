@@ -208,13 +208,13 @@ export class ChargeFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.chargeFormGroup.value,
+      ...this.chargeFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.chargeFormGroup.value,
+      ...this.chargeFormGroup.getRawValue(),
     };
   }
 

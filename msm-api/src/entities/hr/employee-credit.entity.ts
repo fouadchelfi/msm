@@ -3,27 +3,27 @@ import { UserEntity } from "../settings";
 import { EmployeeEntity } from "./employee.entity";
 import { MoneySourceEntity } from "../treasuries";
 
-@Entity({ name: 'employee_accounts' })
-export class EmployeeAccountEntity {
+@Entity({ name: 'employee_credits' })
+export class EmployeeCreditEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ nullable: true })
     code: string;
 
-    @ManyToOne(() => EmployeeEntity, employee => employee.employeeAccounts)
+    @ManyToOne(() => EmployeeEntity, employee => employee.employeeCredits)
     @JoinColumn({ name: "employeeId" })
     employeeId: EmployeeEntity;
 
-    @ManyToOne(() => MoneySourceEntity, moneySource => moneySource.employeeAccounts)
+    @ManyToOne(() => MoneySourceEntity, moneySource => moneySource.employeeCredits)
     @JoinColumn({ name: "moneySourceId" })
-    moneySource: MoneySourceEntity;
-
-    @Column({ type: 'date' })
-    date: Date;
+    moneySourceId: MoneySourceEntity;
 
     @Column({ default: 0, type: 'decimal' })
     amount: number;
+
+    @Column({ type: 'date' })
+    date: Date;
 
     @Column({ nullable: true })
     notes: string;
@@ -31,7 +31,7 @@ export class EmployeeAccountEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdEmployees)
+    @ManyToOne(() => UserEntity, user => user.createdEmployeeCredits)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -39,7 +39,7 @@ export class EmployeeAccountEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedEmployees)
+    @ManyToOne(() => UserEntity, user => user.updatedEmployeeCredits)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion

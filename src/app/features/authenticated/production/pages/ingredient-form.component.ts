@@ -150,13 +150,13 @@ export class IngredientFormComponent implements OnInit, AfterViewInit {
 
     getCreation() {
         return {
-            ...this.ingredientFormGroup.value,
+            ...this.ingredientFormGroup.getRawValue(),
         };
     }
 
     getUpdate() {
         return {
-            ...this.ingredientFormGroup.value,
+            ...this.ingredientFormGroup.getRawValue(),
         };
     }
 

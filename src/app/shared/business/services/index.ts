@@ -15,3 +15,5 @@ export * from './premises-http.service';
 export * from './money-sources-http.service';
 export * from './money-source-transfers-http.service';
 export * from './punches-http.service';
+export * from './employee-credits-http.service';
+export * from './employee-payments-http.service';

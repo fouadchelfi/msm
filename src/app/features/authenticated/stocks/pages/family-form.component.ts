@@ -150,13 +150,13 @@ export class FamilyFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.familyFormGroup.value,
+      ...this.familyFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.familyFormGroup.value,
+      ...this.familyFormGroup.getRawValue(),
     };
   }
 

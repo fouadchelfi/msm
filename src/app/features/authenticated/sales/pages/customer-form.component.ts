@@ -247,13 +247,13 @@ export class CustomerFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.customerFormGroup.value,
+      ...this.customerFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.customerFormGroup.value,
+      ...this.customerFormGroup.getRawValue(),
     };
   }
 

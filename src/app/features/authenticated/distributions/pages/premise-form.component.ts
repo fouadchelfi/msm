@@ -150,13 +150,13 @@ export class PremiseFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.premiseFormGroup.value,
+      ...this.premiseFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.premiseFormGroup.value,
+      ...this.premiseFormGroup.getRawValue(),
     };
   }
 

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { HrRoutingModule } from './hr-routing.module';
 import { SharedModule } from '../../../shared';
-import { EmployeeFormComponent, EmployeesGridComponent, PuncheFormComponent, PunchesGridComponent } from './pages';
+import { EmployeeCreditFormComponent, EmployeeCreditsGridComponent, EmployeeFormComponent, EmployeePaymentFormComponent, EmployeePaymentsGridComponent, EmployeesGridComponent, PuncheFormComponent, PunchesGridComponent } from './pages';
 
-const COMPONENTS = [EmployeesGridComponent, EmployeeFormComponent, PuncheFormComponent, PunchesGridComponent];
+const COMPONENTS = [EmployeesGridComponent, EmployeeFormComponent, PuncheFormComponent, PunchesGridComponent, EmployeeCreditsGridComponent, EmployeeCreditFormComponent, EmployeePaymentsGridComponent, EmployeePaymentFormComponent];
 
 @NgModule({
   declarations: [COMPONENTS],

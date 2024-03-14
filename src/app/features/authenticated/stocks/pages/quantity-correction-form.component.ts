@@ -214,13 +214,13 @@ export class QuantityCorrectionFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.quantityCorrectionFormGroup.value,
+      ...this.quantityCorrectionFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.quantityCorrectionFormGroup.value,
+      ...this.quantityCorrectionFormGroup.getRawValue(),
     };
   }
 

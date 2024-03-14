@@ -208,13 +208,13 @@ export class LosseFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.losseFormGroup.value,
+      ...this.losseFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.losseFormGroup.value,
+      ...this.losseFormGroup.getRawValue(),
     };
   }
 

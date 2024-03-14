@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { PuncheEntity } from 'src/entities';
+import { AppDataSource } from 'src/data-source';
+import { EmployeeEntity, PuncheEntity } from 'src/entities';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 // @UseGuards(AuthGuard)
@@ -61,6 +62,8 @@ export class PunchesController {
             code: body.code,
             employeeId: body.employeeId,
             hourlyCoefficient: body.hourlyCoefficient,
+            salary: body.salary,
+            amount: body.amount,
             date: body.date,
             notes: body.notes,
             createdAt: currentDateTime(),
@@ -70,7 +73,19 @@ export class PunchesController {
         };
         let dbPunche = await repo(PuncheEntity).save(creation);
 
-        if (isEmpty(dbPunche.code)) await repo(PuncheEntity).update(dbPunche.id, { ...creation, code: code('SRA', dbPunche.id) });
+        if (isEmpty(dbPunche.code)) await repo(PuncheEntity).update(dbPunche.id, { ...creation, code: code('PTG', dbPunche.id) });
+
+        //Increase amount in the given employee.
+        let employee = await repo(EmployeeEntity)
+            .createQueryBuilder('employee')
+            .where('employee.id = :id', { id: creation.employeeId })
+            .getOne();
+        await AppDataSource
+            .createQueryBuilder()
+            .update(EmployeeEntity)
+            .set({ debt: parseFloat(employee.debt) + (parseFloat(employee.salary) / 26) * parseFloat(creation.hourlyCoefficient) })
+            .where("id = :id", { id: creation.employeeId })
+            .execute();
 
         return {
             success: true,
@@ -86,9 +101,11 @@ export class PunchesController {
 
         await repo(PuncheEntity).update(body.id, {
             id: body.id,
-            code: isEmpty(body.code) ? code('SRA', id) : body.code,
+            code: isEmpty(body.code) ? code('PTG', id) : body.code,
             employeeId: body.employeeId,
             hourlyCoefficient: body.hourlyCoefficient,
+            salary: body.salary,
+            amount: body.amount,
             date: body.date,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
@@ -126,5 +143,5 @@ function queryAll() {
         .leftJoinAndSelect('punche.createdBy', 'createdBy')
         .leftJoinAndSelect('punche.lastUpdateBy', 'lastUpdateBy')
         .leftJoinAndSelect('punche.employeeId', 'employeeId')
-        .select(['punche.id', 'punche.code', 'employeeId', 'punche.hourlyCoefficient', 'punche.date', 'punche.notes', 'punche.createdAt', 'punche.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
+        .select(['punche.id', 'punche.code', 'employeeId', 'punche.hourlyCoefficient', 'punche.salary', 'punche.amount', 'punche.date', 'punche.notes', 'punche.createdAt', 'punche.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
 }

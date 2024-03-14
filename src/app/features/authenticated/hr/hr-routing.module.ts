@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DebtsGridComponent, EmployeesGridComponent, PaymentsGridComponent, PunchesGridComponent } from './pages';
+import { EmployeeCreditsGridComponent, EmployeePaymentsGridComponent, EmployeesGridComponent, PunchesGridComponent } from './pages';
 
 const routes: Routes = [
   { path: '', redirectTo: 'employees', pathMatch: 'full' },
   { path: 'employees', component: EmployeesGridComponent },
-  { path: 'debts', component: DebtsGridComponent },
-  { path: 'payments', component: PaymentsGridComponent },
+  { path: 'credits', component: EmployeeCreditsGridComponent },
+  { path: 'payments', component: EmployeePaymentsGridComponent },
   { path: 'punches', component: PunchesGridComponent },
 ];
 

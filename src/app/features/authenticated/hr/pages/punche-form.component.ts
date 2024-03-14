@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EmployeesHttpService, PunchesHttpService, currentDateForHtmlField, dateForHtmlField } from '../../../../shared';
+import { EmployeesHttpService, PunchesHttpService, currentDateForHtmlField, dateForHtmlField, parseFloatOrZero } from '../../../../shared';
 
 @Component({
   selector: 'app-punche-form',
@@ -10,7 +10,7 @@ import { EmployeesHttpService, PunchesHttpService, currentDateForHtmlField, date
       <div class="dialog-container">
         <div class="dialog-header">
           <div class="text-lg font-medium">
-            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} Pointage
+            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} pointage
           </div>
           <button (click)="closeDialog()">
             <i class="ri-close-line text-xl"></i>
@@ -20,31 +20,51 @@ import { EmployeesHttpService, PunchesHttpService, currentDateForHtmlField, date
         <mat-dialog-content>
           <form [formGroup]="puncheFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
             <input formControlName="id" type="number" class="!hidden">
-            <my-form-field>
+     
+            <div class="inline-fields">
+              <my-form-field>
               <my-label>Code</my-label>
               <input #firstFocused formControlName="code" type="text" myInput>
             </my-form-field>
-            <my-form-field>
-              <my-label>Employé</my-label>
-              <select formControlName="employeeId" myInput>
-                <ng-container *ngFor="let employee of employees">
-                  <option [value]="employee.id">{{ employee.name }}</option>
-                </ng-container>
-              </select>
-              <my-error
-                *ngIf="puncheFormGroup.get('employeeId')?.invalid && (puncheFormGroup.get('employeeId')?.dirty || puncheFormGroup.get('employeeId')?.touched) && puncheFormGroup.get('employeeId')?.getError('required')">
-                Veuillez remplir ce champ.
-              </my-error>
-            </my-form-field>
-            <my-form-field>
-              <my-label [required]="true">Coefficient (Par Jour)</my-label>
-              <input formControlName="hourlyCoefficient" type="number" myInput>
-              <my-error
-                *ngIf="puncheFormGroup.get('hourlyCoefficient')?.invalid && (puncheFormGroup.get('hourlyCoefficient')?.dirty || puncheFormGroup.get('hourlyCoefficient')?.touched) && puncheFormGroup.get('hourlyCoefficient')?.getError('required')">
-                Veuillez remplir ce champ.
-              </my-error>
-            </my-form-field>
-
+              <my-form-field>
+                <my-label>Employé</my-label>
+                <select formControlName="employeeId" myInput>
+                  <ng-container *ngFor="let employee of employees">
+                    <option [value]="employee.id">{{ employee.name }}</option>
+                  </ng-container>
+                </select>
+                <my-error
+                  *ngIf="puncheFormGroup.get('employeeId')?.invalid && (puncheFormGroup.get('employeeId')?.dirty || puncheFormGroup.get('employeeId')?.touched) && puncheFormGroup.get('employeeId')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
+              </my-form-field>
+            </div>
+            <div class="inline-fields">
+              <my-form-field>
+                <my-label [required]="true">Salaire</my-label>
+                <input formControlName="salary" type="number" myInput myCalculableField>
+                <my-error
+                  *ngIf="puncheFormGroup.get('salary')?.invalid && (puncheFormGroup.get('salary')?.dirty || puncheFormGroup.get('salary')?.touched) && puncheFormGroup.get('salary')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
+              </my-form-field>
+              <my-form-field>
+                <my-label [required]="true">Coefficient (Par Jour)</my-label>
+                <input formControlName="hourlyCoefficient" type="number" myInput>
+                <my-error
+                  *ngIf="puncheFormGroup.get('hourlyCoefficient')?.invalid && (puncheFormGroup.get('hourlyCoefficient')?.dirty || puncheFormGroup.get('hourlyCoefficient')?.touched) && puncheFormGroup.get('hourlyCoefficient')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
+              </my-form-field>
+              <my-form-field>
+                <my-label [required]="true">Montant</my-label>
+                <input formControlName="amount" type="number" myInput myCalculableField>
+                <my-error
+                  *ngIf="puncheFormGroup.get('amount')?.invalid && (puncheFormGroup.get('amount')?.dirty || puncheFormGroup.get('amount')?.touched) && puncheFormGroup.get('amount')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
+              </my-form-field>
+            </div>
             <my-form-field>
               <my-label>Notes</my-label>
               <textarea formControlName="notes" myTextarea type="text"></textarea>
@@ -79,7 +99,9 @@ export class PuncheFormComponent implements OnInit, AfterViewInit {
       'id': [undefined],
       'code': [''],
       'employeeId': [undefined, [Validators.required]],
+      'salary': [{ value: 0, disabled: true }, [Validators.required]],
       'hourlyCoefficient': [0, [Validators.required]],
+      'amount': [{ value: 0, disabled: true }, , [Validators.required]],
       'date': [currentDateForHtmlField(), [Validators.required]],
       'notes': [''],
     });
@@ -95,6 +117,7 @@ export class PuncheFormComponent implements OnInit, AfterViewInit {
         }
       }
     });
+    this.handleFormChanged();
   }
 
   loadData(id: number) {
@@ -105,7 +128,9 @@ export class PuncheFormComponent implements OnInit, AfterViewInit {
             'id': res.id,
             'code': res.code,
             'employeeId': res.employeeId.id,
+            'salary': res.salary,
             'hourlyCoefficient': res.hourlyCoefficient,
+            'amount': res.amount,
             'date': dateForHtmlField(res.date),
             'notes': res.notes,
           });
@@ -128,11 +153,12 @@ export class PuncheFormComponent implements OnInit, AfterViewInit {
             next: (res) => {
               if (res.success) {
                 this.snackBar.open("Opération réussie", '✔', { duration: 7000 });
-                this.data = {
-                  'id': res.data.id,
-                  'mode': 'edit'
-                };
-                this.loadData(res.data.id);
+                this.create();
+                // this.data = {
+                //   'id': res.data.id,
+                //   'mode': 'edit'
+                // };
+                // this.loadData(res.data.id);
               } else {
                 this.errors = res.errors;
               }
@@ -165,7 +191,9 @@ export class PuncheFormComponent implements OnInit, AfterViewInit {
       id: undefined,
       code: '',
       employeeId: undefined,
+      salary: 0,
       hourlyCoefficient: 0,
+      amount: 0,
       date: currentDateForHtmlField(),
       notes: '',
     }, { emitEvent: false });
@@ -185,17 +213,37 @@ export class PuncheFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.puncheFormGroup.value,
+      ...this.puncheFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.puncheFormGroup.value,
+      ...this.puncheFormGroup.getRawValue(),
     };
   }
 
   closeDialog() {
     this.dialogRef.close();
+  }
+
+  handleFormChanged() {
+    this.puncheFormGroup.get('employeeId')?.valueChanges.subscribe({
+      next: employeeId => {
+        this.employeesHttp.getOneById(employeeId).subscribe({
+          next: employee => {
+            this.puncheFormGroup.get('salary')?.setValue(employee.salary);
+            let hourlyCoefficient = parseFloatOrZero(this.puncheFormGroup.get('hourlyCoefficient')?.value);
+            this.puncheFormGroup.get('amount')?.setValue((parseFloatOrZero(employee.salary) / 26) * hourlyCoefficient);
+          }
+        });
+      }
+    });
+    this.puncheFormGroup.get('hourlyCoefficient')?.valueChanges.subscribe({
+      next: hourlyCoefficient => {
+        let salary = this.puncheFormGroup.get('salary')?.value;
+        this.puncheFormGroup.get('amount')?.setValue((parseFloatOrZero(salary) / 26) * parseFloatOrZero(hourlyCoefficient));
+      }
+    });
   }
 }
