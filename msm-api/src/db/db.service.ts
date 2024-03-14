@@ -336,14 +336,16 @@ export class DbService {
             );
         `);
 
-        //Pointages
+        //Punches Pointages
         await AppDataSource.manager.query(`
             CREATE TABLE IF NOT EXISTS punches (
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
                 "employeeId" INT,
                 date DATE,
+                "salary" NUMERIC(10,2),
                 "hourlyCoefficient" REAL,
+                "amount" NUMERIC(10,2),
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
                 "createdBy" INT,
@@ -355,15 +357,15 @@ export class DbService {
             );
         `);
 
-        //Employee Accounts
+        //Employee Credits (Accounts)
         await AppDataSource.manager.query(`
-            CREATE TABLE IF NOT EXISTS employee_accounts (
+            CREATE TABLE IF NOT EXISTS employee_credits (
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
                 "employeeId" INT,
                 "moneySourceId" INT,
+                amount NUMERIC(16,2),
                 date DATE,
-                "amount" NUMERIC(16,2),
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
                 "createdBy" INT,
@@ -383,6 +385,7 @@ export class DbService {
                 code VARCHAR(16),
                 "employeeId" INT,
                 "moneySourceId" INT,
+                "moneySourceAmount" NUMERIC(16,2),
                 date DATE,
                 "calculatedPayment" NUMERIC(16,2),
                 "payment" NUMERIC(16,2),
@@ -431,6 +434,7 @@ export class DbService {
                 code VARCHAR(16),
                 "totalQuantity" REAL,
                 "totalAmount" NUMERIC(16,2),
+                cost NUMERIC(16,2),
                 payment NUMERIC(16,2),
                 "moneySourceId" INT,
                 "supplierId" INT,

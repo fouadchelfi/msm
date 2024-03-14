@@ -1,11 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { StatusTransferEntity, StockEntity } from 'src/entities';
+import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 // @UseGuards(AuthGuard)
 @Controller('status-transfers')
 export class StatusTransfersController {
+
+    constructor(private manager: ManagerService) { }
 
     @Get('all')
     async getAllStatusTransfers() {
@@ -78,20 +81,9 @@ export class StatusTransfersController {
 
         if (isEmpty(dbStatusTransfer.code)) await repo(StatusTransferEntity).update(dbStatusTransfer.id, { ...creation, code: code('STT', dbStatusTransfer.id) });
 
-        //Update Stock quantity for both free & frozen.
-        await AppDataSource
-            .createQueryBuilder()
-            .update(StockEntity)
-            .set({ quantity: creation.newFreeQuantity })
-            .where("id = :id", { id: creation.freeStockId })
-            .execute();
-
-        await AppDataSource
-            .createQueryBuilder()
-            .update(StockEntity)
-            .set({ quantity: creation.newFrozenQuantity })
-            .where("id = :id", { id: creation.frozenStockId })
-            .execute();
+        //Sync database changes
+        await this.manager.updateStockQuantity(creation.freeStockId, creation.newFreeQuantity, 'replace');
+        await this.manager.updateStockQuantity(creation.frozenStockId, creation.newFrozenQuantity, 'replace');
 
         return {
             success: true,

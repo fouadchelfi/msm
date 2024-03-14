@@ -37,7 +37,7 @@ import { appConfig } from '../../../../app.config';
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="premiseFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="premiseFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <my-form-field>
                         <my-label>Libellé</my-label>
                         <input #firstFocused formControlName="label" type="text" myInput >
@@ -228,7 +228,6 @@ export class PremisesGridComponent implements OnInit {
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
     this.matDialog.open(PremiseFormComponent, {
       data: { id: id, mode: action },
-      minWidth: '512px',
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({

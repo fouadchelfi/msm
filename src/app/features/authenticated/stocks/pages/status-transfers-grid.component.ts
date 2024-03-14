@@ -37,7 +37,7 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="stockFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="stockFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <my-form-field>
                         <my-label>Stock</my-label>
                         <select formControlName="freeStockId" myInput>
@@ -269,7 +269,6 @@ export class StatusTransfersGridComponent implements OnInit {
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
     this.matDialog.open(StatusTransferFormComponent, {
       data: { id: id, mode: action },
-      minWidth: '1000px',
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({

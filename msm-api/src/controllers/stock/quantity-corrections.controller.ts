@@ -1,11 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { QuantityCorrectionEntity, StockEntity } from 'src/entities';
+import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 // @UseGuards(AuthGuard)
 @Controller('quantity-corrections')
 export class QuantityCorrectionsController {
+
+    constructor(private manager: ManagerService) { }
 
     @Get('all')
     async getAllQuantityCorrections() {
@@ -75,13 +78,8 @@ export class QuantityCorrectionsController {
 
         if (isEmpty(dbQuantityCorrection.code)) await repo(QuantityCorrectionEntity).update(dbQuantityCorrection.id, { ...creation, code: code('QTC', dbQuantityCorrection.id) });
 
-        //Update Stock quantity
-        await AppDataSource
-            .createQueryBuilder()
-            .update(StockEntity)
-            .set({ quantity: creation.newQuantity })
-            .where("id = :id", { id: creation.stockId })
-            .execute();
+        //Sync database changes
+        await this.manager.updateStockQuantity(creation.stockId, creation.newQuantity, 'replace');
 
         return {
             success: true,

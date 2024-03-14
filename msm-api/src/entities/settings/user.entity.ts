@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { CategoryEntity, FamilyEntity, StatusTransferEntity, StockEntity } from "../stock";
 import { SupplierEntity } from "../purchases";
 import { CustomerEntity, SaleEntity } from "../sales";
-import { EmployeeEntity, PuncheEntity } from "../hr";
+import { EmployeeCreditEntity, EmployeeEntity, EmployeePaymentEntity, PuncheEntity } from "../hr";
 import { BatchEntity, IngredientEntity } from "../production";
 import { MoneySourceEntity } from "../treasuries";
 import { PurchaseEntity } from "../purchases/purchase.entity";
@@ -128,4 +128,14 @@ export class UserEntity {
     createdStatusTransferStocks: StatusTransferEntity[];
     @OneToMany(() => StatusTransferEntity, entity => entity.lastUpdateBy)
     updatedStatusTransferStocks: StatusTransferEntity[];
+
+    @OneToMany(() => EmployeeCreditEntity, entity => entity.createdBy)
+    createdEmployeeCredits: EmployeeCreditEntity[];
+    @OneToMany(() => EmployeeCreditEntity, entity => entity.lastUpdateBy)
+    updatedEmployeeCredits: EmployeeCreditEntity[];
+
+    @OneToMany(() => EmployeePaymentEntity, entity => entity.createdBy)
+    createdEmployeePayments: EmployeePaymentEntity[];
+    @OneToMany(() => EmployeePaymentEntity, entity => entity.lastUpdateBy)
+    updatedEmployeePayments: EmployeePaymentEntity[];
 }

@@ -13,31 +13,31 @@ import { LosseNaturesHttpService } from '../../../../shared';
                     {{data.mode == 'creation' ? 'Nouvelle' : 'Modifier'}} nature perte 
                 </div>
                 <button (click)="closeDialog()">
-                  <i class="ri-close-line text-xl"></i>
+                  <i class="ri-close-line text-2xl"></i>
                 </button>
             </div>
         <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
 
-            <mat-dialog-content>
+            <div class="dialog-content">
                 <form [formGroup]="losseNatureFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
                     <input formControlName="id" type="number" class="!hidden">
-                    <my-form-field>
+                    <my-form-field class="w-80">
                         <my-label [required]="true">Libellé</my-label>
                         <input #firstFocused formControlName="label" type="text" myInput >
                         <my-error *ngIf="losseNatureFormGroup.get('label')?.invalid && (losseNatureFormGroup.get('label')?.dirty || losseNatureFormGroup.get('label')?.touched) && losseNatureFormGroup.get('label')?.getError('required')">
                             Veuillez remplir ce champ.
                           </my-error>
                     </my-form-field>
-                    <my-form-field>
+                    <my-form-field class="w-80">
                         <my-label>Notes</my-label>
                         <textarea formControlName="notes" myTextarea type="text"></textarea>
                       </my-form-field>
                 </form>
-            </mat-dialog-content>
-            <mat-dialog-actions>
+            </div>
+            <div class="dialog-actions">
                 <button mat-stroked-button (click)="create()">Nouvelle </button>
                 <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
-            </mat-dialog-actions>
+            </div>
         </div>
     `
 })
@@ -151,13 +151,13 @@ export class LosseNatureFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.losseNatureFormGroup.value,
+      ...this.losseNatureFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.losseNatureFormGroup.value,
+      ...this.losseNatureFormGroup.getRawValue(),
     };
   }
 

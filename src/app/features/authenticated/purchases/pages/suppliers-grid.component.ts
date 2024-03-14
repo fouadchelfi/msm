@@ -37,7 +37,7 @@ import { appConfig } from '../../../../app.config';
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="supplierFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="supplierFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <my-form-field>
                         <my-label>Nom *</my-label>
                         <input #firstFocused formControlName="name" type="text" myInput >
@@ -311,13 +311,13 @@ export class SuppliersGridComponent implements OnInit {
     const qry: any = {
       pageIndex: this.paginator.pageIndex,
       pageSize: this.pageSize,
-      label: this.supplierFilterFormGroup.get('name')?.value,
+      name: this.supplierFilterFormGroup.get('name')?.value,
     }
 
     if (isNotEmpty(qry.pageIndex)) urlParams.append('pageIndex', qry.pageIndex.toString());
     if (isNotEmpty(qry.pageSize)) urlParams.append('pageSize', qry.pageSize.toString());
     urlParams.append('order', 'DESC');
-    if (isNotEmpty(qry.label)) urlParams.append('name', qry.label);
+    if (isNotEmpty(qry.name)) urlParams.append('name', qry.name);
 
     return `?${urlParams.toString()}`;
   }

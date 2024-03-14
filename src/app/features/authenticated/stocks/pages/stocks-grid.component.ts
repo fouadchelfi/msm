@@ -37,7 +37,7 @@ import { appConfig } from '../../../../app.config';
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="stockFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="stockFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <my-form-field>
                         <my-label>Nom *</my-label>
                         <input #firstFocused formControlName="label" type="text" myInput >
@@ -125,8 +125,8 @@ import { appConfig } from '../../../../app.config';
                 <ng-container matColumnDef="status">
                   <th mat-header-cell *matHeaderCellDef>Étate</th>
                   <td mat-cell *matCellDef="let row">
-                      <div *ngIf="row.status == 'free'" class="px-2 py-1 rounded font-medium w-fit bg-orange-100 text-orange-500">Free</div>
-                      <div *ngIf="row.status == 'frozen'" class="px-2 py-1 rounded font-medium w-fit bg-blue-100 text-blue-500">Congelée</div>
+                      <div *ngIf="row.status == 'free'" class="px-2 py-1 rounded !text-xs font-medium w-fit bg-orange-100 text-orange-500">Free</div>
+                      <div *ngIf="row.status == 'frozen'" class="px-2 py-1 rounded !text-xs font-medium w-fit bg-blue-100 text-blue-500">Congelée</div>
                   </td>
                 </ng-container>
 

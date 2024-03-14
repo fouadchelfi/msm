@@ -14,8 +14,14 @@ export class PuncheEntity {
     @JoinColumn({ name: "employeeId" })
     employeeId: EmployeeEntity;
 
+    @Column({ type: 'decimal' })
+    salary: number;
+
     @Column({ type: 'real' })
     hourlyCoefficient: number;
+
+    @Column({ type: 'decimal' })
+    amount: number;
 
     @Column({ type: 'date' })
     date: Date;

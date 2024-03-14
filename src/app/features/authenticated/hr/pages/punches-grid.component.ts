@@ -37,7 +37,7 @@ import { PuncheFormComponent } from './punche-form.component';
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="sourceFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="sourceFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                     <my-form-field>
                         <my-label>Employé</my-label>
                         <select formControlName="employeeId" myInput>
@@ -64,7 +64,7 @@ import { PuncheFormComponent } from './punche-form.component';
             <button mat-flat-button color="primary" (click)="newItem()">
               <div class="!flex !flex-row !items-center !space-x-2">
                 <i class="ri-add-line text-lg"></i>
-                <span class="text-white">Source</span>
+                <span class="text-white">Pointage</span>
               </div>
             </button>
             </div>
@@ -103,9 +103,19 @@ import { PuncheFormComponent } from './punche-form.component';
                   <td mat-cell *matCellDef="let row">{{ row.employeeId.name }}</td>
                 </ng-container>
                 
+                <ng-container matColumnDef="salary">
+                  <th mat-header-cell *matHeaderCellDef >Salaire</th>
+                  <td mat-cell *matCellDef="let row">{{ row.salary }}</td>
+                </ng-container>
+                
                 <ng-container matColumnDef="hourlyCoefficient">
                   <th mat-header-cell *matHeaderCellDef >Coefficient (Par Jour)</th>
                   <td mat-cell *matCellDef="let row">{{ row.hourlyCoefficient }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef >Montant</th>
+                  <td mat-cell *matCellDef="let row">{{ row.amount }}</td>
                 </ng-container>
                 
                 <ng-container matColumnDef="date">
@@ -119,14 +129,14 @@ import { PuncheFormComponent } from './punche-form.component';
                   <td mat-cell *matCellDef="let item, let i = index">
                   <div class="flex flex-row items-center space-x-2">
                     <button mat-icon-button [matTooltip]="getTracabilityInfo(item)"><i class="ri-information-line"></i></button>
-                    <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button>
-                    <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button>
+                    <!-- <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button> -->
+                    <!-- <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button> -->
                   </div>    
                 </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" class="!bg-gray-50"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer" (dblclick)="newItem('edit', row.id)">
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer">
                 </tr>
               </table>
               <div class="flex flex-row items-center space-x-1 p-4" *ngIf="dataSource.data.length == 0">
@@ -146,7 +156,7 @@ import { PuncheFormComponent } from './punche-form.component';
 export class PunchesGridComponent implements OnInit {
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['select', 'code', 'employeeId.name', 'hourlyCoefficient', 'date', 'actions'];
+  displayedColumns: string[] = ['select', 'code', 'employeeId.name', 'salary', 'hourlyCoefficient', 'amount', 'date', 'actions'];
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
@@ -238,8 +248,8 @@ export class PunchesGridComponent implements OnInit {
     this.matDialog.open(PuncheFormComponent, {
       data: { id: id, mode: action },
       minWidth: '512px',
+      minHeight: '80vh',
       disableClose: true,
-      minHeight: '90vh',
       autoFocus: false,
     }).afterClosed().subscribe({
       next: res => this.refreshGrid.emit()

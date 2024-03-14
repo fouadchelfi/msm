@@ -37,7 +37,7 @@ import { appConfig } from '../../../../app.config';
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="ingredientFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="ingredientFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <my-form-field>
                         <my-label>Libellé *</my-label>
                         <input #firstFocused formControlName="label" type="text" myInput >

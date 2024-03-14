@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PurchasesRoutingModule } from './purchases-routing.module';
 import { SharedModule } from '../../../shared';
-import { SupplierFormComponent, SuppliersGridComponent } from './pages';
+import { PurchaseFormComponent, PurchasesGridComponent, SupplierFormComponent, SuppliersGridComponent } from './pages';
 
-const COMPONENTS = [SuppliersGridComponent, SupplierFormComponent];
+const COMPONENTS = [SuppliersGridComponent, SupplierFormComponent, PurchasesGridComponent, PurchaseFormComponent];
 
 @NgModule({
   declarations: [COMPONENTS],

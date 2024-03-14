@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoriesHttpService, FamiliesHttpService, StocksHttpService, amount } from '../../../../shared';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-stock-form',
@@ -14,11 +15,11 @@ import { CategoriesHttpService, FamiliesHttpService, StocksHttpService, amount }
             stock
           </div>
           <button (click)="closeDialog()">
-            <i class="ri-close-line text-xl"></i>
+            <i class="ri-close-line text-2xl"></i>
           </button>
         </div>
         <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
-        <mat-dialog-content>
+        <div class="dialog-content">
           <form [formGroup]="stockFormGroup" class="flex flex-col gap-y-5 mt-3">
             <input formControlName="id" type="number" class="!hidden">
             <div class="inline-fields">
@@ -103,11 +104,11 @@ import { CategoriesHttpService, FamiliesHttpService, StocksHttpService, amount }
               <textarea formControlName="notes" myTextarea type="text"></textarea>
             </my-form-field>
           </form>
-        </mat-dialog-content>
-        <mat-dialog-actions>
+        </div>
+        <div class="dialog-actions">
           <button mat-stroked-button (click)="create()">Nouveau </button>
           <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
-        </mat-dialog-actions>
+        </div>
       </div>
     `,
   encapsulation: ViewEncapsulation.None,
@@ -115,7 +116,6 @@ import { CategoriesHttpService, FamiliesHttpService, StocksHttpService, amount }
       app-stock-form { display: flex; flex: 1; }
     `],
 })
-
 export class StockFormComponent implements OnInit, AfterViewInit {
 
   stockFormGroup: FormGroup;
@@ -149,19 +149,16 @@ export class StockFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     //Load form data
-    this.familiesHttp.getAll().subscribe({
-      next: families => {
-        this.categoriesHttp.getAll().subscribe({
-          next: categories => {
-            this.families = families;
-            this.categories = categories;
-            if (this.data.mode == 'edit') {
-              this.loadData(this.data.id);
-            }
-          }
-        });
+    forkJoin([this.categoriesHttp.getAll(), this.familiesHttp.getAll()]).subscribe({
+      next: ([categories, families]) => {
+        this.families = families;
+        this.categories = categories;
+        if (this.data.mode == 'edit') {
+          this.loadData(this.data.id);
+        }
       }
     });
+
     this.handleFormChanged();
   }
 
@@ -261,13 +258,13 @@ export class StockFormComponent implements OnInit, AfterViewInit {
 
   getCreation() {
     return {
-      ...this.stockFormGroup.value,
+      ...this.stockFormGroup.getRawValue(),
     };
   }
 
   getUpdate() {
     return {
-      ...this.stockFormGroup.value,
+      ...this.stockFormGroup.getRawValue(),
     };
   }
 

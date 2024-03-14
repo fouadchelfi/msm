@@ -31,13 +31,16 @@ export class EmployeePaymentEntity {
     @Column({ default: 0, type: 'decimal' })
     restPayment: number;
 
+    @Column({ default: 0, type: 'decimal' })
+    moneySourceAmount: number;
+
     @Column({ nullable: true })
     notes: string;
 
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdEmployees)
+    @ManyToOne(() => UserEntity, user => user.createdEmployeePayments)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -45,7 +48,7 @@ export class EmployeePaymentEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedEmployees)
+    @ManyToOne(() => UserEntity, user => user.updatedEmployeePayments)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion

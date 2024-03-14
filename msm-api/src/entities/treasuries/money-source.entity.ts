@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
-import { EmployeeAccountEntity, EmployeePaymentEntity } from "../hr";
+import { EmployeeCreditEntity, EmployeePaymentEntity } from "../hr";
 import { MoneySourceTransferEntity } from "./money-source-transfer.entity";
 import { PurchaseEntity } from "../purchases/purchase.entity";
 import { SaleEntity } from "../sales";
@@ -45,8 +45,8 @@ export class MoneySourceEntity {
     lastUpdateBy: UserEntity;
     //#endregion
 
-    @OneToMany(() => EmployeeAccountEntity, employeeAccount => employeeAccount.employeeId)
-    employeeAccounts: EmployeeAccountEntity[];
+    @OneToMany(() => EmployeeCreditEntity, employeeCredit => employeeCredit.employeeId)
+    employeeCredits: EmployeeCreditEntity[];
 
     @OneToMany(() => EmployeePaymentEntity, employeePayment => employeePayment.employeeId)
     employeePayments: EmployeePaymentEntity[];

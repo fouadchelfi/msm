@@ -15,11 +15,16 @@ body { margin: 0; color: theme('colors.color-txt'); }
   }
 
   .dialog-container{
-    @apply flex flex-col flex-1 p-5;
+    @apply flex flex-col flex-1 bg-white px-7 overflow-hidden max-h-[calc(95vh)];
   }
-
   .dialog-header{
-    @apply flex flex-row items-center justify-between py-2 px-4;
+    @apply flex flex-row items-center justify-between pt-5 pb-3;
+  }
+  .dialog-content{
+    @apply flex flex-1 overflow-y-auto p-2;
+  }
+  .dialog-actions{
+    @apply flex flex-row justify-between py-3 border-t;
   }
 
   mat-dialog-content{
@@ -30,4 +35,28 @@ body { margin: 0; color: theme('colors.color-txt'); }
     justify-content: space-between !important;
     padding: 16px !important;
   }
+}
+
+/* Style pour le défilement vertical */
+::-webkit-scrollbar {
+  width: 7px; /* largeur de la barre de défilement */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cccccc;
+  border-radius: 7px; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: theme('colors.primary'); 
+  border-radius: 7px; 
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1; 
+}
+
+::selection {
+  background-color: theme('colors.primary'); 
+  color: #ffffff; 
 }

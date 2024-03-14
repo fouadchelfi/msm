@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DbService } from './db';
-import { AuthController, CategoriesController, ChargeNaturesController, ChargesController, CustomersController, EmployeesController, FamiliesController, IngredientsController, LosseNaturesController, LossesController, MoneySourceTransfersController, MoneySourcesController, PremisesController, PunchesController, QuantityCorrectionsController, StatusTransfersController, StocksController, SuppliersController, UsersController } from './controllers';
+import { AuthController, CategoriesController, ChargeNaturesController, ChargesController, CustomersController, EmployeeCreditsController, EmployeePaymentsController, EmployeesController, FamiliesController, IngredientsController, LosseNaturesController, LossesController, MoneySourceTransfersController, MoneySourcesController, PremisesController, PunchesController, PurchasesController, QuantityCorrectionsController, StatusTransfersController, StocksController, SuppliersController, UsersController } from './controllers';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from './utils';
+import { ManagerService } from './services';
 
 @Module({
   imports: [
@@ -43,13 +44,17 @@ import { JwtStrategy } from './utils';
     PremisesController,
     MoneySourcesController,
     MoneySourceTransfersController,
-    PunchesController
+    PunchesController,
+    EmployeeCreditsController,
+    EmployeePaymentsController,
+    PurchasesController,
   ],
   providers: [
     AppService,
     DbService,
     JwtService,
-    JwtStrategy
+    JwtStrategy,
+    ManagerService,
   ],
 })
 export class AppModule { }

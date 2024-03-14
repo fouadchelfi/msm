@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
 import { PuncheEntity } from "./punche.entity";
-import { EmployeeAccountEntity } from "./employee-account.entity";
+import { EmployeeCreditEntity } from "./employee-credit.entity";
 import { EmployeePaymentEntity } from "./employee-payment.entity";
 
 @Entity({ name: 'employees' })
@@ -70,8 +70,8 @@ export class EmployeeEntity {
     @OneToMany(() => PuncheEntity, punche => punche.employeeId)
     punches: PuncheEntity[];
 
-    @OneToMany(() => EmployeeAccountEntity, employeeAccount => employeeAccount.employeeId)
-    employeeAccounts: EmployeeAccountEntity[];
+    @OneToMany(() => EmployeeCreditEntity, employeeCredit => employeeCredit.employeeId)
+    employeeCredits: EmployeeCreditEntity[];
 
     @OneToMany(() => EmployeePaymentEntity, employeePayment => employeePayment.employeeId)
     employeePayments: EmployeePaymentEntity[];
