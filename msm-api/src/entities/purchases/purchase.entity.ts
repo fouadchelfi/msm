@@ -12,14 +12,17 @@ export class PurchaseEntity {
     @Column({ nullable: true })
     code: string;
 
+    @Column({ default: 0, type: 'decimal' })
+    cost: number;
+
+    @Column({ default: 0, type: 'decimal' })
+    payment: number;
+
     @Column({ default: 0, type: 'real' })
     totalQuantity: number;
 
     @Column({ default: 0, type: 'decimal' })
     totalAmount: number;
-
-    @Column({ default: 0, type: 'decimal' })
-    payment: number;
 
     @ManyToOne(() => MoneySourceEntity, moneySource => moneySource.purchases)
     @JoinColumn({ name: "moneySourceId" })
@@ -52,5 +55,5 @@ export class PurchaseEntity {
     //#endregion
 
     @OneToMany(() => PurchaseItemEntity, item => item.purchaseId)
-    purchaseItems: PurchaseItemEntity[];
+    items: PurchaseItemEntity[];
 }    

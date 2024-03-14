@@ -13,59 +13,61 @@ import { MoneySourcesHttpService } from '../../../../shared';
             {{ data.mode == 'creation' ? 'Nouvelle' : 'Modifier' }} Source
           </div>
           <button (click)="closeDialog()">
-            <i class="ri-close-line text-xl"></i>
+            <i class="ri-close-line text-2xl"></i>
           </button>
         </div>
         <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
-        <mat-dialog-content>
+        <div class="dialog-content">
           <form [formGroup]="sourceFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
             <input formControlName="id" type="number" class="!hidden">
+            <div class="inline-fields">
               <my-form-field>
                 <my-label>Code</my-label>
                 <input #firstFocused formControlName="code" type="text" myInput>
               </my-form-field>
-
-            <my-form-field>
-              <my-label [required]="true">Libellé</my-label>
-              <input #firstFocused formControlName="label" type="text" myInput>
-              <my-error
-                *ngIf="sourceFormGroup.get('label')?.invalid && (sourceFormGroup.get('label')?.dirty || sourceFormGroup.get('label')?.touched) && sourceFormGroup.get('label')?.getError('required')">
-                Veuillez remplir ce champ.
-              </my-error>
-            </my-form-field>
-            <my-form-field>
+              <my-form-field>
+                <my-label [required]="true">Libellé</my-label>
+                <input #firstFocused formControlName="label" type="text" myInput>
+                <my-error
+                  *ngIf="sourceFormGroup.get('label')?.invalid && (sourceFormGroup.get('label')?.dirty || sourceFormGroup.get('label')?.touched) && sourceFormGroup.get('label')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
+              </my-form-field>
+            </div>
+            <div class="inline-fields">
+              <my-form-field>
                 <my-label [required]="true">Nature</my-label>
                 <select formControlName="nature" myInput>
-                    <option value="coffer">Coffre</option>
-                    <option value="crate">Caisse</option>
-                    <option value="bank">Banque</option>
-                    <option value="poste">Poste</option>
+                  <option value="coffer">Coffre</option>
+                  <option value="crate">Caisse</option>
+                  <option value="bank">Banque</option>
+                  <option value="poste">Poste</option>
                 </select>
                 <my-error
                   *ngIf="sourceFormGroup.get('nature')?.invalid && (sourceFormGroup.get('nature')?.dirty || sourceFormGroup.get('nature')?.touched) && sourceFormGroup.get('nature')?.getError('required')">
                   Veuillez remplir ce champ.
                 </my-error>
               </my-form-field>
-            <my-form-field>
-              <my-label [required]="true">Montant</my-label>
-              <input formControlName="amount" type="number" myInput>
-              <my-error
-                *ngIf="sourceFormGroup.get('amount')?.invalid && (sourceFormGroup.get('amount')?.dirty || sourceFormGroup.get('amount')?.touched) && sourceFormGroup.get('amount')?.getError('required')">
-                Veuillez remplir ce champ.
-              </my-error>
-            </my-form-field>
-   
+              <my-form-field>
+                <my-label [required]="true">Montant</my-label>
+                <input formControlName="amount" type="number" myInput>
+                <my-error
+                  *ngIf="sourceFormGroup.get('amount')?.invalid && (sourceFormGroup.get('amount')?.dirty || sourceFormGroup.get('amount')?.touched) && sourceFormGroup.get('amount')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
+              </my-form-field>
+            </div>
             <my-form-field>
               <my-label>Notes</my-label>
               <textarea formControlName="notes" myTextarea type="text"></textarea>
             </my-form-field>
 
           </form>
-        </mat-dialog-content>
-        <mat-dialog-actions>
+        </div>
+        <div class="dialog-actions">
           <button mat-stroked-button (click)="create()">Nouvelle </button>
           <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
-        </mat-dialog-actions>
+        </div>
       </div>
     `
 })

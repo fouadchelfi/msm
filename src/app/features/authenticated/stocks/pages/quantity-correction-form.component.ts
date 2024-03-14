@@ -13,11 +13,11 @@ import { CategoriesHttpService, FamiliesHttpService, QuantityCorrectionsHttpServ
             {{ data.mode == 'creation' ? 'Nouvelle' : 'Modifier' }} correction
           </div>
           <button (click)="closeDialog()">
-            <i class="ri-close-line text-xl"></i>
+            <i class="ri-close-line text-2xl"></i>
           </button>
         </div>
         <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
-        <mat-dialog-content>
+        <div class="dialog-content">
           <form [formGroup]="quantityCorrectionFormGroup" class="flex flex-col gap-y-5 mt-3">
             <input formControlName="id" type="number" class="!hidden">
             <div class="inline-fields">
@@ -51,7 +51,7 @@ import { CategoriesHttpService, FamiliesHttpService, QuantityCorrectionsHttpServ
             <div class="inline-fields">
               <my-form-field>
                 <my-label [required]="true">Ancienne quantité</my-label>
-                <input formControlName="oldQuantity" type="number" myInput>
+                <input formControlName="oldQuantity" type="number" myInput myCalculableField>
                 <my-error
                   *ngIf="quantityCorrectionFormGroup.get('oldQuantity')?.invalid && (quantityCorrectionFormGroup.get('oldQuantity')?.dirty || quantityCorrectionFormGroup.get('oldQuantity')?.touched) && quantityCorrectionFormGroup.get('oldQuantity')?.getError('required')">
                   Veuillez remplir ce champ.
@@ -72,11 +72,11 @@ import { CategoriesHttpService, FamiliesHttpService, QuantityCorrectionsHttpServ
               <textarea formControlName="notes" myTextarea type="text"></textarea>
             </my-form-field>
           </form>
-        </mat-dialog-content>
-        <mat-dialog-actions>
+        </div>
+        <div class="dialog-actions">
           <button mat-stroked-button (click)="create()">Nouveau </button>
           <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
-        </mat-dialog-actions>
+        </div>
       </div>
     `,
   encapsulation: ViewEncapsulation.None,
@@ -104,7 +104,7 @@ export class QuantityCorrectionFormComponent implements OnInit, AfterViewInit {
       'id': [undefined],
       'code': [''],
       'stockId': [undefined, [Validators.required]],
-      'oldQuantity': [0, [Validators.required]],
+      'oldQuantity': [{ value: 0, disabled: true }, [Validators.required]],
       'newQuantity': [0, [Validators.required]],
       'date': [currentDateForHtmlField(), [Validators.required]],
       'notes': [''],

@@ -3,11 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { EmployeeCreditsGridComponent, EmployeePaymentsGridComponent, EmployeesGridComponent, PunchesGridComponent } from './pages';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'employees', pathMatch: 'full' },
+  { path: '', redirectTo: 'punches', pathMatch: 'full' },
+  { path: 'punches', component: PunchesGridComponent },
   { path: 'employees', component: EmployeesGridComponent },
   { path: 'credits', component: EmployeeCreditsGridComponent },
   { path: 'payments', component: EmployeePaymentsGridComponent },
-  { path: 'punches', component: PunchesGridComponent },
 ];
 
 @NgModule({

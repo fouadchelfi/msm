@@ -37,7 +37,7 @@ import { PuncheFormComponent } from './punche-form.component';
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="sourceFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="sourceFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                     <my-form-field>
                         <my-label>Employé</my-label>
                         <select formControlName="employeeId" myInput>
@@ -136,7 +136,7 @@ import { PuncheFormComponent } from './punche-form.component';
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true" class="!bg-gray-50"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer" (dblclick)="newItem('edit', row.id)">
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"  class="hover:!bg-slate-50 cursor-pointer">
                 </tr>
               </table>
               <div class="flex flex-row items-center space-x-1 p-4" *ngIf="dataSource.data.length == 0">

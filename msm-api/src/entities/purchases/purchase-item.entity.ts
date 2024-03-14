@@ -20,7 +20,7 @@ export class PurchaseItemEntity {
     @Column({ default: 0, type: 'decimal' })
     amount: number;
 
-    @ManyToOne(() => PurchaseEntity, p => p.purchaseItems)
-    @JoinColumn({ name: "stockId" })
+    @ManyToOne(() => PurchaseEntity, p => p.items)
+    @JoinColumn({ name: "purchaseId" })
     purchaseId: PurchaseEntity;
 }    

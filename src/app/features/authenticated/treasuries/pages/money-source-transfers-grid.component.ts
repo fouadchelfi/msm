@@ -37,7 +37,7 @@ import { MoneySourceTransferFormComponent } from './money-source-transfer-form.c
                             <i class="ri-close-line"></i>
                         </button>
                     </div>
-                    <form [formGroup]="transferFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+                    <form [formGroup]="transferFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <div class="inline-fields">
                         <my-form-field>
                         <my-label>Source (Crédit)</my-label>

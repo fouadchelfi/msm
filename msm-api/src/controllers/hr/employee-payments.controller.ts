@@ -1,11 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { EmployeePaymentEntity, EmployeeEntity, MoneySourceEntity } from 'src/entities';
+import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 // @UseGuards(AuthGuard)
 @Controller('employee-payments')
 export class EmployeePaymentsController {
+
+    constructor(private manager: ManagerService) { }
 
     @Get('all')
     async getAllPayments() {
@@ -81,25 +84,9 @@ export class EmployeePaymentsController {
 
         if (isEmpty(dbPayment.code)) await repo(EmployeePaymentEntity).update(dbPayment.id, { ...creation, code: code('PME', dbPayment.id) });
 
-        // Handle debt in the given employee.
-        await AppDataSource
-            .createQueryBuilder()
-            .update(EmployeeEntity)
-            .set({ debt: parseFloat(creation.restPayment) })
-            .where("id = :id", { id: creation.employeeId })
-            .execute();
-
-        // Handle amount in the given money source.
-        let source = await repo(MoneySourceEntity)
-            .createQueryBuilder('source')
-            .where('source.id = :id', { id: creation.moneySourceId })
-            .getOne();
-        await AppDataSource
-            .createQueryBuilder()
-            .update(MoneySourceEntity)
-            .set({ amount: parseFloat(source.amount) - parseFloat(creation.payment) })
-            .where("id = :id", { id: creation.moneySourceId })
-            .execute();
+        //Sync database changes
+        this.manager.updateEmployeeDebt(creation.employeeId, creation.restPayment, 'replace')
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.payment, 'add');
 
         return {
             success: true,

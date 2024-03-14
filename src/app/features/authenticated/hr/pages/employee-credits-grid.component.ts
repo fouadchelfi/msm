@@ -37,7 +37,7 @@ import { EmployeeCreditFormComponent } from './employee-credit-form.component';
                 <i class="ri-close-line"></i>
               </button>
             </div>
-            <form [formGroup]="sourceFilterFormGroup" class="flex flex-col !text-sm gap-y-4 p-6">
+            <form [formGroup]="sourceFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
               <my-form-field>
                 <my-label>Employé</my-label>
                 <select formControlName="employeeId" myInput>
@@ -253,7 +253,6 @@ export class EmployeeCreditsGridComponent implements OnInit {
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
     this.matDialog.open(EmployeeCreditFormComponent, {
       data: { id: id, mode: action },
-      minWidth: '600px',
       disableClose: true,
       minHeight: '90vh',
       autoFocus: false,

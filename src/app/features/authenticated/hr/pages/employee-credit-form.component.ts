@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EmployeeCreditsHttpService, EmployeesHttpService, MoneySourcesHttpService, currentDateForHtmlField, dateForHtmlField } from '../../../../shared';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-employee-credit-form',
@@ -13,19 +14,19 @@ import { EmployeeCreditsHttpService, EmployeesHttpService, MoneySourcesHttpServi
             {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} Account
           </div>
           <button (click)="closeDialog()">
-            <i class="ri-close-line text-xl"></i>
+            <i class="ri-close-line text-2xl"></i>
           </button>
         </div>
         <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
-        <mat-dialog-content>
+        <div class="dialog-content">
           <form [formGroup]="creditFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
             <input formControlName="id" type="number" class="!hidden">
             <div class="inline-fields">
-              <my-form-field>
+              <my-form-field class="w-64">
               <my-label>Code</my-label>
               <input #firstFocused formControlName="code" type="text" myInput>
             </my-form-field>
-            <my-form-field>
+            <my-form-field class="w-64">
               <my-label>Employé</my-label>
               <select formControlName="employeeId" myInput>
                 <ng-container *ngFor="let employee of employees">
@@ -39,7 +40,7 @@ import { EmployeeCreditsHttpService, EmployeesHttpService, MoneySourcesHttpServi
             </my-form-field>
             </div>
             <div class="inline-fields">
-            <my-form-field>
+            <my-form-field class="w-64">
               <my-label>Source d'argent</my-label>
               <select formControlName="moneySourceId" myInput>
                 <ng-container *ngFor="let moneySource of moneySources">
@@ -51,7 +52,7 @@ import { EmployeeCreditsHttpService, EmployeesHttpService, MoneySourcesHttpServi
                 Veuillez remplir ce champ.
               </my-error>
             </my-form-field>
-            <my-form-field>
+            <my-form-field class="w-64">
               <my-label [required]="true">Montant</my-label>
               <input formControlName="amount" type="number" myInput>
               <my-error
@@ -67,15 +68,14 @@ import { EmployeeCreditsHttpService, EmployeesHttpService, MoneySourcesHttpServi
             </my-form-field>
 
           </form>
-        </mat-dialog-content>
-        <mat-dialog-actions>
+        </div>
+        <div class="dialog-actions">
           <button mat-stroked-button (click)="create()">Nouvelle </button>
           <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
-        </mat-dialog-actions>
+        </div>
       </div>
     `
 })
-
 export class EmployeeCreditFormComponent implements OnInit, AfterViewInit {
 
   creditFormGroup: FormGroup;
@@ -106,17 +106,13 @@ export class EmployeeCreditFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     //Load form data
-    this.moneySourcesHttp.getAll().subscribe({
-      next: sources => {
-        this.employeesHttp.getAll().subscribe({
-          next: employees => {
-            this.employees = employees;
-            this.moneySources = sources;
-            if (this.data.mode == 'edit') {
-              this.loadData(this.data.id);
-            }
-          }
-        });
+    forkJoin([this.moneySourcesHttp.getAll(), this.employeesHttp.getAll()]).subscribe({
+      next: ([sources, employees]) => {
+        this.employees = employees;
+        this.moneySources = sources;
+        if (this.data.mode == 'edit') {
+          this.loadData(this.data.id);
+        }
       }
     });
   }

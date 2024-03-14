@@ -14,11 +14,11 @@ import { EmployeePaymentsHttpService, EmployeesHttpService, MoneySourcesHttpServ
             Paiement
           </div>
           <button (click)="closeDialog()">
-            <i class="ri-close-line text-xl"></i>
+            <i class="ri-close-line text-2xl"></i>
           </button>
         </div>
         <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
-        <mat-dialog-content>
+        <div class="dialog-content">
           <form [formGroup]="paymentFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
             <input formControlName="id" type="number" class="!hidden">
             <my-form-field>
@@ -93,11 +93,11 @@ import { EmployeePaymentsHttpService, EmployeesHttpService, MoneySourcesHttpServ
               <textarea formControlName="notes" myTextarea type="text"></textarea>
             </my-form-field>
           </form>
-        </mat-dialog-content>
-        <mat-dialog-actions>
+        </div>
+        <div class="dialog-actions">
           <button mat-stroked-button (click)="create()">Nouvelle </button>
           <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
-        </mat-dialog-actions>
+        </div>
       </div>
     `
 })

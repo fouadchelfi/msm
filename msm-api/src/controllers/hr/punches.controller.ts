@@ -1,11 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { EmployeeEntity, PuncheEntity } from 'src/entities';
+import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 // @UseGuards(AuthGuard)
 @Controller('punches')
 export class PunchesController {
+
+    constructor(private manager: ManagerService) { }
 
     @Get('all')
     async getAllPunches() {
@@ -75,17 +78,12 @@ export class PunchesController {
 
         if (isEmpty(dbPunche.code)) await repo(PuncheEntity).update(dbPunche.id, { ...creation, code: code('PTG', dbPunche.id) });
 
-        //Increase amount in the given employee.
+        //Sync database changes
         let employee = await repo(EmployeeEntity)
             .createQueryBuilder('employee')
             .where('employee.id = :id', { id: creation.employeeId })
             .getOne();
-        await AppDataSource
-            .createQueryBuilder()
-            .update(EmployeeEntity)
-            .set({ debt: parseFloat(employee.debt) + (parseFloat(employee.salary) / 26) * parseFloat(creation.hourlyCoefficient) })
-            .where("id = :id", { id: creation.employeeId })
-            .execute();
+        this.manager.updateEmployeeDebt(creation.employeeId, (parseFloat(employee.salary) / 26) * parseFloat(creation.hourlyCoefficient), 'add')
 
         return {
             success: true,

@@ -434,6 +434,7 @@ export class DbService {
                 code VARCHAR(16),
                 "totalQuantity" REAL,
                 "totalAmount" NUMERIC(16,2),
+                cost NUMERIC(16,2),
                 payment NUMERIC(16,2),
                 "moneySourceId" INT,
                 "supplierId" INT,

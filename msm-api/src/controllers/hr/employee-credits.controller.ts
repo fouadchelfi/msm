@@ -1,11 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { EmployeeCreditEntity, EmployeeEntity, MoneySourceEntity } from 'src/entities';
+import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 // @UseGuards(AuthGuard)
 @Controller('employee-credits')
 export class EmployeeCreditsController {
+
+    constructor(private manager: ManagerService) { }
 
     @Get('all')
     async getAllCredits() {
@@ -78,29 +81,9 @@ export class EmployeeCreditsController {
 
         if (isEmpty(dbCredit.code)) await repo(EmployeeCreditEntity).update(dbCredit.id, { ...creation, code: code('ACC', dbCredit.id) });
 
-        //Increase amount in the given employee.
-        let employee = await repo(EmployeeEntity)
-            .createQueryBuilder('employee')
-            .where('employee.id = :id', { id: creation.employeeId })
-            .getOne();
-        await AppDataSource
-            .createQueryBuilder()
-            .update(EmployeeEntity)
-            .set({ debt: parseFloat(employee.debt) + parseFloat(creation.amount) })
-            .where("id = :id", { id: creation.employeeId })
-            .execute();
-
-        //Decrease amount in the given money source.
-        let source = await repo(MoneySourceEntity)
-            .createQueryBuilder('source')
-            .where('source.id = :id', { id: creation.moneySourceId })
-            .getOne();
-        await AppDataSource
-            .createQueryBuilder()
-            .update(MoneySourceEntity)
-            .set({ amount: parseFloat(source.amount) - parseFloat(creation.amount) })
-            .where("id = :id", { id: creation.moneySourceId })
-            .execute();
+        //Sync database changes
+        this.manager.updateEmployeeDebt(creation.employeeId, creation.amount, 'add');
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.amount, 'add');
 
         return {
             success: true,
