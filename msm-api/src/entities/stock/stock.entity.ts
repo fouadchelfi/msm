@@ -7,7 +7,7 @@ import { StatusTransferEntity } from "./status-transfer.entity";
 import { PurchaseItemEntity } from "../purchases";
 import { SaleItemEntity } from "../sales";
 import { DistributionItemEntity, PremiseReturnItemEntity } from "../distributions";
-import { BatchStockItemEntity } from "../production";
+import { BatchItemEntity } from "../production";
 
 @Entity({ name: 'stocks' })
 export class StockEntity {
@@ -85,6 +85,6 @@ export class StockEntity {
     @OneToMany(() => PremiseReturnItemEntity, item => item.stockId)
     premiseReturnItems: PremiseReturnItemEntity[];
 
-    @OneToMany(() => BatchStockItemEntity, item => item.stockId)
-    batchStockItems: BatchStockItemEntity[];
+    @OneToMany(() => BatchItemEntity, item => item.stockId)
+    batchStockItems: BatchItemEntity[];
 }    

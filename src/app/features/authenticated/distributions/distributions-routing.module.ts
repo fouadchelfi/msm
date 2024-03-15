@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DistributionsGridComponent, PremisesGridComponent, ReturnsGridComponent } from './pages';
+import { DistributionsGridComponent, PremiseReturnsGridComponent, PremisesGridComponent, } from './pages';
 
 const routes: Routes = [
   { path: '', redirectTo: 'distributions', pathMatch: 'full' },
   { path: 'distributions', component: DistributionsGridComponent },
   { path: 'premises', component: PremisesGridComponent },
-  { path: 'returns', component: ReturnsGridComponent },
+  { path: 'returns', component: PremiseReturnsGridComponent },
 ];
 
 @NgModule({

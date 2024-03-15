@@ -42,7 +42,7 @@ import { appConfig } from '../../../../app.config';
                       <my-label>Local</my-label>
                       <select formControlName="premiseId" myInput size="small">
                         <ng-container *ngFor="let premise of premises">
-                          <option [value]="premise.id">{{ premise.name }}</option>
+                          <option [value]="premise.id">{{ premise.label }}</option>
                         </ng-container>
                       </select>
                     </my-form-field>

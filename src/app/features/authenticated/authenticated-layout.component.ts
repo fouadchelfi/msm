@@ -38,7 +38,7 @@ import { Component, OnInit } from '@angular/core';
                   </nav>
                 </div>
                 <div class="relative group">
-                  <button [routerLinkActive]="['!text-white', '!bg-slate-700', '!border-l-2', '!border-l-primary']" routerLink="/authenticated/production"
+                  <button [routerLinkActive]="['!text-white', '!bg-slate-700', '!border-l-2', '!border-l-primary']" routerLink="/authenticated/production/batches"
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-building-3-line text-lg"></i>
                     <span class="text-sm">Production</span></button>

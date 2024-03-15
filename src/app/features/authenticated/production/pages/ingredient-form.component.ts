@@ -20,14 +20,14 @@ import { IngredientsHttpService } from '../../../../shared';
               <div class="dialog-content">
                 <form [formGroup]="ingredientFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
                     <input formControlName="id" type="number" class="!hidden">
-                    <my-form-field>
+                    <my-form-field class="w-80">
                         <my-label [required]="true">Libellé</my-label>
                         <input #firstFocused formControlName="label" type="text" myInput >
                         <my-error *ngIf="ingredientFormGroup.get('label')?.invalid && (ingredientFormGroup.get('label')?.dirty || ingredientFormGroup.get('label')?.touched) && ingredientFormGroup.get('label')?.getError('required')">
                             Veuillez remplir ce champ.
                           </my-error>
                     </my-form-field>
-                    <my-form-field>
+                    <my-form-field class="w-80">
                         <my-label>Notes</my-label>
                         <textarea formControlName="notes" myTextarea type="text"></textarea>
                       </my-form-field>

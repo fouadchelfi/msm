@@ -80,7 +80,7 @@ export class SalesController {
         };
         let dbSale = await repo(SaleEntity).save(creation);
 
-        if (isEmpty(dbSale.code)) await repo(SaleEntity).update(dbSale.id, { ...creation, code: code('ACH', dbSale.id) });
+        if (isEmpty(dbSale.code)) await repo(SaleEntity).update(dbSale.id, { ...creation, code: code('VNT', dbSale.id) });
 
         //Asigne sale id to every item.
         (<any[]>body.items).map(item => item.saleId = parseInt(dbSale.id));
@@ -108,7 +108,7 @@ export class SalesController {
 
         await repo(SaleEntity).update(body.id, {
             id: body.id,
-            code: isEmpty(body.code) ? code('ACH', id) : body.code,
+            code: isEmpty(body.code) ? code('VNT', id) : body.code,
             //...
             notes: body.notes,
             lastUpdateAt: currentDateTime(),

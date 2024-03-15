@@ -20,7 +20,7 @@ export class PremiseReturnItemEntity {
     @Column({ default: 0, type: 'decimal' })
     amount: number;
 
-    @ManyToOne(() => PremiseReturnEntity, p => p.premiseReturnItems)
+    @ManyToOne(() => PremiseReturnEntity, p => p.items)
     @JoinColumn({ name: "premiseReturnId" })
     premiseReturnId: PremiseReturnEntity;
 }    

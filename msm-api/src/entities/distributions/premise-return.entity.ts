@@ -52,5 +52,5 @@ export class PremiseReturnEntity {
     //#endregion
 
     @OneToMany(() => PremiseReturnItemEntity, item => item.premiseReturnId)
-    premiseReturnItems: PremiseReturnItemEntity[];
+    items: PremiseReturnItemEntity[];
 }    

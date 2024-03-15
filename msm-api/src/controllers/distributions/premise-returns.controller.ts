@@ -1,47 +1,47 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { DistributionEntity, DistributionItemEntity } from 'src/entities';
+import { PremiseReturnEntity, PremiseReturnItemEntity } from 'src/entities';
 import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 // @UseGuards(AuthGuard)
-@Controller('distributions')
-export class DistributionsController {
+@Controller('premise-returns')
+export class PremiseReturnsController {
 
     constructor(private manager: ManagerService) { }
 
     @Get('all')
-    async getAllDistributions() {
+    async getAllPremiseReturns() {
         return await queryAll().getMany();
     }
 
     @Get('one/:id')
-    async getOneDistributionById(@Param('id') id: number) {
+    async getOnePremiseReturnById(@Param('id') id: number) {
         return await queryAll()
-            .where('distribution.id = :id', { id })
+            .where('premiseReturn.id = :id', { id })
             .getOne();
     }
 
     @Get('pagination')
-    async paginateDistribution(@Query() query) {
+    async paginatePremiseReturn(@Query() query) {
 
         let result = queryAll();
 
         if (isNotEmpty(query.moneySourceId))
-            result = result.where("distribution.moneySourceId = :moneySourceId", { moneySourceId: query.moneySourceId });
+            result = result.where("premiseReturn.moneySourceId = :moneySourceId", { moneySourceId: query.moneySourceId });
 
         if (isNotEmpty(query.premiseId))
-            result = result.andWhere("distribution.premiseId = :premiseId", { premiseId: query.premiseId });
+            result = result.andWhere("premiseReturn.premiseId = :premiseId", { premiseId: query.premiseId });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('distribution.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('distribution.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.where('premiseReturn.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('premiseReturn.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('distribution.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('distribution.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.where('premiseReturn.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('premiseReturn.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
-            .orderBy(`distribution.id`, query.order)
+            .orderBy(`premiseReturn.id`, query.order)
             .skip(parseInt(query.pageIndex) * parseInt(query.pageSize))
             .take(parseInt(query.pageSize));
 
@@ -58,14 +58,14 @@ export class DistributionsController {
     }
 
     @Post('create')
-    async createDistribution(@Body() body, @GetCurrentUser() currentUser) {
+    async createPremiseReturn(@Body() body, @GetCurrentUser() currentUser) {
 
-        let errors = await validateDistribution(body);
+        let errors = await validatePremiseReturn(body);
         if (errors) return { success: false, errors: errors, data: null };
 
         let creation = {
             code: body.code,
-            cash: body.cash,
+            returnedCash: body.returnedCash,
             totalQuantity: body.totalQuantity,
             totalAmount: body.totalAmount,
             moneySourceId: body.moneySourceId,
@@ -77,14 +77,14 @@ export class DistributionsController {
             lastUpdateAt: currentDateTime(),
             lastUpdateBy: 1
         };
-        let dbDistribution = await repo(DistributionEntity).save(creation);
+        let dbPremiseReturn = await repo(PremiseReturnEntity).save(creation);
 
-        if (isEmpty(dbDistribution.code)) await repo(DistributionEntity).update(dbDistribution.id, { ...creation, code: code('DST', dbDistribution.id) });
+        if (isEmpty(dbPremiseReturn.code)) await repo(PremiseReturnEntity).update(dbPremiseReturn.id, { ...creation, code: code('RTL', dbPremiseReturn.id) });
 
-        //Asigne distribution id to every item.
-        (<any[]>body.items).map(item => item.distributionId = parseInt(dbDistribution.id));
+        //Asigne premiseReturn id to every item.
+        (<any[]>body.items).map(item => item.premiseReturnId = parseInt(dbPremiseReturn.id));
         //Save items
-        await repo(DistributionItemEntity).save(body.items);
+        await repo(PremiseReturnItemEntity).save(body.items);
 
         //Sync database changes
         for (const item of (<any[]>body.items)) {
@@ -96,18 +96,18 @@ export class DistributionsController {
         return {
             success: true,
             errors: [],
-            data: await this.getOneDistributionById(dbDistribution.id)
+            data: await this.getOnePremiseReturnById(dbPremiseReturn.id)
         };
     }
 
     @Put('one/update/:id')
-    async updateDistribution(@Param('id') id: number, @Body() body, @GetCurrentUser() currentUser) {
-        let errors = await validateDistribution(body);
+    async updatePremiseReturn(@Param('id') id: number, @Body() body, @GetCurrentUser() currentUser) {
+        let errors = await validatePremiseReturn(body);
         if (errors) return { success: false, errors: errors, data: null };
 
-        await repo(DistributionEntity).update(body.id, {
+        await repo(PremiseReturnEntity).update(body.id, {
             id: body.id,
-            code: isEmpty(body.code) ? code('DST', id) : body.code,
+            code: isEmpty(body.code) ? code('RTL', id) : body.code,
             //...
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
@@ -117,7 +117,7 @@ export class DistributionsController {
         return {
             success: true,
             errors: [],
-            data: await this.getOneDistributionById(body.id)
+            data: await this.getOnePremiseReturnById(body.id)
         };
     }
 
@@ -125,9 +125,9 @@ export class DistributionsController {
     async deleteMany(@Query() query) {
         let ids = Object.values(query.id).map(id => parseInt(<any>id));
         for (const id of ids) {
-            let itemsIds = (<any[]>(await this.getItemsByDistributionId(id))).map(item => (<number>item.id));
-            if (itemsIds.length > 0) await repo(DistributionItemEntity).delete(itemsIds);
-            await repo(DistributionEntity).delete(id);
+            let itemsIds = (<any[]>(await this.getItemsByPremiseReturnId(id))).map(item => (<number>item.id));
+            if (itemsIds.length > 0) await repo(PremiseReturnItemEntity).delete(itemsIds);
+            await repo(PremiseReturnEntity).delete(id);
         }
         return { success: true };
     }
@@ -139,43 +139,43 @@ export class DistributionsController {
             .getOne();
     }
 
-    @Get('items/many/by-distribution-id/:distributionId')
-    async getItemsByDistributionId(@Param('distributionId') distributionId: number) {
+    @Get('items/many/by-premise-return-id/:premiseReturnId')
+    async getItemsByPremiseReturnId(@Param('premiseReturnId') premiseReturnId: number) {
         return await queryAllItems()
-            .where('item.distributionId = :distributionId', { distributionId })
+            .where('item.premiseReturnId = :premiseReturnId', { premiseReturnId })
             .getMany();
     }
 }
 
-async function validateDistribution(distribution) {
+async function validatePremiseReturn(premiseReturn) {
     let errors = [];
 
-    let distributionDbCode = await repo(DistributionEntity).createQueryBuilder('distribution').where("distribution.code = :code", { code: `${(<string>distribution.code)}` }).getOne();
-    if (distributionDbCode && distributionDbCode.id != distribution.id)
+    let premiseReturnDbCode = await repo(PremiseReturnEntity).createQueryBuilder('premiseReturn').where("premiseReturn.code = :code", { code: `${(<string>premiseReturn.code)}` }).getOne();
+    if (premiseReturnDbCode && premiseReturnDbCode.id != premiseReturn.id)
         errors.push("Code existe déjà");
 
     return errors.length == 0 ? null : errors;
 }
 
 function queryAll() {
-    return repo(DistributionEntity)
-        .createQueryBuilder('distribution')
-        .leftJoinAndSelect('distribution.moneySourceId', 'moneySourceId')
-        .leftJoinAndSelect('distribution.premiseId', 'premiseId')
-        .leftJoinAndSelect('distribution.createdBy', 'createdBy')
-        .leftJoinAndSelect('distribution.lastUpdateBy', 'lastUpdateBy')
-        .leftJoinAndSelect('distribution.items', 'items')
+    return repo(PremiseReturnEntity)
+        .createQueryBuilder('premiseReturn')
+        .leftJoinAndSelect('premiseReturn.moneySourceId', 'moneySourceId')
+        .leftJoinAndSelect('premiseReturn.premiseId', 'premiseId')
+        .leftJoinAndSelect('premiseReturn.createdBy', 'createdBy')
+        .leftJoinAndSelect('premiseReturn.lastUpdateBy', 'lastUpdateBy')
+        .leftJoinAndSelect('premiseReturn.items', 'items')
         .leftJoinAndSelect('items.stockId', 'itemsStockId')
         .select([
-            'distribution.id',
-            'distribution.code',
-            'distribution.cash',
-            'distribution.totalQuantity',
-            'distribution.totalAmount',
-            'distribution.date',
-            'distribution.notes',
-            'distribution.createdAt',
-            'distribution.lastUpdateAt',
+            'premiseReturn.id',
+            'premiseReturn.code',
+            'premiseReturn.returnedCash',
+            'premiseReturn.totalQuantity',
+            'premiseReturn.totalAmount',
+            'premiseReturn.date',
+            'premiseReturn.notes',
+            'premiseReturn.createdAt',
+            'premiseReturn.lastUpdateAt',
             'moneySourceId',
             'premiseId',
             'createdBy',
@@ -186,16 +186,16 @@ function queryAll() {
 }
 
 function queryAllItems() {
-    return repo(DistributionItemEntity)
+    return repo(PremiseReturnItemEntity)
         .createQueryBuilder('item')
         .leftJoinAndSelect('item.stockId', 'stockId')
-        .leftJoinAndSelect('item.distributionId', 'distributionId')
+        .leftJoinAndSelect('item.premiseReturnId', 'premiseReturnId')
         .select([
             'item.id',
             'item.quantity',
             'item.salePrice',
             'item.amount',
             'stockId',
-            'distributionId'
+            'premiseReturnId'
         ]);
 }

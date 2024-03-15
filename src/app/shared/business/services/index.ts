@@ -20,3 +20,6 @@ export * from './employee-payments-http.service';
 export * from './purchases-http.service';
 export * from './sales-http.service';
 export * from './distributions-http.service';
+export * from './premise-returns-http.service';
+export * from './batches-http.service';
+export * from './fences-http.service';
