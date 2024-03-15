@@ -195,7 +195,7 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
             'totalSaleAmount': res.totalSaleAmount,
             'turnover': res.turnover,
             'marginProfit': res.marginProfit,
-            'date': res.date,
+            'date': dateForHtmlField(res.date),
             'notes': res.notes
           });
         }

@@ -70,7 +70,7 @@ import { FenceFormComponent } from './fence-form.component';
             </div>
           </div>
           <div>
-            <div class="relative flex-1 overflow-auto !h-[calc(100vh-185px)] bg-white rounded shadow">
+            <div class="relative flex-1 overflow-auto !h-[calc(100vh-185px)] !w-[calc(100vw-140px)] bg-white rounded shadow">
               <table mat-table [dataSource]="dataSource" class="w-full" matSort matSortActive="createdAt"
                 matSortDisableClear matSortDirection="desc">
 
@@ -113,8 +113,8 @@ import { FenceFormComponent } from './fence-form.component';
                 </th>
                   <td mat-cell *matCellDef="let row">
                     <div class="flex flex-col">
-                      <span class="text-orange-500">{{ row.inStockQuantity }}</span>
-                      <span class="text-blue-500">{{ row.calculatedInStockQuantity }}</span>
+                      <span class="text-orange-500 !text-sm">{{ row.inStockQuantity }}</span>
+                      <span class="text-blue-500 !text-sm">{{ row.calculatedInStockQuantity }}</span>
                     </div>
                   </td>
                 </ng-container>
@@ -128,8 +128,8 @@ import { FenceFormComponent } from './fence-form.component';
                 </th>
                   <td mat-cell *matCellDef="let row">
                     <div class="flex flex-col">
-                      <span class="text-orange-500">{{ row.inStockQuantityAmount }}</span>
-                      <span class="text-blue-500">{{ row.calculatedInStockQuantityAmount }}</span>
+                      <span class="text-orange-500 !text-sm">{{ row.inStockQuantityAmount }}</span>
+                      <span class="text-blue-500 !text-sm">{{ row.calculatedInStockQuantityAmount }}</span>
                     </div>
                   </td>
                 </ng-container>
@@ -142,7 +142,7 @@ import { FenceFormComponent } from './fence-form.component';
                 </ng-container>
      
                 <ng-container matColumnDef="totalSaleAmount">
-                  <th mat-header-cell *matHeaderCellDef >Montant (Vente)</th>
+                  <th mat-header-cell *matHeaderCellDef >Montant de vente</th>
                   <td mat-cell *matCellDef="let row">
                         {{ row.totalSaleAmount }}
                   </td>

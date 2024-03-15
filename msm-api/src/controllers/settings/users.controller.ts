@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UserEntity } from 'src/entities';
 import { AuthGuard, GetCurrentUser, code, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 import * as bcrypt from 'bcrypt';
 import { config } from 'src/app.config';
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
 
@@ -26,7 +26,7 @@ export class UsersController {
         let result = queryAll();
 
         if (isNotEmpty(query.name))
-            result = result.where("TRIM(LOWER(user.name)) like %TRIM(LOWER(:name))%", { name: query.name });
+            result = result.where("TRIM(LOWER(user.name)) LIKE :name", { name: `%${(<string>query.name).toLowerCase().trim()}%` });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
             result = result.where('user.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
@@ -59,14 +59,14 @@ export class UsersController {
         if (errors) return { success: false, messages: errors, data: null };
 
         let creation = {
-            name: body.name,
-            password: bcrypt.hash(body.password, config.saltOrRounds),
             code: body.code,
+            name: body.name,
+            password: await bcrypt.hash(body.password, config.saltOrRounds),
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: currentUser.id,
+            createdBy: 1,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: currentUser.id
+            lastUpdateBy: 1
         };
         let dbUser = await repo(UserEntity).save(creation);
 
@@ -79,19 +79,23 @@ export class UsersController {
         };
     }
 
-    @Put('update')
-    async updateUser(id: number, @Body() body, @GetCurrentUser() currentUser) {
+    @Put('one/update/:id')
+    async updateUser(@Param('id') id: number, @Body() body, @GetCurrentUser() currentUser) {
+
+        if (id == 1)
+            throw new ForbiddenException('Vous ne pouvez pas modifier l’utilisateur admin');
+
+
         let errors = await validateUser(body);
         if (errors) return { success: false, messages: errors, data: null };
 
         let update = {
             id: body.id,
-            name: body.name,
-            password: bcrypt.hash(body.password, config.saltOrRounds),
             code: isEmpty(body.code) ? code('USR', id) : body.code,
+            name: body.name,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: currentUser.id
+            lastUpdateBy: 1
         };
 
         await repo(UserEntity).update(update.id, update);
@@ -105,8 +109,12 @@ export class UsersController {
 
     @Delete('many')
     async deleteMany(@Query() query) {
-        await repo(UserEntity).delete((<[]>query.id).map(id => parseInt(id)));
-        return { success: true };
+        let ids = Object.values(query.id).map(id => parseInt(<any>id)).filter(id => id != 1);
+        if (ids.length > 0) {
+            await repo(UserEntity).delete(ids);
+            return { success: true };
+        }
+        return { success: false };
     }
 }
 
@@ -128,5 +136,5 @@ function queryAll() {
         .createQueryBuilder('user')
         .leftJoinAndSelect('user.createdBy', 'createdBy')
         .leftJoinAndSelect('user.lastUpdateBy', 'lastUpdateBy')
-        .select(['user.id', 'user.name', 'user.password', 'user.code', 'user.notes', 'user.createdAt', 'user.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
+        .select(['user.id', 'user.name', 'user.code', 'user.notes', 'user.createdAt', 'user.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
 }

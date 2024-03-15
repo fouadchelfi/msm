@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { JwtInterceptor } from './core';
 import { BrowserModule } from '@angular/platform-browser';
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { AuthInterceptor } from './features';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { DatePipe, DecimalPipe } from '@angular/common';
             multi: true
         },
         DatePipe,
-        DecimalPipe
+        DecimalPipe,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ]
 })
 export class AppModule { }
