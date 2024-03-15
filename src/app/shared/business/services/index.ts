@@ -18,3 +18,5 @@ export * from './punches-http.service';
 export * from './employee-credits-http.service';
 export * from './employee-payments-http.service';
 export * from './purchases-http.service';
+export * from './sales-http.service';
+export * from './distributions-http.service';

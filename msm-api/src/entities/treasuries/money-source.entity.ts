@@ -62,10 +62,10 @@ export class MoneySourceEntity {
     @OneToMany(() => SaleEntity, sale => sale.moneySourceId)
     sales: SaleEntity[];
 
-    @OneToMany(() => DistributionEntity, distribution => distribution.cashMoneySourceId)
+    @OneToMany(() => DistributionEntity, distribution => distribution.moneySourceId)
     cashDistributions: DistributionEntity[];
 
-    @OneToMany(() => PremiseReturnEntity, r => r.returnedCashMoneySourceId)
+    @OneToMany(() => PremiseReturnEntity, r => r.moneySourceId)
     returnedCashDistributions: PremiseReturnEntity[];
 
     @OneToMany(() => BatchEntity, b => b.moneySourceId)

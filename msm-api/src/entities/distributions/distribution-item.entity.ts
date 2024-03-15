@@ -15,12 +15,12 @@ export class DistributionItemEntity {
     quantity: number;
 
     @Column({ default: 0, type: 'decimal' })
-    distributionPrice: number;
+    salePrice: number;
 
     @Column({ default: 0, type: 'decimal' })
     amount: number;
 
-    @ManyToOne(() => DistributionEntity, p => p.distributionItems)
-    @JoinColumn({ name: "stockId" })
+    @ManyToOne(() => DistributionEntity, p => p.items)
+    @JoinColumn({ name: "distributionId" })
     distributionId: DistributionEntity;
 }    

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { SalesRoutingModule } from './sales-routing.module';
 import { SharedModule } from '../../../shared';
-import { CustomerFormComponent, CustomersGridComponent } from './pages';
+import { CustomerFormComponent, CustomersGridComponent, SaleFormComponent, SalesGridComponent } from './pages';
 
-const COMPONENTS = [CustomersGridComponent, CustomerFormComponent];
+const COMPONENTS = [CustomersGridComponent, CustomerFormComponent, SaleFormComponent, SalesGridComponent];
 
 
 @NgModule({

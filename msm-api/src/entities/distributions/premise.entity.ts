@@ -33,6 +33,6 @@ export class PremiseEntity {
     //#endregion
 
 
-    @OneToMany(() => DistributionEntity, distribution => distribution.distributionItems)
+    @OneToMany(() => DistributionEntity, distribution => distribution.items)
     distributions: DistributionEntity[];
 }    
