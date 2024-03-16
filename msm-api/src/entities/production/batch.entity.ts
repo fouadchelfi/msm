@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../settings";
 import { MoneySourceEntity } from "../treasuries";
-import { BatchStockItemEntity } from "./batch-stock-item.entity";
+import { BatchItemEntity } from "./batch-item.entity";
 import { BatchIngredientEntity } from "./batch-ingredient.entity";
 
 @Entity({ name: 'batches' })
@@ -44,9 +44,9 @@ export class BatchEntity {
     lastUpdateBy: UserEntity;
     //#endregion
 
-    @OneToMany(() => BatchStockItemEntity, item => item.batchId)
-    batchStockItems: BatchStockItemEntity[];
+    @OneToMany(() => BatchItemEntity, item => item.batchId)
+    items: BatchItemEntity[];
 
     @OneToMany(() => BatchIngredientEntity, item => item.batchId)
-    batchIngredients: BatchIngredientEntity[];
-}    
+    ingredients: BatchIngredientEntity[];
+}     

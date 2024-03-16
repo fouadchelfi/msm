@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 
 import { DistributionsRoutingModule } from './distributions-routing.module';
 import { SharedModule } from '../../../shared';
-import { PremiseFormComponent, PremisesGridComponent } from './pages';
+import { DistributionFormComponent, DistributionsGridComponent, PremiseFormComponent, PremiseReturnFormComponent, PremiseReturnsGridComponent, PremisesGridComponent } from './pages';
 
-const COMPONENTS = [PremiseFormComponent, PremisesGridComponent]
+const COMPONENTS = [PremiseFormComponent, PremisesGridComponent, DistributionFormComponent, DistributionsGridComponent, PremiseReturnFormComponent, PremiseReturnsGridComponent]
 
 @NgModule({
   declarations: [COMPONENTS],

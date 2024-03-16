@@ -3,7 +3,7 @@ import { AppDataSource } from 'src/data-source';
 import { MoneySourceEntity, MoneySourceTransferEntity, StockEntity } from 'src/entities';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('money-source-transfers')
 export class MoneySourceTransfersController {
 

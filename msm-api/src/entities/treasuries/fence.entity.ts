@@ -16,14 +16,17 @@ export class FenceEntity {
     @Column({ default: 0, type: 'decimal' })
     inStockQuantityAmount: number;
 
-    @Column({ default: 0, type: 'decimal' })
-    currentSalePrice: number;
+    @Column({ default: 0, type: 'real' })
+    calculatedInStockQuantity: number;
 
     @Column({ default: 0, type: 'decimal' })
-    totalPurchasePrice: number;
+    calculatedInStockQuantityAmount: number;
 
     @Column({ default: 0, type: 'decimal' })
-    totalSalePrice: number;
+    totalPurchaseAmount: number;
+
+    @Column({ default: 0, type: 'decimal' })
+    totalSaleAmount: number;
 
     @Column({ default: 0, type: 'decimal' })
     turnover: number;
@@ -44,7 +47,7 @@ export class FenceEntity {
     //#region Creation Area
     @Column({ update: false })
     createdAt: Date;
-    @ManyToOne(() => UserEntity, user => user.createdEmployees)
+    @ManyToOne(() => UserEntity, user => user.createdFences)
     @JoinColumn({ name: "createdBy" })
     createdBy: UserEntity;
     //#endregion
@@ -52,7 +55,7 @@ export class FenceEntity {
     //#region Update Area
     @Column({ nullable: true })
     lastUpdateAt: Date;
-    @ManyToOne(() => UserEntity, user => user.updatedEmployees)
+    @ManyToOne(() => UserEntity, user => user.updatedFences)
     @JoinColumn({ name: "lastUpdateBy" })
     lastUpdateBy: UserEntity;
     //#endregion

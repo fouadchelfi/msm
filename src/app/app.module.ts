@@ -6,9 +6,9 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { SharedModule, getFrenchPaginatorIntl } from './shared';
 import { routes } from './app.routes';
-import { JwtInterceptor } from './core';
 import { BrowserModule } from '@angular/platform-browser';
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { JwtInterceptor } from './core';
 
 @NgModule({
     imports: [
@@ -30,7 +30,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
             multi: true
         },
         DatePipe,
-        DecimalPipe
+        DecimalPipe,
     ]
 })
 export class AppModule { }

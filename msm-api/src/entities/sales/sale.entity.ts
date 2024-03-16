@@ -55,5 +55,5 @@ export class SaleEntity {
     //#endregion
 
     @OneToMany(() => SaleItemEntity, item => item.saleId)
-    saleItems: SaleItemEntity[];
+    items: SaleItemEntity[];
 }    

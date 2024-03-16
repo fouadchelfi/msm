@@ -20,7 +20,7 @@ export class SaleItemEntity {
     @Column({ default: 0, type: 'decimal' })
     amount: number;
 
-    @ManyToOne(() => SaleEntity, p => p.saleItems)
-    @JoinColumn({ name: "stockId" })
+    @ManyToOne(() => SaleEntity, p => p.items)
+    @JoinColumn({ name: "saleId" })
     saleId: SaleEntity;
 }    

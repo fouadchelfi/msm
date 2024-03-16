@@ -14,7 +14,10 @@ export class BatchIngredientEntity {
     @Column({ default: 0, type: 'real' })
     quantity: number;
 
-    @ManyToOne(() => BatchEntity, b => b.batchIngredients)
+    @Column({ default: 0, type: 'decimal' })
+    amount: number;
+
+    @ManyToOne(() => BatchEntity, b => b.ingredients)
     @JoinColumn({ name: "batchId" })
     batchId: BatchEntity;
 }    

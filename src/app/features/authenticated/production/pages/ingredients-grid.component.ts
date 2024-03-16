@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
-import { IngredientsHttpService, TimeZoneService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
+import { IngredientsHttpService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
 import { IngredientFormComponent } from './ingredient-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -228,7 +228,6 @@ export class IngredientsGridComponent implements OnInit {
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
     this.matDialog.open(IngredientFormComponent, {
       data: { id: id, mode: action },
-      minWidth: '512px',
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({

@@ -50,7 +50,7 @@ import { CategoriesHttpService, FamiliesHttpService, QuantityCorrectionsHttpServ
             </div>
             <div class="inline-fields">
               <my-form-field>
-                <my-label [required]="true">Ancienne quantité</my-label>
+                <my-label [required]="true">Quantité actuelle</my-label>
                 <input formControlName="oldQuantity" type="number" myInput myCalculableField>
                 <my-error
                   *ngIf="quantityCorrectionFormGroup.get('oldQuantity')?.invalid && (quantityCorrectionFormGroup.get('oldQuantity')?.dirty || quantityCorrectionFormGroup.get('oldQuantity')?.touched) && quantityCorrectionFormGroup.get('oldQuantity')?.getError('required')">

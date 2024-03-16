@@ -4,7 +4,7 @@ import { SupplierEntity } from "../purchases";
 import { CustomerEntity, SaleEntity } from "../sales";
 import { EmployeeCreditEntity, EmployeeEntity, EmployeePaymentEntity, PuncheEntity } from "../hr";
 import { BatchEntity, IngredientEntity } from "../production";
-import { MoneySourceEntity } from "../treasuries";
+import { FenceEntity, MoneySourceEntity } from "../treasuries";
 import { PurchaseEntity } from "../purchases/purchase.entity";
 import { DistributionEntity } from "../distributions/distribution.entity";
 import { PremiseEntity } from "../distributions";
@@ -123,6 +123,11 @@ export class UserEntity {
     createdBatches: BatchEntity[];
     @OneToMany(() => BatchEntity, entity => entity.lastUpdateBy)
     updatedBatches: BatchEntity[];
+
+    @OneToMany(() => FenceEntity, entity => entity.createdBy)
+    createdFences: FenceEntity[];
+    @OneToMany(() => FenceEntity, entity => entity.lastUpdateBy)
+    updatedFences: FenceEntity[];
 
     @OneToMany(() => StatusTransferEntity, entity => entity.createdBy)
     createdStatusTransferStocks: StatusTransferEntity[];

@@ -22,8 +22,8 @@ export class DistributionEntity {
     cash: number;
 
     @ManyToOne(() => MoneySourceEntity, moneySource => moneySource.cashDistributions)
-    @JoinColumn({ name: "cashMoneySourceId" })
-    cashMoneySourceId: MoneySourceEntity;
+    @JoinColumn({ name: "moneySourceId" })
+    moneySourceId: MoneySourceEntity;
 
     @ManyToOne(() => PremiseEntity, premise => premise.distributions)
     @JoinColumn({ name: "premiseId" })
@@ -52,5 +52,5 @@ export class DistributionEntity {
     //#endregion
 
     @OneToMany(() => DistributionItemEntity, item => item.distributionId)
-    distributionItems: DistributionItemEntity[];
+    items: DistributionItemEntity[];
 }    

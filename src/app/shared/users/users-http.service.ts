@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { HttpResponse } from '../common';
 import { CONFIG } from '../../env';
 
 @Injectable({ providedIn: 'root' })
@@ -11,46 +10,27 @@ export class UsersHttpService {
 
     private userUrl: string = `${CONFIG.backendUrl}users`;
 
-    public count(): Observable<HttpResponse> {
-        const requestUrl = `${this.userUrl}/Count`;
-        return this.httpClient.get<HttpResponse>(requestUrl);
+    public getAll(): Observable<any> {
+        return this.httpClient.get<any>(`${this.userUrl}/all`);
     }
 
-    public getPaginated(query: string): Observable<HttpResponse> {
-        const requestUrl = `${this.userUrl}/Pagination${query}`;
-        return this.httpClient.get<HttpResponse>(requestUrl);
+    public paginate(query: string): Observable<any> {
+        return this.httpClient.get<any>(`${this.userUrl}/pagination${query}`);
     }
 
-    public getAll(): Observable<HttpResponse> {
-        const requestUrl = `${this.userUrl}`;
-        return this.httpClient.get<HttpResponse>(requestUrl);
+    public getOneById(id: number): Observable<any> {
+        return this.httpClient.get<any>(`${this.userUrl}/one/${id}`);
     }
 
-    public create(creation: any): Observable<HttpResponse> {
-        return this.httpClient.post<HttpResponse>(`${this.userUrl}`, creation);
+    public create(creation: any): Observable<any> {
+        return this.httpClient.post<any>(`${this.userUrl}/create`, creation);
     }
 
-    public getOneById(id: number): Observable<HttpResponse> {
-        return this.httpClient.get<HttpResponse>(`${this.userUrl}/one/${id}`);
+    public update(id: number, update: any): Observable<any> {
+        return this.httpClient.put<any>(`${this.userUrl}/one/update/${id}`, update);
     }
 
-    public update(id: number, update: any): Observable<HttpResponse> {
-        return this.httpClient.put<HttpResponse>(`${this.userUrl}/${id}`, update);
-    }
-
-    public delete(id: number): Observable<HttpResponse> {
-        return this.httpClient.delete<HttpResponse>(`${this.userUrl}/${id}`);
-    }
-
-    public changePassword(data: any): Observable<HttpResponse<any>> {
-        return this.httpClient.put<HttpResponse<any>>(`${this.userUrl}/current/set-change-passord`, data);
-    }
-
-    public setPersonalInfos(data: any): Observable<HttpResponse<any>> {
-        return this.httpClient.put<HttpResponse<any>>(`${this.userUrl}/current/set-personel-infos`, data);
-    }
-
-    public sendValidateDocument(data: any): Observable<HttpResponse<any>> {
-        return this.httpClient.put<HttpResponse<any>>(`${this.userUrl}/current/send-validate-document`, data);
+    public deleteMany(query: string): Observable<any> {
+        return this.httpClient.delete<any>(`${this.userUrl}/many${query}`);
     }
 }

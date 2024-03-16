@@ -503,7 +503,7 @@ export class DbService {
                 "totalQuantity" REAL,
                 "totalAmount" NUMERIC(16,2),
                 cash NUMERIC(16,2),
-                "cashMoneySourceId" INT,
+                "moneySourceId" INT,
                 "premiseId" INT,
                 date DATE,
                 notes VARCHAR(300),
@@ -511,7 +511,7 @@ export class DbService {
                 "createdBy" INT,
                 "lastUpdateAt" TIMESTAMP,
                 "lastUpdateBy" INT,
-                CONSTRAINT fk_cash_money_source_id FOREIGN KEY("cashMoneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
                 CONSTRAINT fk_premise_id FOREIGN KEY("premiseId") REFERENCES premises(id),
                 CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
                 CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
@@ -536,7 +536,7 @@ export class DbService {
                 "totalQuantity" REAL,
                 "totalAmount" NUMERIC(16,2),
                 "returnedCash" NUMERIC(16,2),
-                "returnedCashMoneySourceId" INT,
+                "moneySourceId" INT,
                 "premiseId" INT,
                 date DATE,
                 notes VARCHAR(300),
@@ -544,7 +544,7 @@ export class DbService {
                 "createdBy" INT,
                 "lastUpdateAt" TIMESTAMP,
                 "lastUpdateBy" INT,
-                CONSTRAINT fk_returned_cash_money_source_id FOREIGN KEY("returnedCashMoneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
                 CONSTRAINT fk_premise_id FOREIGN KEY("premiseId") REFERENCES premises(id),
                 CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
                 CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
@@ -579,10 +579,11 @@ export class DbService {
                 CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
                 CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
             );
-            CREATE TABLE IF NOT EXISTS batch_stock_items (
+            CREATE TABLE IF NOT EXISTS batch_items (
                 id SERIAL PRIMARY KEY NOT NULL,
                 "stockId" INT,
                 quantity REAL,
+                amount NUMERIC(16,2),
                 "batchId" INT,
                 CONSTRAINT fk_stock_id FOREIGN KEY("stockId") REFERENCES stocks(id),
                 CONSTRAINT fk_batch_id FOREIGN KEY("batchId") REFERENCES batches(id)
@@ -591,6 +592,7 @@ export class DbService {
                 id SERIAL PRIMARY KEY NOT NULL,
                 "ingredientId" INT,
                 quantity REAL,
+                amount NUMERIC(16,2),
                 "batchId" INT,
                 CONSTRAINT fk_ingredient_id FOREIGN KEY("ingredientId") REFERENCES ingredients(id),
                 CONSTRAINT fk_batch_id FOREIGN KEY("batchId") REFERENCES batches(id)
@@ -604,9 +606,10 @@ export class DbService {
                 code VARCHAR(16),
                 "inStockQuantity" REAL,
                 "inStockQuantityAmount" NUMERIC(16,2),
-                "currentSalePrice" NUMERIC(16,2),
-                "totalPurchasePrice" NUMERIC(16,2),
-                "totalSalePrice" NUMERIC(16,2),
+                "calculatedInStockQuantity" REAL,
+                "calculatedInStockQuantityAmount" NUMERIC(16,2),
+                "totalPurchaseAmount" NUMERIC(16,2),
+                "totalSaleAmount" NUMERIC(16,2),
                 "turnover" NUMERIC(16,2),
                 "marginProfit" NUMERIC(16,2),
                 "categoryId" INT,

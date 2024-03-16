@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from '../../shared';
+import { LoginComponent } from './pages';
 
-const COMPONENTS = [];
+const COMPONENTS = [LoginComponent];
 
 @NgModule({
-  declarations: [],
+  declarations: [COMPONENTS],
   imports: [
     SharedModule,
     AuthRoutingModule,

@@ -22,8 +22,8 @@ export class PremiseReturnEntity {
     returnedCash: number;
 
     @ManyToOne(() => MoneySourceEntity, moneySource => moneySource.returnedCashDistributions)
-    @JoinColumn({ name: "returnedCashMoneySourceId" })
-    returnedCashMoneySourceId: MoneySourceEntity;
+    @JoinColumn({ name: "moneySourceId" })
+    moneySourceId: MoneySourceEntity;
 
     @ManyToOne(() => PremiseEntity, premise => premise.distributions)
     @JoinColumn({ name: "premiseId" })
@@ -52,5 +52,5 @@ export class PremiseReturnEntity {
     //#endregion
 
     @OneToMany(() => PremiseReturnItemEntity, item => item.premiseReturnId)
-    premiseReturnItems: PremiseReturnItemEntity[];
+    items: PremiseReturnItemEntity[];
 }    
