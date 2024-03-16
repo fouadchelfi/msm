@@ -33,7 +33,7 @@ import { AuthService } from '../../../core/services/auth.service';
               Veuillez remplir ce champ.
             </my-error>
           </my-form-field>
-          <button (click)="login()" mat-flat-button color="primary" class="!h-12 mt-3">Se connecter</button>
+          <button (click)="login()" mat-flat-button color="primary" class="!h-12 mt-3 text-lg">Se connecter</button>
           <div class="self-center">Version 2.5.0</div>
         </form>
       </div>

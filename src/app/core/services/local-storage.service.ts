@@ -12,7 +12,7 @@ export class LocalStorageService {
 
     getDecodedAuthToken() {
         let token = localStorage.getItem('auth_token');
-        return token ? jwtDecode(token) : null;
+        return token ? jwtDecode(token) as any : null;
     }
 
     setAuthToken(token: any) {
@@ -21,5 +21,9 @@ export class LocalStorageService {
 
     removeAuthToken() {
         localStorage.removeItem('auth_token');
+    }
+
+    currentUsername() {
+        return this.getDecodedAuthToken()?.name;
     }
 }
