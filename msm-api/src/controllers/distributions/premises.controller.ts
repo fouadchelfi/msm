@@ -60,6 +60,7 @@ export class PremisesController {
         let creation = {
             code: body.code,
             label: body.label,
+            debt: body.debt,
             notes: body.notes,
             createdAt: currentDateTime(),
             createdBy: 1,
@@ -86,6 +87,7 @@ export class PremisesController {
             id: body.id,
             code: isEmpty(body.code) ? code('LCL', id) : body.code,
             label: body.label,
+            debt: body.debt,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
             lastUpdateBy: 1
@@ -125,5 +127,5 @@ function queryAll() {
         .createQueryBuilder('premise')
         .leftJoinAndSelect('premise.createdBy', 'createdBy')
         .leftJoinAndSelect('premise.lastUpdateBy', 'lastUpdateBy')
-        .select(['premise.id', 'premise.code', 'premise.label', 'premise.notes', 'premise.createdAt', 'premise.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
+        .select(['premise.id', 'premise.code', 'premise.label', 'premise.debt', 'premise.notes', 'premise.createdAt', 'premise.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
 }

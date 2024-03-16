@@ -11,7 +11,7 @@ import { forkJoin } from 'rxjs';
       <div class="dialog-container">
         <div class="dialog-header">
           <div class="text-lg font-medium">
-            {{ data.mode == 'creation' ? 'Nouvelle ' : 'Modifier ' }}
+            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }}
             Retour
           </div>
           <button (click)="closeDialog()">
@@ -29,7 +29,7 @@ import { forkJoin } from 'rxjs';
                   <input #firstFocused formControlName="code" type="text" myInput size="small">
                 </my-form-field>
                 <my-form-field>
-                  <my-label>Local</my-label>
+                  <my-label [required]="true">Local</my-label>
                   <select formControlName="premiseId" myInput size="small">
                     <ng-container *ngFor="let premise of premises">
                       <option [value]="premise.id">{{ premise.label }}</option>
@@ -37,18 +37,6 @@ import { forkJoin } from 'rxjs';
                   </select>
                   <my-error
                   *ngIf="premiseReturnFormGroup.get('premiseId')?.invalid && (premiseReturnFormGroup.get('premiseId')?.dirty || premiseReturnFormGroup.get('premiseId')?.touched) && premiseReturnFormGroup.get('premiseId')?.getError('required')">
-                  Veuillez remplir ce champ.
-                </my-error>
-                </my-form-field>
-                <my-form-field>
-                  <my-label>Source d'argent</my-label>
-                  <select formControlName="moneySourceId" myInput size="small">
-                    <ng-container *ngFor="let source of moneySources">
-                      <option [value]="source.id">{{ source.label }}</option>
-                    </ng-container>
-                  </select>
-                  <my-error
-                  *ngIf="premiseReturnFormGroup.get('moneySourceId')?.invalid && (premiseReturnFormGroup.get('moneySourceId')?.dirty || premiseReturnFormGroup.get('moneySourceId')?.touched) && premiseReturnFormGroup.get('moneySourceId')?.getError('required')">
                   Veuillez remplir ce champ.
                 </my-error>
                 </my-form-field>
@@ -61,6 +49,18 @@ import { forkJoin } from 'rxjs';
                     *ngIf="premiseReturnFormGroup.get('returnedCash')?.invalid && (premiseReturnFormGroup.get('returnedCash')?.dirty || premiseReturnFormGroup.get('returnedCash')?.touched) && premiseReturnFormGroup.get('returnedCash')?.getError('required')">
                     Veuillez remplir ce champ.
                   </my-error>
+                </my-form-field>
+                <my-form-field>
+                  <my-label [required]="true">Source d'argent</my-label>
+                  <select formControlName="moneySourceId" myInput size="small">
+                    <ng-container *ngFor="let source of moneySources">
+                      <option [value]="source.id">{{ source.label }}</option>
+                    </ng-container>
+                  </select>
+                  <my-error
+                  *ngIf="premiseReturnFormGroup.get('moneySourceId')?.invalid && (premiseReturnFormGroup.get('moneySourceId')?.dirty || premiseReturnFormGroup.get('moneySourceId')?.touched) && premiseReturnFormGroup.get('moneySourceId')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
                 </my-form-field>
               </div>
               <div class="flex flex-col gap-y-2 w-64">
@@ -97,7 +97,7 @@ import { forkJoin } from 'rxjs';
                 <input formControlName="mode" type="text" class="!hidden">
                 <input formControlName="oldMode" type="text" class="!hidden">
                 <my-form-field class="w-[400px]">
-                  <my-label>Stock</my-label>
+                  <my-label [required]="true">Stock</my-label>
                   <select formControlName="stockId" myInput size="small">
                     <ng-container *ngFor="let stock of stocks">
                       <option [value]="stock.id">{{ getStockInfo(stock) }}</option>
@@ -113,7 +113,7 @@ import { forkJoin } from 'rxjs';
                   </my-error>
                 </my-form-field>
                 <my-form-field class="w-48">
-                  <my-label [required]="true">Prix de premiseReturn</my-label>
+                  <my-label [required]="true">Prix de vente</my-label>
                   <input formControlName="salePrice" type="number" myInput size="small">
                   <my-error
                     *ngIf="itemGroup.get('salePrice')?.invalid && (itemGroup.get('salePrice')?.dirty || itemGroup.get('salePrice')?.touched) && itemGroup.get('salePrice')?.getError('required')">

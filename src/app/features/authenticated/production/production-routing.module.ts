@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BatchesGridComponent, IngredientsGridComponent } from './pages';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'productions', pathMatch: 'full' },
+    { path: '', redirectTo: 'batches', pathMatch: 'full' },
     { path: 'batches', component: BatchesGridComponent },
     { path: 'ingredients', component: IngredientsGridComponent },
 ];

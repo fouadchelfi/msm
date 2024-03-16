@@ -90,8 +90,8 @@ export class PremiseReturnsController {
         for (const item of (<any[]>body.items)) {
             await this.manager.updateStockQuantity(item.stockId, item.quantity, 'add');
         }
-        // this.manager.updatePremiseDebt(creation.premiseId, parseFloat(creation.cost) - parseFloat(creation.payment), 'add');
-        // this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.payment, 'add');
+        this.manager.updatePremiseDebt(creation.premiseId, -(parseFloat(creation.returnedCash) + parseFloat(creation.totalAmount)), 'add');
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, creation.returnedCash, 'add');
 
         return {
             success: true,

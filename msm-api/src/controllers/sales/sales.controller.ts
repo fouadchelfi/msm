@@ -89,10 +89,10 @@ export class SalesController {
 
         //Sync database changes
         for (const item of (<any[]>body.items)) {
-            await this.manager.updateStockQuantity(item.stockId, item.quantity, 'add');
+            await this.manager.updateStockQuantity(item.stockId, -item.quantity, 'add');
         }
-        // this.manager.updateCustomerDebt(creation.customerId, parseFloat(creation.cost) - parseFloat(creation.payment), 'add');
-        this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.payment, 'add');
+        this.manager.updateCustomerDebt(creation.customerId, parseFloat(creation.totalAmount) - parseFloat(creation.payment), 'add');
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, creation.payment, 'add');
 
         return {
             success: true,

@@ -40,7 +40,7 @@ import { MoneySourceTransferFormComponent } from './money-source-transfer-form.c
                     <form [formGroup]="transferFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <div class="inline-fields">
                         <my-form-field>
-                        <my-label>Source (Crédit)</my-label>
+                        <my-label [required]="true">Source (Crédit)</my-label>
                         <select formControlName="fromMoneySourceId" myInput>
                           <ng-container *ngFor="let source of sources">
                             <option [value]="source.id">{{ source.label }}</option>
@@ -51,7 +51,7 @@ import { MoneySourceTransferFormComponent } from './money-source-transfer-form.c
                         <i class="ri-arrow-right-line text-xl text-blue-500"></i>
                       </div>
                       <my-form-field>
-                        <my-label>Source (Débit)</my-label>
+                        <my-label [required]="true">Source (Débit)</my-label>
                         <select formControlName="toMoneySourceId" myInput>
                           <ng-container *ngFor="let source of sources">
                             <option [value]="source.id">{{ source.label }}</option>

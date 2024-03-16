@@ -1,11 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { MoneySourceEntity, MoneySourceTransferEntity, StockEntity } from 'src/entities';
+import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 @UseGuards(AuthGuard)
 @Controller('money-source-transfers')
 export class MoneySourceTransfersController {
+
+    constructor(private manager: ManagerService) { }
 
     @Get('all')
     async getAllTransfers() {
@@ -80,20 +83,9 @@ export class MoneySourceTransfersController {
 
         if (isEmpty(dbTransfer.code)) await repo(MoneySourceTransferEntity).update(dbTransfer.id, { ...creation, code: code('TRA', dbTransfer.id) });
 
-        //Update amount for both Receiver and sender sources.
-        await AppDataSource
-            .createQueryBuilder()
-            .update(MoneySourceEntity)
-            .set({ amount: creation.newFromMoneySourceAmount })
-            .where("id = :id", { id: creation.fromMoneySourceId })
-            .execute();
-
-        await AppDataSource
-            .createQueryBuilder()
-            .update(MoneySourceEntity)
-            .set({ amount: creation.newToMoneySourceAmount })
-            .where("id = :id", { id: creation.toMoneySourceId })
-            .execute();
+        //Sync database changes
+        this.manager.updateMoneySourceAmount(creation.fromMoneySourceId, creation.newFromMoneySourceAmount, 'replace');
+        this.manager.updateMoneySourceAmount(creation.toMoneySourceId, creation.newToMoneySourceAmount, 'replace');
 
         return {
             success: true,

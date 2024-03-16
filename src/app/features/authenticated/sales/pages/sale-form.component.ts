@@ -29,7 +29,7 @@ import { forkJoin } from 'rxjs';
                   <input #firstFocused formControlName="code" type="text" myInput size="small">
                 </my-form-field>
                 <my-form-field>
-                  <my-label>Client</my-label>
+                  <my-label [required]="true">Client</my-label>
                   <select formControlName="customerId" myInput size="small">
                     <ng-container *ngFor="let customer of customers">
                       <option [value]="customer.id">{{ customer.name }}</option>
@@ -41,7 +41,7 @@ import { forkJoin } from 'rxjs';
                 </my-error>
                 </my-form-field>
                 <my-form-field>
-                  <my-label>Source d'argent</my-label>
+                  <my-label [required]="true">Source d'argent</my-label>
                   <select formControlName="moneySourceId" myInput size="small">
                     <ng-container *ngFor="let source of moneySources">
                       <option [value]="source.id">{{ source.label }}</option>
@@ -105,7 +105,7 @@ import { forkJoin } from 'rxjs';
                 <input formControlName="mode" type="text" class="!hidden">
                 <input formControlName="oldMode" type="text" class="!hidden">
                 <my-form-field class="w-[400px]">
-                  <my-label>Stock</my-label>
+                  <my-label [required]="true">Stock</my-label>
                   <select formControlName="stockId" myInput size="small">
                     <ng-container *ngFor="let stock of stocks">
                       <option [value]="stock.id">{{ getStockInfo(stock) }}</option>
@@ -366,17 +366,19 @@ export class SaleFormComponent implements OnInit, AfterViewInit {
   }
 
   handleFormChaged() {
-    this.items.valueChanges.subscribe({
-      next: (items: any[]) => {
+    this.saleFormGroup.valueChanges.subscribe({
+      next: data => {
+        let items = data?.items;
         let totalQuantity = 0;
         let totalAmount = 0;
-        items.forEach((item, i) => {
+        items.forEach((item: any, i: number) => {
           this.items.at(i).get('amount')?.setValue(parseFloatOrZero(item.quantity) * parseFloatOrZero(item.salePrice), { emitEvent: false });
         });
-        items.forEach((item, i) => {
+        items.forEach((item: any, i: number) => {
           totalQuantity += parseFloatOrZero(item.quantity);
           totalAmount += parseFloatOrZero(this.items.at(i).get('amount')?.value);
         });
+        totalAmount += parseFloatOrZero(this.saleFormGroup.get('deliveryAmount')?.value);
         this.saleFormGroup.get('totalQuantity')?.setValue(totalQuantity, { emitEvent: false });
         this.saleFormGroup.get('totalAmount')?.setValue(totalAmount, { emitEvent: false });
       }

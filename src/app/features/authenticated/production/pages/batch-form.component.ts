@@ -28,7 +28,7 @@ import { forkJoin } from 'rxjs';
                   <input #firstFocused formControlName="code" type="text" myInput size="small">
                 </my-form-field>
                 <my-form-field>
-                  <my-label>Source d'argent</my-label>
+                  <my-label [required]="true">Source d'argent</my-label>
                   <select formControlName="moneySourceId" myInput size="small">
                     <ng-container *ngFor="let source of moneySources">
                       <option [value]="source.id">{{ source.label }}</option>
@@ -74,7 +74,7 @@ import { forkJoin } from 'rxjs';
                         <input formControlName="mode" type="text" class="!hidden">
                         <input formControlName="oldMode" type="text" class="!hidden">
                         <my-form-field class="w-[450px]">
-                          <my-label>Stock</my-label>
+                          <my-label [required]="true">Stock</my-label>
                           <select formControlName="stockId" myInput size="small">
                             <ng-container *ngFor="let stock of stocks">
                               <option [value]="stock.id">{{ getStockInfo(stock) }}</option>
@@ -125,7 +125,7 @@ import { forkJoin } from 'rxjs';
                         <input formControlName="mode" type="text" class="!hidden">
                         <input formControlName="oldMode" type="text" class="!hidden">
                         <my-form-field class="w-[400px]">
-                          <my-label>Ingrédient</my-label>
+                          <my-label [required]="true">Ingrédient</my-label>
                           <select formControlName="ingredientId" myInput size="small">
                             <ng-container *ngFor="let ingredient of ingredientsArr">
                               <option [value]="ingredient.id">{{ ingredient.label }}</option>

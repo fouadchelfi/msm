@@ -8,36 +8,46 @@ import { PremisesHttpService } from '../../../../shared';
   selector: 'app-premise-form',
   template: `
       <div class="dialog-container">
-            <div class="dialog-header">
-                <div class="text-lg font-medium">
-                    {{data.mode == 'creation' ? 'Nouveau' : 'Modifier'}} local
-                </div>
-                <button (click)="closeDialog()">
-                  <i class="ri-close-line text-2xl"></i>
-                </button>
-              </div>
-        <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
-              <div class="dialog-content">
-                <form [formGroup]="premiseFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
-                    <input formControlName="id" type="number" class="!hidden">
-                    <my-form-field class="w-80">
-                        <my-label [required]="true">Libellé</my-label>
-                        <input #firstFocused formControlName="label" type="text" myInput >
-                        <my-error *ngIf="premiseFormGroup.get('label')?.invalid && (premiseFormGroup.get('label')?.dirty || premiseFormGroup.get('label')?.touched) && premiseFormGroup.get('label')?.getError('required')">
-                            Veuillez remplir ce champ.
-                          </my-error>
-                    </my-form-field>
-                    <my-form-field class="w-80">
-                        <my-label>Notes</my-label>
-                        <textarea formControlName="notes" myTextarea type="text"></textarea>
-                      </my-form-field>
-                </form>
-              </div>
-        <div class="dialog-actions">
-                <button mat-stroked-button (click)="create()">Nouvelle </button>
-                <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
-            </div>
+        <div class="dialog-header">
+          <div class="text-lg font-medium">
+            {{ data.mode == 'creation' ? 'Nouveau' : 'Modifier' }}
+            local
+          </div>
+          <button (click)="closeDialog()">
+            <i class="ri-close-line text-2xl"></i>
+          </button>
         </div>
+        <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
+        <div class="dialog-content">
+          <form [formGroup]="premiseFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
+            <input formControlName="id" type="number" class="!hidden">
+            <my-form-field class="w-80">
+              <my-label [required]="true">Libellé</my-label>
+              <input #firstFocused formControlName="label" type="text" myInput>
+              <my-error
+                *ngIf="premiseFormGroup.get('label')?.invalid && (premiseFormGroup.get('label')?.dirty || premiseFormGroup.get('label')?.touched) && premiseFormGroup.get('label')?.getError('required')">
+                Veuillez remplir ce champ.
+              </my-error>
+            </my-form-field>
+            <my-form-field class="w-80">
+              <my-label [required]="true">Dette</my-label>
+              <input #firstFocused formControlName="debt" type="text" myInput>
+              <my-error
+                *ngIf="premiseFormGroup.get('debt')?.invalid && (premiseFormGroup.get('debt')?.dirty || premiseFormGroup.get('debt')?.touched) && premiseFormGroup.get('debt')?.getError('required')">
+                Veuillez remplir ce champ.
+              </my-error>
+            </my-form-field>
+            <my-form-field class="w-80">
+              <my-label>Notes</my-label>
+              <textarea formControlName="notes" myTextarea type="text"></textarea>
+            </my-form-field>
+          </form>
+        </div>
+        <div class="dialog-actions">
+          <button mat-stroked-button (click)="create()">Nouvelle </button>
+          <button mat-flat-button color="primary" (click)="save()">Sauvegarder</button>
+        </div>
+      </div>
     `
 })
 
@@ -57,6 +67,7 @@ export class PremiseFormComponent implements OnInit, AfterViewInit {
     this.premiseFormGroup = this.fb.group({//Initialize the form and it's validations.
       'id': [undefined],
       'label': ['', [Validators.required]],
+      'debt': [0, [Validators.required]],
       'notes': [''],
     });
   }
@@ -75,6 +86,7 @@ export class PremiseFormComponent implements OnInit, AfterViewInit {
           this.premiseFormGroup.patchValue({
             'id': res.id,
             'label': res.label,
+            'debt': res.debt,
             'notes': res.notes,
           });
         }
@@ -132,6 +144,7 @@ export class PremiseFormComponent implements OnInit, AfterViewInit {
     this.premiseFormGroup.reset({
       id: undefined,
       label: '',
+      debt: 0,
       notes: '',
     }, { emitEvent: false });
   }

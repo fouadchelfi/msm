@@ -13,6 +13,9 @@ export class PremiseEntity {
     @Column({ unique: true })
     label: string;
 
+    @Column({ default: 0, type: 'decimal' })
+    debt: number;
+
     @Column({ nullable: true })
     notes: string;
 

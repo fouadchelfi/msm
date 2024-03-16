@@ -39,7 +39,7 @@ import { appConfig } from '../../../../app.config';
                   </div>
                   <form [formGroup]="batchFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                     <my-form-field>
-                      <my-label>Source d'argent</my-label>
+                      <my-label [required]="true">Source d'argent</my-label>
                       <select formControlName="moneySourceId" myInput size="small">
                         <ng-container *ngFor="let source of moneySources">
                           <option [value]="source.id">{{ source.label }}</option>

@@ -23,7 +23,7 @@ import { UsersHttpService } from '../../../../shared';
             <input formControlName="id" type="number" class="!hidden">
               <my-form-field class="min-w-72"> 
                 <my-label [required]="true">Nom</my-label>
-                <input #firstFocused formControlName="name" type="text" myInput>
+                <input #firstFocused formControlName="name" type="text" myInput autocomplete="username">
                 <my-error
                   *ngIf="userFormGroup.get('name')?.invalid && (userFormGroup.get('name')?.dirty || userFormGroup.get('name')?.touched) && userFormGroup.get('name')?.getError('required')">
                   Veuillez remplir ce champ.
@@ -32,7 +32,7 @@ import { UsersHttpService } from '../../../../shared';
               <div class="inline-fields">
                 <my-form-field class="w-72" [style.display]="data.mode == 'edit' ? 'none' : 'block'">
                 <my-label [required]="true">Mot de passe</my-label>
-                <input formControlName="password" type="password" myInput>
+                <input formControlName="password" type="password" myInput autocomplete="new-password">
                 <my-error
                   *ngIf="userFormGroup.get('password')?.invalid && (userFormGroup.get('password')?.dirty || userFormGroup.get('password')?.touched) && userFormGroup.get('password')?.getError('required')">
                   Veuillez remplir ce champ.
@@ -40,7 +40,7 @@ import { UsersHttpService } from '../../../../shared';
               </my-form-field>
               <my-form-field class="w-72" [style.display]="data.mode == 'edit' ? 'none' : 'block'">
                 <my-label [required]="true">Confirmation</my-label>
-                <input formControlName="confirmPassword" type="password" myInput>
+                <input formControlName="confirmPassword" type="password" myInput autocomplete="new-password">
                 <my-error
                   *ngIf="userFormGroup.get('confirmPassword')?.invalid && (userFormGroup.get('confirmPassword')?.dirty || userFormGroup.get('confirmPassword')?.touched) && userFormGroup.get('confirmPassword')?.getError('required')">
                   Veuillez remplir ce champ.

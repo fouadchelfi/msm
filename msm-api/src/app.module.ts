@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DbService } from './db';
-import { AuthController, BatchesController, CategoriesController, ChargeNaturesController, ChargesController, CustomersController, DistributionsController, EmployeeCreditsController, EmployeePaymentsController, EmployeesController, FamiliesController, FencesController, IngredientsController, LosseNaturesController, LossesController, MoneySourceTransfersController, MoneySourcesController, PremiseReturnsController, PremisesController, PunchesController, PurchasesController, QuantityCorrectionsController, SalesController, StatusTransfersController, StocksController, SuppliersController, UsersController } from './controllers';
+import { AuthController, BatchesController, CategoriesController, ChargeNaturesController, ChargesController, CustomersController, DistributionsController, EmployeeCreditsController, EmployeePaymentsController, EmployeesController, FamiliesController, FencesController, IngredientsController, LosseNaturesController, LossesController, MoneySourceTransfersController, MoneySourcesController, PremiseReturnsController, PremisesController, PunchesController, PurchasesController, QuantityCorrectionsController, SalesController, StatsController, StatusTransfersController, StocksController, SuppliersController, UsersController } from './controllers';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from './utils';
 import { ManagerService } from './services';
@@ -52,7 +52,8 @@ import { ManagerService } from './services';
     DistributionsController,
     PremiseReturnsController,
     BatchesController,
-    FencesController
+    FencesController,
+    StatsController
   ],
   providers: [
     AppService,

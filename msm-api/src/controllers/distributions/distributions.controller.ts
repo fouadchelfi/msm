@@ -88,10 +88,10 @@ export class DistributionsController {
 
         //Sync database changes
         for (const item of (<any[]>body.items)) {
-            await this.manager.updateStockQuantity(item.stockId, item.quantity, 'add');
+            await this.manager.updateStockQuantity(item.stockId, -item.quantity, 'add');
         }
-        // this.manager.updatePremiseDebt(creation.premiseId, parseFloat(creation.cost) - parseFloat(creation.payment), 'add');
-        // this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.payment, 'add');
+        this.manager.updatePremiseDebt(creation.premiseId, parseFloat(creation.cash) + parseFloat(creation.totalAmount), 'add');
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.cash, 'add');
 
         return {
             success: true,

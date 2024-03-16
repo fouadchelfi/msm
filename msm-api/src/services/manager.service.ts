@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
-import { CustomerEntity, EmployeeEntity, MoneySourceEntity, StockEntity, SupplierEntity } from 'src/entities';
+import { CustomerEntity, EmployeeEntity, MoneySourceEntity, PremiseEntity, StockEntity, SupplierEntity } from 'src/entities';
 import { repo } from 'src/utils';
 
 @Injectable()
@@ -68,6 +68,19 @@ export class ManagerService {
             .update(CustomerEntity)
             .set({ debt: operation == 'add' ? parseFloat(customer.debt) + parseFloat(amount) : parseFloat(amount) })
             .where("id = :id", { id: customerId })
+            .execute();
+    }
+
+    async updatePremiseDebt(premiseId: any, amount: any, operation: 'add' | 'replace') {
+        let premise = await repo(PremiseEntity)
+            .createQueryBuilder('premise')
+            .where('premise.id = :id', { id: premiseId })
+            .getOne();
+        await AppDataSource
+            .createQueryBuilder()
+            .update(PremiseEntity)
+            .set({ debt: operation == 'add' ? parseFloat(premise.debt) + parseFloat(amount) : parseFloat(amount) })
+            .where("id = :id", { id: premiseId })
             .execute();
     }
 

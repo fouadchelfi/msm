@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { UserEntity } from 'src/entities';
 import { currentDateTime, repo } from 'src/utils';
+import * as bcrypt from 'bcrypt';
+import { config } from 'src/app.config';
 
 @Injectable()
 export class DbService {
@@ -326,6 +328,7 @@ export class DbService {
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
                 label VARCHAR(100),
+                debt NUMERIC(16,2),
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
                 "createdBy" INT,
@@ -566,6 +569,7 @@ export class DbService {
             CREATE TABLE IF NOT EXISTS batches (
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
+                productId INT,
                 "totalQuantity" REAL,
                 "totalAmount" NUMERIC(16,2),
                 "moneySourceId" INT,
@@ -575,6 +579,7 @@ export class DbService {
                 "createdBy" INT,
                 "lastUpdateAt" TIMESTAMP,
                 "lastUpdateBy" INT,
+                CONSTRAINT fk_product_id FOREIGN KEY("productId") REFERENCES stocks(id),
                 CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
                 CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
                 CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
@@ -631,7 +636,7 @@ export class DbService {
         if (!exists) {
             let creation = {
                 name: 'admin',
-                password: 'admin',
+                password: await bcrypt.hash('admin', config.saltOrRounds),
                 code: 'admin',
                 notes: 'Créé par défaut.',
                 createdAt: currentDateTime(),

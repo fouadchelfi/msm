@@ -6,7 +6,8 @@ import { Component, Input, OnInit } from '@angular/core';
         <div 
             class="flex items-center justify-center p-3 rounded-full bg-primary text-white font-medium text-sm uppercase" 
             [style.width]="width" 
-            [style.height]="height">
+            [style.height]="height"
+        >
             <span>{{ visibleContent }}</span>
         </div>
     `
@@ -41,6 +42,7 @@ export class MyAvatarComponent implements OnInit {
                 return '2.5rem';
         }
     }
+
 
     constructor() { }
     ngOnInit() { }
