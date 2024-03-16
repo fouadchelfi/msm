@@ -6,10 +6,9 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { SharedModule, getFrenchPaginatorIntl } from './shared';
 import { routes } from './app.routes';
-import { JwtInterceptor } from './core';
 import { BrowserModule } from '@angular/platform-browser';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { AuthInterceptor } from './features';
+import { JwtInterceptor } from './core';
 
 @NgModule({
     imports: [
@@ -32,7 +31,6 @@ import { AuthInterceptor } from './features';
         },
         DatePipe,
         DecimalPipe,
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
     ]
 })
 export class AppModule { }

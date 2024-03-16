@@ -16,7 +16,7 @@ import { Component, OnInit } from '@angular/core';
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-funds-line text-lg"></i>
                     <span class="text-sm">Stock</span></button>
-                  <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
+                  <nav class="absolute left-[105px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stocks/stocks" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Stocks</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stocks/status-transfers"
                       [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Transferts d'étate</a>
@@ -31,7 +31,7 @@ import { Component, OnInit } from '@angular/core';
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-bank-card-line text-lg"></i>
                     <span class="text-sm">Achats</span></button>
-                  <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
+                  <nav class="absolute left-[105px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/purchases/purchases" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Achats</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/purchases/suppliers"
                       [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Fournisseurs</a>
@@ -42,7 +42,7 @@ import { Component, OnInit } from '@angular/core';
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-building-3-line text-lg"></i>
                     <span class="text-sm">Production</span></button>
-                  <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
+                  <nav class="absolute left-[105px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/production/bacthes" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Lots</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/production/ingredients" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Ingrédients</a>
                   </nav>
@@ -52,7 +52,7 @@ import { Component, OnInit } from '@angular/core';
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-article-line text-lg"></i>
                     <span class="text-sm">Ventes</span></button>
-                  <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
+                  <nav class="absolute left-[105px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/sales/sales" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Ventes</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/sales/customers" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Clients</a>
                   </nav>
@@ -62,7 +62,7 @@ import { Component, OnInit } from '@angular/core';
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-truck-line text-lg"></i>
                     <span class="text-sm">Distributions</span></button>
-                  <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
+                  <nav class="absolute left-[105px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/distributions/distributions"
                       [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Distributions</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/distributions/premises" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Locaux</a>
@@ -75,7 +75,7 @@ import { Component, OnInit } from '@angular/core';
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-team-line text-lg"></i>
                     <span class="text-sm">RH</span></button>
-                  <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
+                  <nav class="absolute left-[105px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/hr/punches" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Pointages</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/hr/employees" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Employées</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/hr/credits" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Accounts</a>
@@ -87,7 +87,7 @@ import { Component, OnInit } from '@angular/core';
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-cash-line text-lg"></i>
                     <span class="text-sm">Trésoreries</span></button>
-                  <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
+                  <nav class="absolute left-[105px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                   <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/money-sources" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Sources
                       d'argent</a>
                   <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/treasuries/money-source-transfers" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Transferts d'argent</a>
@@ -105,7 +105,7 @@ import { Component, OnInit } from '@angular/core';
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-bar-chart-box-line text-lg"></i>
                     <span class="text-sm">Statistiques</span></button>
-                    <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
+                    <nav class="absolute left-[105px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                       <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm" routerLink="/authenticated/stats/turnover" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Chiffre d'affaires</a>
                     </nav>
                 </div>

@@ -3,7 +3,7 @@ import { AppDataSource } from 'src/data-source';
 import { FenceEntity } from 'src/entities';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('fences')
 export class FencesController {
 

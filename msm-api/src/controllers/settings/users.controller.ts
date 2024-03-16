@@ -4,7 +4,7 @@ import { AuthGuard, GetCurrentUser, code, currentDateTime, isEmpty, isNotEmpty, 
 import * as bcrypt from 'bcrypt';
 import { config } from 'src/app.config';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
 

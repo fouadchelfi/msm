@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { StockEntity } from 'src/entities';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('stocks')
 export class StocksController {
 

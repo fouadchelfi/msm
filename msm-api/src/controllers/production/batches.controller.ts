@@ -3,7 +3,7 @@ import { BatchEntity, BatchIngredientEntity, BatchItemEntity } from 'src/entitie
 import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('batches')
 export class BatchesController {
 

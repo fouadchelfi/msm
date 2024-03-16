@@ -3,7 +3,7 @@ import { PurchaseEntity, PurchaseItemEntity } from 'src/entities';
 import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('purchases')
 export class PurchasesController {
 

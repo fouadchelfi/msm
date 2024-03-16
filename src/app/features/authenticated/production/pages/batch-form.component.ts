@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoneySourcesHttpService, BatchesHttpService, StocksHttpService, currentDateForHtmlField, dateForHtmlField, parseFloatOrZero, IngredientsHttpService } from '../../../../shared';
 import { forkJoin } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-batch-form',
@@ -36,9 +35,9 @@ import { Observable } from 'rxjs/internal/Observable';
                     </ng-container>
                   </select>
                   <my-error
-                  *ngIf="batchFormGroup.get('moneySourceId')?.invalid && (batchFormGroup.get('moneySourceId')?.dirty || batchFormGroup.get('moneySourceId')?.touched) && batchFormGroup.get('moneySourceId')?.getError('required')">
-                  Veuillez remplir ce champ.
-                </my-error>
+                    *ngIf="batchFormGroup.get('moneySourceId')?.invalid && (batchFormGroup.get('moneySourceId')?.dirty || batchFormGroup.get('moneySourceId')?.touched) && batchFormGroup.get('moneySourceId')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
                 </my-form-field>
               </div>
               <div class="flex flex-col gap-y-2 w-64">
@@ -60,108 +59,114 @@ import { Observable } from 'rxjs/internal/Observable';
                 </my-form-field>
               </div>
               <my-form-field class="!-mt-1">
-                  <my-label>Notes</my-label>
-                  <textarea formControlName="notes" myTextarea type="text"></textarea>
-                </my-form-field>
+                <my-label>Notes</my-label>
+                <textarea formControlName="notes" myTextarea type="text"></textarea>
+              </my-form-field>
             </div>
-            <div formArrayName="items" class="!mt-5">
-              <span>Stocks</span>
-              <mat-divider class="mb-1"></mat-divider>
-              <div class="flex flex-col mt-2">
-                <div *ngFor="let itemGroup of items.controls; let i = index;" [formGroupName]="i"
-                class="flex flex-row">
-                <div class="relative flex flex-row gap-x-2">
-                <input formControlName="id" type="number" class="!hidden">
-                <input formControlName="mode" type="text" class="!hidden">
-                <input formControlName="oldMode" type="text" class="!hidden">
-                <my-form-field class="w-[400px]">
-                  <my-label>Stock</my-label>
-                  <select formControlName="stockId" myInput size="small">
-                    <ng-container *ngFor="let stock of stocks">
-                      <option [value]="stock.id">{{ getStockInfo(stock) }}</option>
-                    </ng-container>
-                  </select>
-                </my-form-field>
-                <my-form-field class="w-48">
-                  <my-label [required]="true">Quantité</my-label>
-                  <input formControlName="quantity" type="number" myInput size="small">
-                  <my-error
-                    *ngIf="itemGroup.get('quantity')?.invalid && (itemGroup.get('quantity')?.dirty || itemGroup.get('quantity')?.touched) && itemGroup.get('quantity')?.getError('required')">
-                    Veuillez remplir ce champ.
-                  </my-error>
-                </my-form-field>
-                <my-form-field class="w-48">
-                  <my-label [required]="true">Montant</my-label>
-                  <input formControlName="amount" type="number" myInput size="small">
-                  <my-error
-                    *ngIf="itemGroup.get('amount')?.invalid && (itemGroup.get('amount')?.dirty || itemGroup.get('amount')?.touched) && itemGroup.get('amount')?.getError('required')">
-                    Veuillez remplir ce champ.
-                  </my-error>
-                </my-form-field>
-                <div *ngIf="itemGroup.get('mode')?.value == 'deletion'" class="absolute w-full h-full">
-                  <div class="relative h-full bg-[rgba(255,0,0,0.05)]">
-                    <div class="absolute w-full my-auto top-0 bottom-0 h-[0.06rem] bg-red-500"></div>
+            <mat-tab-group dynamicHeight animationDuration="0ms">
+              <mat-tab label="Stocks">
+                <div formArrayName="items" class="!mt-5">
+                  <div class="flex flex-col mt-2">
+                    <div *ngFor="let itemGroup of items.controls; let i = index;" [formGroupName]="i"
+                      class="flex flex-row">
+                      <div class="relative flex flex-row gap-x-2">
+                        <input formControlName="id" type="number" class="!hidden">
+                        <input formControlName="mode" type="text" class="!hidden">
+                        <input formControlName="oldMode" type="text" class="!hidden">
+                        <my-form-field class="w-[450px]">
+                          <my-label>Stock</my-label>
+                          <select formControlName="stockId" myInput size="small">
+                            <ng-container *ngFor="let stock of stocks">
+                              <option [value]="stock.id">{{ getStockInfo(stock) }}</option>
+                            </ng-container>
+                          </select>
+                        </my-form-field>
+                        <my-form-field class="w-48">
+                          <my-label [required]="true">Quantité</my-label>
+                          <input formControlName="quantity" type="number" myInput size="small">
+                          <my-error
+                            *ngIf="itemGroup.get('quantity')?.invalid && (itemGroup.get('quantity')?.dirty || itemGroup.get('quantity')?.touched) && itemGroup.get('quantity')?.getError('required')">
+                            Veuillez remplir ce champ.
+                          </my-error>
+                        </my-form-field>
+                        <my-form-field class="w-48">
+                          <my-label [required]="true">Montant</my-label>
+                          <input formControlName="amount" type="number" myInput size="small">
+                          <my-error
+                            *ngIf="itemGroup.get('amount')?.invalid && (itemGroup.get('amount')?.dirty || itemGroup.get('amount')?.touched) && itemGroup.get('amount')?.getError('required')">
+                            Veuillez remplir ce champ.
+                          </my-error>
+                        </my-form-field>
+                        <div *ngIf="itemGroup.get('mode')?.value == 'deletion'" class="absolute w-full h-full">
+                          <div class="relative h-full bg-[rgba(255,0,0,0.05)]">
+                            <div class="absolute w-full my-auto top-0 bottom-0 h-[0.06rem] bg-red-500"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <button *ngIf="itemGroup.get('mode')?.value != 'deletion'" (click)="removeItem(i)"
+                        class="mx-3 mt-2"><i class="ri-delete-bin-6-line text-lg text-red-500"></i></button>
+                      <button *ngIf="itemGroup.get('mode')?.value == 'deletion'" (click)="recoverItem(i)"
+                        class="mx-3 mt-2"><i class="ri-device-recover-line text-lg text-blue-500"></i></button>
+                    </div>
                   </div>
+                  <button (click)="createItem()" mat-stroked-button color="accent" class="mt-2">
+                    <i class="ri-add-line text-lg"></i>
+                    <span>Stock</span>
+                  </button>
                 </div>
-              </div>
-                <button  *ngIf="itemGroup.get('mode')?.value != 'deletion'" (click)="removeItem(i)" class="mx-3 mt-2"><i class="ri-delete-bin-6-line text-lg text-red-500"></i></button>
-                <button *ngIf="itemGroup.get('mode')?.value == 'deletion'" (click)="recoverItem(i)" class="mx-3 mt-2"><i class="ri-device-recover-line text-lg text-blue-500"></i></button>
-              </div>
-              </div>
-              <button (click)="createItem()" mat-stroked-button color="accent" class="mt-2">
-                <i class="ri-add-line text-lg"></i>
-                <span>Stock</span>
-              </button>
-            </div>
-            <div formArrayName="ingredients" class="!mt-5">
-              <span>Ingrédients</span>
-              <mat-divider class="mb-1"></mat-divider>
-              <div class="flex flex-col mt-2">
-                <div *ngFor="let ingredientGroup of ingredients.controls; let i = index;" [formGroupName]="i"
-                class="flex flex-row">
-                <div class="relative flex flex-row gap-x-2">
-                <input formControlName="id" type="number" class="!hidden">
-                <input formControlName="mode" type="text" class="!hidden">
-                <input formControlName="oldMode" type="text" class="!hidden">
-                <my-form-field class="w-[400px]">
-                  <my-label>Ingrédient</my-label>
-                  <select formControlName="ingredientId" myInput size="small">
-                    <ng-container *ngFor="let ingredient of ingredientsArr">
-                      <option [value]="ingredient.id">{{ ingredient.label }}</option>
-                    </ng-container>
-                  </select>
-                </my-form-field>
-                <my-form-field class="w-48">
-                  <my-label [required]="true">Quantité</my-label>
-                  <input formControlName="quantity" type="number" myInput size="small">
-                  <my-error
-                    *ngIf="ingredientGroup.get('quantity')?.invalid && (ingredientGroup.get('quantity')?.dirty || ingredientGroup.get('quantity')?.touched) && ingredientGroup.get('quantity')?.getError('required')">
-                    Veuillez remplir ce champ.
-                  </my-error>
-                </my-form-field>
-                <my-form-field class="w-48">
-                  <my-label [required]="true">Montant</my-label>
-                  <input formControlName="amount" type="number" myInput size="small">
-                  <my-error
-                    *ngIf="ingredientGroup.get('amount')?.invalid && (ingredientGroup.get('amount')?.dirty || ingredientGroup.get('amount')?.touched) && ingredientGroup.get('amount')?.getError('required')">
-                    Veuillez remplir ce champ.
-                  </my-error>
-                </my-form-field>
-                <div *ngIf="ingredientGroup.get('mode')?.value == 'deletion'" class="absolute w-full h-full">
-                  <div class="relative h-full bg-[rgba(255,0,0,0.05)]">
-                    <div class="absolute w-full my-auto top-0 bottom-0 h-[0.06rem] bg-red-500"></div>
+              </mat-tab>
+              <mat-tab label="Ingrédients">
+                <div formArrayName="ingredients" class="!mt-5">
+                  <div class="flex flex-col mt-2">
+                    <div *ngFor="let ingredientGroup of ingredients.controls; let i = index;" [formGroupName]="i"
+                      class="flex flex-row">
+                      <div class="relative flex flex-row gap-x-2">
+                        <input formControlName="id" type="number" class="!hidden">
+                        <input formControlName="mode" type="text" class="!hidden">
+                        <input formControlName="oldMode" type="text" class="!hidden">
+                        <my-form-field class="w-[400px]">
+                          <my-label>Ingrédient</my-label>
+                          <select formControlName="ingredientId" myInput size="small">
+                            <ng-container *ngFor="let ingredient of ingredientsArr">
+                              <option [value]="ingredient.id">{{ ingredient.label }}</option>
+                            </ng-container>
+                          </select>
+                        </my-form-field>
+                        <my-form-field class="w-48">
+                          <my-label [required]="true">Quantité</my-label>
+                          <input formControlName="quantity" type="number" myInput size="small">
+                          <my-error
+                            *ngIf="ingredientGroup.get('quantity')?.invalid && (ingredientGroup.get('quantity')?.dirty || ingredientGroup.get('quantity')?.touched) && ingredientGroup.get('quantity')?.getError('required')">
+                            Veuillez remplir ce champ.
+                          </my-error>
+                        </my-form-field>
+                        <my-form-field class="w-48">
+                          <my-label [required]="true">Montant</my-label>
+                          <input formControlName="amount" type="number" myInput size="small">
+                          <my-error
+                            *ngIf="ingredientGroup.get('amount')?.invalid && (ingredientGroup.get('amount')?.dirty || ingredientGroup.get('amount')?.touched) && ingredientGroup.get('amount')?.getError('required')">
+                            Veuillez remplir ce champ.
+                          </my-error>
+                        </my-form-field>
+                        <div *ngIf="ingredientGroup.get('mode')?.value == 'deletion'" class="absolute w-full h-full">
+                          <div class="relative h-full bg-[rgba(255,0,0,0.05)]">
+                            <div class="absolute w-full my-auto top-0 bottom-0 h-[0.06rem] bg-red-500"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <button *ngIf="ingredientGroup.get('mode')?.value != 'deletion'" (click)="removeIngredient(i)"
+                        class="mx-3 mt-2"><i class="ri-delete-bin-6-line text-lg text-red-500"></i></button>
+                      <button *ngIf="ingredientGroup.get('mode')?.value == 'deletion'" (click)="recoverIngredient(i)"
+                        class="mx-3 mt-2"><i class="ri-device-recover-line text-lg text-blue-500"></i></button>
+                    </div>
                   </div>
+                  <button (click)="createIngredient()" mat-stroked-button color="accent" class="mt-2">
+                    <i class="ri-add-line text-lg"></i>
+                    <span>Ingrédient</span>
+                  </button>
                 </div>
-              </div>
-                <button *ngIf="ingredientGroup.get('mode')?.value != 'deletion'" (click)="removeIngredient(i)" class="mx-3 mt-2"><i class="ri-delete-bin-6-line text-lg text-red-500"></i></button>
-                <button *ngIf="ingredientGroup.get('mode')?.value == 'deletion'" (click)="recoverIngredient(i)" class="mx-3 mt-2"><i class="ri-device-recover-line text-lg text-blue-500"></i></button>
-              </div>
-              </div>
-              <button (click)="createIngredient()" mat-stroked-button color="accent" class="mt-2">
-                <i class="ri-add-line text-lg"></i>
-                <span>Ingrédient</span>
-              </button>
-            </div>
+              </mat-tab>
+            </mat-tab-group>
           </form>
         </div>
         <div class="dialog-actions">

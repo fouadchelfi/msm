@@ -4,7 +4,7 @@ import { EmployeePaymentEntity, EmployeeEntity, MoneySourceEntity } from 'src/en
 import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('employee-payments')
 export class EmployeePaymentsController {
 
