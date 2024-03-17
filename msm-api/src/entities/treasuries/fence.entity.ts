@@ -10,36 +10,46 @@ export class FenceEntity {
     @Column({ nullable: true })
     code: string;
 
-    @Column({ default: 0, type: 'real' })
-    inStockQuantity: number;
-
-    @Column({ default: 0, type: 'decimal' })
-    inStockQuantityAmount: number;
-
-    @Column({ default: 0, type: 'real' })
-    calculatedInStockQuantity: number;
-
-    @Column({ default: 0, type: 'decimal' })
-    calculatedInStockQuantityAmount: number;
-
-    @Column({ default: 0, type: 'decimal' })
-    totalPurchaseAmount: number;
-
-    @Column({ default: 0, type: 'decimal' })
-    totalSaleAmount: number;
-
-    @Column({ default: 0, type: 'decimal' })
-    turnover: number;
-
-    @Column({ default: 0, type: 'decimal' })
-    marginProfit: number;
-
     @ManyToOne(() => CategoryEntity, category => category.fences)
     @JoinColumn({ name: "categoryId" })
     categoryId: CategoryEntity;
 
     @Column({ type: 'date' })
     date: Date;
+
+    //InStock
+    @Column({ default: 0, type: 'real' })
+    inStockQuantity: number;
+    @Column({ default: 0, type: 'decimal' })
+    inStockAmount: number;
+    @Column({ default: 0, type: 'real' })
+    calculatedInStockQuantity: number;
+    @Column({ default: 0, type: 'decimal' })
+    calculatedInStockAmount: number;
+
+    //Total (Sale & Purchases)
+    @Column({ default: 0, type: 'decimal' })
+    totalSaleAmount: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalPurchaseAmount: number;
+
+    //External Charges, Losses, Payments, Debts
+    @Column({ default: 0, type: 'decimal' })
+    totalCharges: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalLosses: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalEmployeesPayments: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalEmployeesDebts: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalSuppliersDebts: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalCustomersDebts: number;
+
+    //Profit
+    @Column({ default: 0, type: 'decimal' })
+    marginProfit: number;
 
     @Column({ nullable: true })
     notes: string;

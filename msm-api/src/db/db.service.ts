@@ -195,12 +195,10 @@ export class DbService {
                 CONSTRAINT fk_family_id FOREIGN KEY("familyId") REFERENCES families(id),
                 CONSTRAINT fk_category_id FOREIGN KEY("categoryId") REFERENCES categories(id),
                 CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
-                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
-                );
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id),
                 -- Create a unique constraint on the composite 
-                ALTER TABLE stocks
-                ADD CONSTRAINT unique_combination UNIQUE ("categoryId", "familyId", "status");
-            
+                CONSTRAINT unique_combination UNIQUE ("categoryId", "familyId", "status")
+            );
         `);
 
         //Ingredients
@@ -614,16 +612,26 @@ export class DbService {
             CREATE TABLE IF NOT EXISTS fences (
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
-                "inStockQuantity" REAL,
-                "inStockQuantityAmount" NUMERIC(16,2),
-                "calculatedInStockQuantity" REAL,
-                "calculatedInStockQuantityAmount" NUMERIC(16,2),
-                "totalPurchaseAmount" NUMERIC(16,2),
-                "totalSaleAmount" NUMERIC(16,2),
-                "turnover" NUMERIC(16,2),
-                "marginProfit" NUMERIC(16,2),
                 "categoryId" INT,
                 date DATE,
+                
+                "inStockQuantity" REAL,
+                "inStockAmount" NUMERIC(16,2),
+                "calculatedInStockQuantity" NUMERIC(16,2),
+                "calculatedInStockAmount" NUMERIC(16,2),
+                
+                "totalSaleAmount" NUMERIC(16,2),
+                "totalPurchaseAmount" NUMERIC(16,2),
+                
+                "totalCharges" NUMERIC(16,2),
+                "totalLosses" NUMERIC(16,2),
+                "totalEmployeesPayments" NUMERIC(16,2),
+                "totalEmployeesDebts" NUMERIC(16,2),
+                "totalSuppliersDebts" NUMERIC(16,2),
+                "totalCustomersDebts" NUMERIC(16,2),
+                
+                "marginProfit" NUMERIC(16,2),
+                
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
                 "createdBy" INT,

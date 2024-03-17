@@ -118,18 +118,18 @@ import { FenceFormComponent } from './fence-form.component';
                     </div>
                   </td>
                 </ng-container>
-                <ng-container matColumnDef="inStockQuantityAmount">
+                <ng-container matColumnDef="inStockAmount">
                   <th mat-header-cell *matHeaderCellDef >
                     <div class="flex flex-col">
                       <span>Montant</span>
                       <span class="text-orange-500 !text-xs">réel</span>
                       <span class="text-blue-500 !text-xs">calculée</span>
                     </div>
-                </th>
+                  </th>
                   <td mat-cell *matCellDef="let row">
                     <div class="flex flex-col">
-                      <span class="text-orange-500 !text-sm">{{ row.inStockQuantityAmount }}</span>
-                      <span class="text-blue-500 !text-sm">{{ row.calculatedInStockQuantityAmount }}</span>
+                      <span class="text-orange-500 !text-sm">{{ row.inStockAmount }}</span>
+                      <span class="text-blue-500 !text-sm">{{ row.calculatedInStockAmount }}</span>
                     </div>
                   </td>
                 </ng-container>
@@ -145,13 +145,6 @@ import { FenceFormComponent } from './fence-form.component';
                   <th mat-header-cell *matHeaderCellDef >Montant de vente</th>
                   <td mat-cell *matCellDef="let row">
                         {{ row.totalSaleAmount }}
-                  </td>
-                </ng-container>
-
-                <ng-container matColumnDef="turnover">
-                  <th mat-header-cell *matHeaderCellDef >Chiffre d'affaire</th>
-                  <td mat-cell *matCellDef="let row">
-                        {{ row.turnover }}
                   </td>
                 </ng-container>
 
@@ -204,7 +197,7 @@ import { FenceFormComponent } from './fence-form.component';
 export class FencesGridComponent implements OnInit {
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['select', 'code', 'categoryId.label', 'inStockQuantity', 'inStockQuantityAmount', 'totalPurchaseAmount', 'totalSaleAmount', 'turnover', 'marginProfit', 'date', 'actions'];
+  displayedColumns: string[] = ['select', 'code', 'categoryId.label', 'inStockQuantity', 'inStockAmount', 'totalPurchaseAmount', 'totalSaleAmount', 'marginProfit', 'date', 'actions'];
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
@@ -295,6 +288,8 @@ export class FencesGridComponent implements OnInit {
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
     this.matDialog.open(FenceFormComponent, {
       data: { id: id, mode: action },
+      minWidth: '95vw',
+      minHeight: '95vh',
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({
