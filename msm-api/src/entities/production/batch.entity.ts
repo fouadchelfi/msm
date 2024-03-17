@@ -16,6 +16,10 @@ export class BatchEntity {
     @Column({ default: 0, type: 'real' })
     totalQuantity: number;
 
+    //Productive quantity
+    @Column({ default: 0, type: 'real' })
+    quantity: number;
+
     @Column({ default: 0, type: 'decimal' })
     totalAmount: number;
 
@@ -41,7 +45,7 @@ export class BatchEntity {
     createdBy: UserEntity;
     //#endregion
 
-    //#region Update Area
+    //#region Update Area 
     @Column({ nullable: true })
     lastUpdateAt: Date;
     @ManyToOne(() => UserEntity, user => user.updatedBatches)

@@ -9,9 +9,9 @@ import { config } from 'src/app.config';
 export class DbService {
     constructor() { }
 
-    checkDb() {
-        this.checkTables();
-        this.checkAdminUser();
+    async checkDb() {
+        await this.checkTables();
+        await this.checkAdminUser();
     }
 
     async checkTables() {
@@ -21,7 +21,7 @@ export class DbService {
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
                 name VARCHAR(50),
-                password VARCHAR(20),
+                password VARCHAR(128),
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP,
                 "createdBy" INT,
@@ -569,10 +569,11 @@ export class DbService {
             CREATE TABLE IF NOT EXISTS batches (
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
-                productId INT,
                 "totalQuantity" REAL,
                 "totalAmount" NUMERIC(16,2),
                 "moneySourceId" INT,
+                "productId" INT,
+                "quantity" REAL,
                 date DATE,
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 

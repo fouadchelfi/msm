@@ -26,6 +26,9 @@ export class BatchesController {
 
         let result = queryAll();
 
+        if (isNotEmpty(query.productId))
+            result = result.where("batch.productId = :productId", { productId: query.productId });
+
         if (isNotEmpty(query.moneySourceId))
             result = result.where("batch.moneySourceId = :moneySourceId", { moneySourceId: query.moneySourceId });
 
@@ -66,6 +69,8 @@ export class BatchesController {
             totalQuantity: body.totalQuantity,
             totalAmount: body.totalAmount,
             moneySourceId: body.moneySourceId,
+            productId: body.productId,
+            quantity: body.quantity,
             date: body.date,
             notes: body.notes,
             createdAt: currentDateTime(),
@@ -75,7 +80,7 @@ export class BatchesController {
         };
         let dbBatch = await repo(BatchEntity).save(creation);
 
-        if (isEmpty(dbBatch.code)) await repo(BatchEntity).update(dbBatch.id, { ...creation, code: code('RLC', dbBatch.id) });
+        if (isEmpty(dbBatch.code)) await repo(BatchEntity).update(dbBatch.id, { ...creation, code: code('LOT', dbBatch.id) });
 
         //Asigne batch id to every item.
         (<any[]>body.items).map(item => item.batchId = parseInt(dbBatch.id));
@@ -89,10 +94,11 @@ export class BatchesController {
 
         //Sync database changes
         for (const item of (<any[]>body.items)) {
-            await this.manager.updateStockQuantity(item.stockId, item.quantity, 'add');
+            await this.manager.updateStockQuantity(item.stockId, -item.quantity, 'add');
         }
-        // this.manager.updatePremiseDebt(creation.premiseId, parseFloat(creation.cost) - parseFloat(creation.payment), 'add');
-        // this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.payment, 'add');
+        this.manager.updateStockQuantity(creation.productId, parseFloat(creation.quantity), 'add');
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.totalAmount, 'add');
+
 
         return {
             success: true,
@@ -108,7 +114,7 @@ export class BatchesController {
 
         await repo(BatchEntity).update(body.id, {
             id: body.id,
-            code: isEmpty(body.code) ? code('RLC', id) : body.code,
+            code: isEmpty(body.code) ? code('LOT', id) : body.code,
             //...
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
@@ -176,6 +182,7 @@ function queryAll() {
     return repo(BatchEntity)
         .createQueryBuilder('batch')
         .leftJoinAndSelect('batch.moneySourceId', 'moneySourceId')
+        .leftJoinAndSelect('batch.productId', 'productId')
         .leftJoinAndSelect('batch.createdBy', 'createdBy')
         .leftJoinAndSelect('batch.lastUpdateBy', 'lastUpdateBy')
         .leftJoinAndSelect('batch.items', 'items')
@@ -186,12 +193,14 @@ function queryAll() {
             'batch.id',
             'batch.code',
             'batch.totalQuantity',
+            'batch.quantity',
             'batch.totalAmount',
             'batch.date',
             'batch.notes',
             'batch.createdAt',
             'batch.lastUpdateAt',
             'moneySourceId',
+            'productId',
             'createdBy',
             'lastUpdateBy',
             'items',
