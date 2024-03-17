@@ -16,7 +16,7 @@ import { CategoriesHttpService } from '../../../../shared';
                   <i class="ri-close-line text-2xl"></i>
                 </button>
               </div>
-        <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
+            <my-global-errors class="px-3" *ngIf="errors.length > 0" [errors]="errors"></my-global-errors>
               <div class="dialog-content">
                 <form [formGroup]="categoryFormGroup" class="flex flex-col gap-y-5 mt-3 h-64">
                     <input formControlName="id" type="number" class="!hidden">

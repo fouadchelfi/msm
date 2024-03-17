@@ -122,11 +122,13 @@ export class UsersController {
 async function validateUser(user) {
     let errors = [];
 
-    if (await (repo(UserEntity).createQueryBuilder('users').where("TRIM(LOWER(users.name)) = TRIM(LOWER(:name))", { name: user.name })).getExists())
-        errors.push("Nom d'utilisateur existe déjà");
-
-    if (isNotEmpty(user.code) && await (repo(UserEntity).createQueryBuilder('users').where("TRIM(users.code) = TRIM(:code)", { code: user.code })).getExists())
+    let userDbCode = await repo(UserEntity).createQueryBuilder('user').where("user.code = :code", { code: `${(<string>user.code)}` }).getOne();
+    if (userDbCode && userDbCode.id != user.id)
         errors.push("Code existe déjà");
+
+    let userDbName = await repo(UserEntity).createQueryBuilder('user').where("TRIM(LOWER(user.name)) = :name", { name: `${(<string>user.name).toLowerCase().trim()}` }).getOne();
+    if (userDbName && userDbName.id != user.id)
+        errors.push("Nom d'utilisateur exist déjà");
 
     return errors.length == 0 ? null : errors;
 }

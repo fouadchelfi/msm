@@ -117,7 +117,7 @@ import { MoneySourcesHttpService, FencesHttpService, StocksHttpService, currentD
                 </my-form-field>
               </div>
             </div>
-            <my-form-field>
+            <my-form-field >
               <my-label>Notes</my-label>
               <textarea formControlName="notes" myTextarea type="text"></textarea>
             </my-form-field>

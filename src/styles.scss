@@ -21,7 +21,7 @@ body { margin: 0; color: theme('colors.color-txt'); }
     @apply flex flex-row items-center justify-between pt-5 pb-3;
   }
   .dialog-content{
-    @apply flex flex-1 overflow-y-auto p-2;
+    @apply flex flex-1 overflow-y-auto p-2 py-7;
   }
   .dialog-actions{
     @apply flex flex-row justify-between py-3 border-t;
