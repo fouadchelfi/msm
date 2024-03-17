@@ -146,6 +146,15 @@ async function validateStock(stock) {
     if (stockDbLabel && stockDbLabel.id != stock.id)
         errors.push("Libellé existe déjà");
 
+    let stockDb = await repo(StockEntity)
+        .createQueryBuilder('stock')
+        .where("stock.familyId = :familyId", { familyId: `${stock.familyId}` })
+        .andWhere("stock.categoryId = :categoryId", { categoryId: `${stock.categoryId}` })
+        .andWhere("stock.status = :status", { status: `${stock.status}` })
+        .getOne();
+    if (stockDb && stockDb.id != stock.id)
+        errors.push("Un stock avec la même famille, catégorie et état existe déjà.");
+
     return errors.length == 0 ? null : errors;
 }
 

@@ -196,7 +196,11 @@ export class DbService {
                 CONSTRAINT fk_category_id FOREIGN KEY("categoryId") REFERENCES categories(id),
                 CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
                 CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
-            );
+                );
+                -- Create a unique constraint on the composite 
+                ALTER TABLE stocks
+                ADD CONSTRAINT unique_combination UNIQUE ("categoryId", "familyId", "status");
+            
         `);
 
         //Ingredients
