@@ -630,6 +630,7 @@ export class DbService {
                 "totalSuppliersDebts" NUMERIC(16,2),
                 "totalCustomersDebts" NUMERIC(16,2),
                 
+                "rawProfit" NUMERIC(16,2),
                 "marginProfit" NUMERIC(16,2),
                 
                 notes VARCHAR(300),

@@ -76,6 +76,7 @@ export class FencesController {
             totalSuppliersDebts: body.totalSuppliersDebts,
             totalCustomersDebts: body.totalCustomersDebts,
             marginProfit: body.marginProfit,
+            rawProfit: body.rawProfit,
             notes: body.notes,
             createdAt: currentDateTime(),
             createdBy: 1,
@@ -85,10 +86,6 @@ export class FencesController {
         let dbFence = await repo(FenceEntity).save(creation);
 
         if (isEmpty(dbFence.code)) await repo(FenceEntity).update(dbFence.id, { ...creation, code: code('CLR', dbFence.id) });
-
-
-        //Sync database changes
-        //..
 
         return {
             success: true,
@@ -120,6 +117,7 @@ export class FencesController {
             totalSuppliersDebts: body.totalSuppliersDebts,
             totalCustomersDebts: body.totalCustomersDebts,
             marginProfit: body.marginProfit,
+            rawProfit: body.rawProfit,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
             lastUpdateBy: 1
@@ -270,6 +268,7 @@ function queryAll() {
             'fence.totalSuppliersDebts',
             'fence.totalCustomersDebts',
             'fence.marginProfit',
+            'fence.rawProfit',
             'fence.notes',
             'fence.createdAt',
             'fence.lastUpdateAt',

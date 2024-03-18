@@ -149,9 +149,16 @@ import { FenceFormComponent } from './fence-form.component';
                 </ng-container>
 
                 <ng-container matColumnDef="marginProfit">
-                  <th mat-header-cell *matHeaderCellDef >Marge bénéficiaire</th>
+                  <th mat-header-cell *matHeaderCellDef >Marge bénéficiaire (Net)</th>
                   <td mat-cell *matCellDef="let row">
                         {{ row.marginProfit }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rawProfit">
+                  <th mat-header-cell *matHeaderCellDef >Marge bénéficiaire (Brut)</th>
+                  <td mat-cell *matCellDef="let row">
+                        {{ row.rawProfit }}
                   </td>
                 </ng-container>
       
@@ -197,7 +204,7 @@ import { FenceFormComponent } from './fence-form.component';
 export class FencesGridComponent implements OnInit {
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['select', 'code', 'categoryId.label', 'inStockQuantity', 'inStockAmount', 'totalPurchaseAmount', 'totalSaleAmount', 'marginProfit', 'date', 'actions'];
+  displayedColumns: string[] = ['select', 'code', 'categoryId.label', 'inStockQuantity', 'inStockAmount', 'totalPurchaseAmount', 'totalSaleAmount', 'marginProfit', 'rawProfit', 'date', 'actions'];
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;

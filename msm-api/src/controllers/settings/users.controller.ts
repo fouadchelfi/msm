@@ -83,7 +83,7 @@ export class UsersController {
     async updateUser(@Param('id') id: number, @Body() body, @GetCurrentUser() currentUser) {
 
         if (id == 1)
-            throw new ForbiddenException('Vous ne pouvez pas modifier l’utilisateur admin');
+            throw new ForbiddenException('Vous ne pouvez pas modifier l’utilisateur admin.');
 
 
         let errors = await validateUser(body);
@@ -104,6 +104,30 @@ export class UsersController {
             success: true,
             errors: [],
             data: await this.getOneUserById(update.id)
+        };
+    }
+
+    @Put('one/change-password/:id')
+    async chargePassword(@Param('id') id: number, @Body() body, @GetCurrentUser() currentUser) {
+
+        let adminDb = await repo(UserEntity).createQueryBuilder('user').where('user.name = :name', { name: 'admin' }).getOne();
+        if (!adminDb || !(await bcrypt.compare(body.adminPassword, adminDb.password))) {
+            return {
+                success: false,
+                errors: ["Vous ne pouvez pas modifier le mot de passe."]
+            };
+        }
+
+        await repo(UserEntity).update(id, {
+            password: await bcrypt.hash(body.newPassword, config.saltOrRounds),
+            lastUpdateAt: currentDateTime(),
+            lastUpdateBy: 1
+        });
+
+        return {
+            success: true,
+            errors: [],
+            data: await this.getOneUserById(body.userId)
         };
     }
 

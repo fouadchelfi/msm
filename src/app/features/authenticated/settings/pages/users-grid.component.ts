@@ -5,11 +5,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
-import { UsersHttpService, TimeZoneService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
+import { UsersHttpService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
 import { UserFormComponent } from './user-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { appConfig } from '../../../../app.config';
+import { ChangePasswordFormComponent } from './change-password-form.component';
 
 @Component({
   selector: 'app-users-grid',
@@ -113,8 +114,8 @@ import { appConfig } from '../../../../app.config';
                     <div class="flex flex-row items-center space-x-2">
                       <button mat-icon-button [matTooltip]="getTracabilityInfo(item)"><i
                           class="ri-information-line"></i></button>
-                      <button mat-icon-button (click)="deleteItem(item)"><i
-                          class="ri-delete-bin-6-line text-red-600"></i></button>
+                      <button mat-icon-button (click)="changePassword(item)"><i class="ri-lock-password-line"></i></button>
+                      <button mat-icon-button (click)="deleteItem(item)"><i class="ri-delete-bin-6-line text-red-600"></i></button>
                       <button mat-icon-button (click)="newItem('edit', item.id)"><i class="ri-pencil-line"></i></button>
                     </div>
                   </td>
@@ -241,6 +242,15 @@ export class UsersGridComponent implements OnInit {
     if (confirm("Etes-vous sûr de ce que vous faites ?")) {
       this.deleteMany([item]);
     }
+  }
+  changePassword(item: any): void {
+    this.matDialog.open(ChangePasswordFormComponent, {
+      data: { id: item?.id },
+      disableClose: true,
+      autoFocus: false,
+    }).afterClosed().subscribe({
+      next: res => this.refreshGrid.emit()
+    });
   }
   deleteSeleted(): void {
     if (confirm("Etes-vous sûr de ce que vous faites ?")) {

@@ -33,4 +33,8 @@ export class UsersHttpService {
     public deleteMany(query: string): Observable<any> {
         return this.httpClient.delete<any>(`${this.userUrl}/many${query}`);
     }
+
+    public changePassword(id: number, update: any): Observable<any> {
+        return this.httpClient.put<any>(`${this.userUrl}/one/change-password/${id}`, update);
+    }
 }

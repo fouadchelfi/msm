@@ -18,13 +18,13 @@ body { margin: 0; color: theme('colors.color-txt'); }
     @apply flex flex-col flex-1 bg-white px-7 overflow-hidden max-h-[calc(95vh)];
   }
   .dialog-header{
-    @apply flex flex-row items-center justify-between pt-5 pb-3;
+    @apply flex flex-row items-center justify-between px-2 pt-5 pb-3;
   }
   .dialog-content{
     @apply flex flex-1 overflow-y-auto p-2 py-7;
   }
   .dialog-actions{
-    @apply flex flex-row justify-between py-3 border-t;
+    @apply flex flex-row justify-between px-2 py-3 border-t;
   }
 
   mat-dialog-content{

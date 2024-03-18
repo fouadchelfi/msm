@@ -43,7 +43,7 @@ import { MoneySourcesHttpService, StatsHttpService, StocksHttpService, currentDa
                 </my-form-field>
               </div>
             </form>
-            <button mat-flat-button color="primary" class="mt-5">Calculer</button>
+            <button mat-flat-button color="primary" class="mt-5">Appliquer</button>
           </div>
             <form [formGroup]="statsFormGroup" class="flex flex-col gap-y-3 mt-8">
               <my-form-field>

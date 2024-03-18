@@ -50,6 +50,8 @@ export class FenceEntity {
     //Profit
     @Column({ default: 0, type: 'decimal' })
     marginProfit: number;
+    @Column({ default: 0, type: 'decimal' })
+    rawProfit: number;
 
     @Column({ nullable: true })
     notes: string;
