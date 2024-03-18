@@ -62,9 +62,9 @@ export class LosseNaturesController {
             label: body.label,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbLosseNature = await repo(LosseNatureEntity).save(creation);
 
@@ -88,7 +88,7 @@ export class LosseNaturesController {
             label: body.label,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

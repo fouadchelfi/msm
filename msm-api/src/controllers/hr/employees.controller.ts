@@ -73,9 +73,9 @@ export class EmployeesController {
             website: body.website,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbEmployee = await repo(EmployeeEntity).save(creation);
 
@@ -110,7 +110,7 @@ export class EmployeesController {
             website: body.website,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

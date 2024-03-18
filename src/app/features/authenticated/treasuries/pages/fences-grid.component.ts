@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
-import { MoneySourcesHttpService, TraceabilityService, isEmpty, isNotEmpty, FencesHttpService, CategoriesHttpService } from '../../../../shared';
+import { MoneySourcesHttpService, TraceabilityService, isEmpty, isNotEmpty, FencesHttpService, CategoriesHttpService, parseFloatOrZero } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { appConfig } from '../../../../app.config';
@@ -144,7 +144,7 @@ import { FenceFormComponent } from './fence-form.component';
                 <ng-container matColumnDef="totalSaleAmount">
                   <th mat-header-cell *matHeaderCellDef >Montant de vente</th>
                   <td mat-cell *matCellDef="let row">
-                        {{ row.totalSaleAmount }}
+                        {{ totalSales([row.totalCustomersSaleAmount, row.totalPremisesSaleAmount]) }}
                   </td>
                 </ng-container>
 
@@ -202,6 +202,7 @@ import { FenceFormComponent } from './fence-form.component';
     `],
 })
 export class FencesGridComponent implements OnInit {
+
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = ['select', 'code', 'categoryId.label', 'inStockQuantity', 'inStockAmount', 'totalPurchaseAmount', 'totalSaleAmount', 'marginProfit', 'rawProfit', 'date', 'actions'];
@@ -378,5 +379,9 @@ export class FencesGridComponent implements OnInit {
 
   getTracabilityInfo(item: any) {
     return this.traceability.info(item);
+  }
+
+  totalSales(sales: any[]) {
+    return sales.reduce((acc, curr) => parseFloatOrZero(acc) + parseFloatOrZero(curr), 0);
   }
 }

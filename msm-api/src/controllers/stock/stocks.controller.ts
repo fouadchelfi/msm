@@ -68,9 +68,9 @@ export class StocksController {
             status: body.status,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbStock = await repo(StockEntity).save(creation);
 
@@ -100,7 +100,7 @@ export class StocksController {
             status: body.status,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

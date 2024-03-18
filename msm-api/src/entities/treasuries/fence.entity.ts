@@ -29,7 +29,9 @@ export class FenceEntity {
 
     //Total (Sale & Purchases)
     @Column({ default: 0, type: 'decimal' })
-    totalSaleAmount: number;
+    totalCustomersSaleAmount: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalPremisesSaleAmount: number;
     @Column({ default: 0, type: 'decimal' })
     totalPurchaseAmount: number;
 
@@ -46,6 +48,10 @@ export class FenceEntity {
     totalSuppliersDebts: number;
     @Column({ default: 0, type: 'decimal' })
     totalCustomersDebts: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalBatchesStocksAmount: number;
+    @Column({ default: 0, type: 'decimal' })
+    totalBatchesIngredientsAmount: number;
 
     //Profit
     @Column({ default: 0, type: 'decimal' })

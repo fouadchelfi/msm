@@ -35,9 +35,18 @@ export class FencesHttpService {
     }
 
 
-    public getSalesTotalAmount(id: number): Observable<any> {
-        return this.httpClient.get<any>(`${this.fenceUrl}/sales/total/${id}`);
+    public getCustomersSalesTotalAmount(id: number): Observable<any> {
+        return this.httpClient.get<any>(`${this.fenceUrl}/sales/customers/total/${id}`);
     }
+
+    public getPremisesSalesTotalAmount(id: number): Observable<any> {
+        return this.httpClient.get<any>(`${this.fenceUrl}/sales/premises/total/${id}`);
+    }
+
+    public getBatchesTotalAmount(id: number): Observable<any> {
+        return this.httpClient.get<any>(`${this.fenceUrl}/batches/total/${id}`);
+    }
+
     public getPurchasesTotalCost(id: number): Observable<any> {
         return this.httpClient.get<any>(`${this.fenceUrl}/purchases/total/${id}`);
     }

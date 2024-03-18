@@ -106,10 +106,18 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
                   </my-error>
                 </my-form-field>
                 <my-form-field class="w-64">
-                    <my-label [required]="true">Total ventes</my-label>
-                    <input formControlName="totalSaleAmount" type="number" myInput size="small" myCalculableField>
+                    <my-label [required]="true">Total ventes (Clients)</my-label>
+                    <input formControlName="totalCustomersSaleAmount" type="number" myInput size="small" myCalculableField>
                     <my-error
-                      *ngIf="fenceFormGroup.get('totalSaleAmount')?.invalid && (fenceFormGroup.get('totalSaleAmount')?.dirty || fenceFormGroup.get('totalSaleAmount')?.touched) && fenceFormGroup.get('totalSaleAmount')?.getError('required')">
+                      *ngIf="fenceFormGroup.get('totalCustomersSaleAmount')?.invalid && (fenceFormGroup.get('totalCustomersSaleAmount')?.dirty || fenceFormGroup.get('totalCustomersSaleAmount')?.touched) && fenceFormGroup.get('totalCustomersSaleAmount')?.getError('required')">
+                      Veuillez remplir ce champ.
+                    </my-error>
+                  </my-form-field>
+                <my-form-field class="w-64">
+                    <my-label [required]="true">Total ventes (Locaux)</my-label>
+                    <input formControlName="totalPremisesSaleAmount" type="number" myInput size="small" myCalculableField>
+                    <my-error
+                      *ngIf="fenceFormGroup.get('totalPremisesSaleAmount')?.invalid && (fenceFormGroup.get('totalPremisesSaleAmount')?.dirty || fenceFormGroup.get('totalPremisesSaleAmount')?.touched) && fenceFormGroup.get('totalPremisesSaleAmount')?.getError('required')">
                       Veuillez remplir ce champ.
                     </my-error>
                   </my-form-field>
@@ -184,6 +192,26 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
                     </my-error>
                   </my-form-field>
                 </div>
+                <div class="flex flex-row gap-x-5">
+                  <my-form-field class="w-64">
+                    <my-label [required]="true">Total lots (Stocks)</my-label>
+                    <input formControlName="totalBatchesStocksAmount" type="number" myInput size="small" myCalculableField>
+                    <my-error
+                      *ngIf="fenceFormGroup.get('totalBatchesStocksAmount')?.invalid && (fenceFormGroup.get('totalBatchesStocksAmount')?.dirty || fenceFormGroup.get('totalBatchesStocksAmount')?.touched) && fenceFormGroup.get('totalBatchesStocksAmount')?.getError('required')">
+                      Veuillez remplir ce champ.
+                    </my-error>
+                  </my-form-field>
+                </div>
+                <div class="flex flex-row gap-x-5">
+                  <my-form-field class="w-64">
+                    <my-label [required]="true">Total lots (Ingrédients)</my-label>
+                    <input formControlName="totalBatchesIngredientsAmount" type="number" myInput size="small" myCalculableField>
+                    <my-error
+                      *ngIf="fenceFormGroup.get('totalBatchesIngredientsAmount')?.invalid && (fenceFormGroup.get('totalBatchesIngredientsAmount')?.dirty || fenceFormGroup.get('totalBatchesIngredientsAmount')?.touched) && fenceFormGroup.get('totalBatchesIngredientsAmount')?.getError('required')">
+                      Veuillez remplir ce champ.
+                    </my-error>
+                  </my-form-field>
+                </div>
               </div>
             </div>
           </form>
@@ -224,7 +252,8 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
       'inStockAmount': [0, [Validators.required]],
       'calculatedInStockQuantity': [{ value: 0, disabled: true }, [Validators.required]],
       'calculatedInStockAmount': [{ value: 0, disabled: true }, [Validators.required]],
-      'totalSaleAmount': [{ value: 0, disabled: true }, [Validators.required]],
+      'totalCustomersSaleAmount': [{ value: 0, disabled: true }, [Validators.required]],
+      'totalPremisesSaleAmount': [{ value: 0, disabled: true }, [Validators.required]],
       'totalPurchaseAmount': [{ value: 0, disabled: true }, [Validators.required]],
       'totalCharges': [{ value: 0, disabled: true }, [Validators.required]],
       'totalLosses': [{ value: 0, disabled: true }, [Validators.required]],
@@ -232,6 +261,8 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
       'totalEmployeesDebts': [{ value: 0, disabled: true }, [Validators.required]],
       'totalSuppliersDebts': [{ value: 0, disabled: true }, [Validators.required]],
       'totalCustomersDebts': [{ value: 0, disabled: true }, [Validators.required]],
+      'totalBatchesStocksAmount': [{ value: 0, disabled: true }, [Validators.required]],
+      'totalBatchesIngredientsAmount': [{ value: 0, disabled: true }, [Validators.required]],
       'rawProfit': [{ value: 0, disabled: true }, [Validators.required]],
       'marginProfit': [{ value: 0, disabled: true }, [Validators.required]],
       'notes': [''],
@@ -266,7 +297,8 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
             'inStockAmount': res.inStockAmount,
             'calculatedInStockQuantity': res.calculatedInStockQuantity,
             'calculatedInStockAmount': res.calculatedInStockAmount,
-            'totalSaleAmount': res.totalSaleAmount,
+            'totalCustomersSaleAmount': res.totalCustomersSaleAmount,
+            'totalPremisesSaleAmount': res.totalPremisesSaleAmount,
             'totalPurchaseAmount': res.totalPurchaseAmount,
             'totalCharges': res.totalCharges,
             'totalLosses': res.totalLosses,
@@ -274,6 +306,8 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
             'totalEmployeesDebts': res.totalEmployeesDebts,
             'totalSuppliersDebts': res.totalSuppliersDebts,
             'totalCustomersDebts': res.totalCustomersDebts,
+            'totalBatchesStocksAmount': res.totalBatchesStocksAmount,
+            'totalBatchesIngredientsAmount': res.totalBatchesIngredientsAmount,
             'rawProfit': res.rawProfit,
             'marginProfit': res.marginProfit,
             'notes': res.notes
@@ -338,7 +372,8 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
       'inStockAmount': 0,
       'calculatedInStockQuantity': 0,
       'calculatedInStockAmount': 0,
-      'totalSaleAmount': 0,
+      'totalCustomersSaleAmount': 0,
+      'totalPremisesSaleAmount': 0,
       'totalPurchaseAmount': 0,
       'totalCharges': 0,
       'totalLosses': 0,
@@ -346,6 +381,8 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
       'totalEmployeesDebts': 0,
       'totalSuppliersDebts': 0,
       'totalCustomersDebts': 0,
+      'totalBatchesStocksAmount': 0,
+      'totalBatchesIngredientsAmount': 0,
       'rawProfit': 0,
       'marginProfit': 0,
       'date': currentDateForHtmlField(),
@@ -387,21 +424,32 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
         forkJoin([
           this.fencesHttp.getStocksTotalQuantity(formData?.categoryId),
           this.fencesHttp.getStocksTotalAmount(formData?.categoryId),
-          this.fencesHttp.getSalesTotalAmount(formData?.categoryId),
-          this.fencesHttp.getPurchasesTotalCost(formData?.categoryId)
+          this.fencesHttp.getCustomersSalesTotalAmount(formData?.categoryId),
+          this.fencesHttp.getPremisesSalesTotalAmount(formData?.categoryId),
+          this.fencesHttp.getPurchasesTotalCost(formData?.categoryId),
+          this.fencesHttp.getBatchesTotalAmount(formData?.categoryId),
         ]).subscribe({
           next: ([
             totalQuantity,
             totalAmount,
-            salesTotalAmount,
-            purchasesTotalAmount
+            customersSalesTotalAmount,
+            premisesSalesTotalAmount,
+            purchasesTotalAmount,
+            batchesTotalAmount
           ]) => {
             this.fenceFormGroup.get('calculatedInStockQuantity')?.setValue(parseFloatOrZero(totalQuantity.total), { emitEvent: false });
             this.fenceFormGroup.get('calculatedInStockAmount')?.setValue(parseFloatOrZero(totalAmount.total), { emitEvent: false });
-            this.fenceFormGroup.get('totalSaleAmount')?.setValue(parseFloatOrZero(salesTotalAmount.total), { emitEvent: false });
+            this.fenceFormGroup.get('totalCustomersSaleAmount')?.setValue(parseFloatOrZero(customersSalesTotalAmount.total), { emitEvent: false });
+            this.fenceFormGroup.get('totalCustomersSaleAmount')?.setValue(parseFloatOrZero(premisesSalesTotalAmount.total), { emitEvent: false });
             this.fenceFormGroup.get('totalPurchaseAmount')?.setValue(parseFloatOrZero(purchasesTotalAmount.total), { emitEvent: false });
+            this.fenceFormGroup.get('totalBatchesStocksAmount')?.setValue(parseFloatOrZero(batchesTotalAmount.totalItems), { emitEvent: false });
+            this.fenceFormGroup.get('totalBatchesIngredientsAmount')?.setValue(parseFloatOrZero(batchesTotalAmount.totalIngredients), { emitEvent: false });
 
-            this.fenceFormGroup.get('rawProfit')?.setValue(parseFloatOrZero(this.fenceFormGroup.get('totalSaleAmount')?.value) - parseFloatOrZero(this.fenceFormGroup.get('totalPurchaseAmount')?.value), { emitEvent: false });
+            this.fenceFormGroup.get('rawProfit')?.setValue(
+              parseFloatOrZero(this.fenceFormGroup.get('totalCustomersSaleAmount')?.value) +
+              parseFloatOrZero(this.fenceFormGroup.get('totalPremisesSaleAmount')?.value) -
+              parseFloatOrZero(this.fenceFormGroup.get('totalPurchaseAmount')?.value)
+              , { emitEvent: false });
 
             let netProfit = parseFloatOrZero(this.fenceFormGroup.get('rawProfit')?.value) -
               parseFloatOrZero(this.fenceFormGroup.get('totalCharges')?.value) -
@@ -409,7 +457,9 @@ export class FenceFormComponent implements OnInit, AfterViewInit {
               parseFloatOrZero(this.fenceFormGroup.get('totalEmployeesPayments')?.value) -
               parseFloatOrZero(this.fenceFormGroup.get('totalEmployeesDebts')?.value) -
               parseFloatOrZero(this.fenceFormGroup.get('totalSuppliersDebts')?.value) -
-              parseFloatOrZero(this.fenceFormGroup.get('totalCustomersDebts')?.value) +
+              parseFloatOrZero(this.fenceFormGroup.get('totalCustomersDebts')?.value) -
+              parseFloatOrZero(this.fenceFormGroup.get('totalBatchesStocksAmount')?.value) -
+              parseFloatOrZero(this.fenceFormGroup.get('totalBatchesIngredientsAmount')?.value) +
               parseFloatOrZero(this.fenceFormGroup.get('inStockAmount')?.value);
 
             this.fenceFormGroup.get('marginProfit')?.setValue(netProfit, { emitEvent: false });

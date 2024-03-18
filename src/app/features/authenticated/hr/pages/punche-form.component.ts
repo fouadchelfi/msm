@@ -212,6 +212,7 @@ export class PuncheFormComponent implements OnInit, AfterViewInit {
   }
 
   getCreation() {
+    console.log(this.puncheFormGroup.getRawValue())
     return {
       ...this.puncheFormGroup.getRawValue(),
     };
@@ -233,17 +234,22 @@ export class PuncheFormComponent implements OnInit, AfterViewInit {
         this.employeesHttp.getOneById(employeeId).subscribe({
           next: employee => {
             this.puncheFormGroup.get('salary')?.setValue(employee.salary);
-            let hourlyCoefficient = parseFloatOrZero(this.puncheFormGroup.get('hourlyCoefficient')?.value);
-            this.puncheFormGroup.get('amount')?.setValue((parseFloatOrZero(employee.salary) / 26) * hourlyCoefficient);
+            this.setAmount();
           }
         });
       }
     });
     this.puncheFormGroup.get('hourlyCoefficient')?.valueChanges.subscribe({
       next: hourlyCoefficient => {
-        let salary = this.puncheFormGroup.get('salary')?.value;
-        this.puncheFormGroup.get('amount')?.setValue((parseFloatOrZero(salary) / 26) * parseFloatOrZero(hourlyCoefficient));
+        this.setAmount();
       }
     });
+  }
+
+  setAmount() {
+    let salary = parseFloatOrZero(this.puncheFormGroup.get('salary')?.value);
+    let hourlyCoefficient = parseFloatOrZero(this.puncheFormGroup.get('hourlyCoefficient')?.value);
+    let round = parseFloatOrZero(((parseFloatOrZero(salary) / 26) * parseFloatOrZero(hourlyCoefficient)).toFixed(2));
+    this.puncheFormGroup.get('amount')?.setValue(round);
   }
 }

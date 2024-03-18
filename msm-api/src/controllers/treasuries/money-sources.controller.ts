@@ -64,9 +64,9 @@ export class MoneySourcesController {
             amount: body.amount,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbSource = await repo(MoneySourceEntity).save(creation);
 
@@ -92,7 +92,7 @@ export class MoneySourcesController {
             amount: body.amount,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

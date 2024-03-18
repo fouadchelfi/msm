@@ -72,9 +72,9 @@ export class CustomersController {
             website: body.website,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbCustomer = await repo(CustomerEntity).save(creation);
 
@@ -108,7 +108,7 @@ export class CustomersController {
             website: body.website,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

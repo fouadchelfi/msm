@@ -620,7 +620,8 @@ export class DbService {
                 "calculatedInStockQuantity" NUMERIC(16,2),
                 "calculatedInStockAmount" NUMERIC(16,2),
                 
-                "totalSaleAmount" NUMERIC(16,2),
+                "totalCustomersSaleAmount" NUMERIC(16,2),
+                "totalPremisesSaleAmount" NUMERIC(16,2),
                 "totalPurchaseAmount" NUMERIC(16,2),
                 
                 "totalCharges" NUMERIC(16,2),
@@ -629,6 +630,8 @@ export class DbService {
                 "totalEmployeesDebts" NUMERIC(16,2),
                 "totalSuppliersDebts" NUMERIC(16,2),
                 "totalCustomersDebts" NUMERIC(16,2),
+                "totalBatchesStocksAmount" NUMERIC(16,2),
+                "totalBatchesIngredientsAmount" NUMERIC(16,2),
                 
                 "rawProfit" NUMERIC(16,2),
                 "marginProfit" NUMERIC(16,2),
@@ -654,11 +657,13 @@ export class DbService {
                 code: 'admin',
                 notes: 'Créé par défaut.',
                 createdAt: currentDateTime(),
-                createdBy: 1,
                 lastUpdateAt: currentDateTime(),
-                lastUpdateBy: 1
             };
-            await repo(UserEntity).save(creation);
+            let adminDb = await repo(UserEntity).save(creation);
+            await repo(UserEntity).update(adminDb.id, {
+                createdBy: adminDb.id,
+                lastUpdateBy: adminDb.id,
+            })
         }
     }
 }

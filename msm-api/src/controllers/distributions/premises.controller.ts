@@ -63,9 +63,9 @@ export class PremisesController {
             debt: body.debt,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbPremise = await repo(PremiseEntity).save(creation);
 
@@ -90,7 +90,7 @@ export class PremisesController {
             debt: body.debt,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

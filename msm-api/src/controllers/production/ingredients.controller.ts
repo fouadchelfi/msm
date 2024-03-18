@@ -62,9 +62,9 @@ export class IngredientsController {
             label: body.label,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbIngredient = await repo(IngredientEntity).save(creation);
 
@@ -88,7 +88,7 @@ export class IngredientsController {
             label: body.label,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

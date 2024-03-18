@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
-import { ChargeEntity, CustomerEntity, EmployeeEntity, EmployeePaymentEntity, FenceEntity, LosseEntity, PurchaseItemEntity, SaleItemEntity, StockEntity, SupplierEntity } from 'src/entities';
+import { BatchEntity, BatchItemEntity, ChargeEntity, CustomerEntity, DistributionItemEntity, EmployeeEntity, EmployeePaymentEntity, FenceEntity, LosseEntity, PremiseReturnItemEntity, PurchaseItemEntity, SaleItemEntity, StockEntity, SupplierEntity } from 'src/entities';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 @UseGuards(AuthGuard)
@@ -75,13 +75,15 @@ export class FencesController {
             totalEmployeesDebts: body.totalEmployeesDebts,
             totalSuppliersDebts: body.totalSuppliersDebts,
             totalCustomersDebts: body.totalCustomersDebts,
+            totalBatchesStocksAmount: body.totalBatchesStocksAmount,
+            totalBatchesIngredientsAmount: body.totalBatchesIngredientsAmount,
             marginProfit: body.marginProfit,
             rawProfit: body.rawProfit,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbFence = await repo(FenceEntity).save(creation);
 
@@ -116,11 +118,13 @@ export class FencesController {
             totalEmployeesDebts: body.totalEmployeesDebts,
             totalSuppliersDebts: body.totalSuppliersDebts,
             totalCustomersDebts: body.totalCustomersDebts,
+            totalBatchesStocksAmount: body.totalBatchesStocksAmount,
+            totalBatchesIngredientsAmount: body.totalBatchesIngredientsAmount,
             marginProfit: body.marginProfit,
             rawProfit: body.rawProfit,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {
@@ -150,8 +154,8 @@ export class FencesController {
         return await query.select("SUM(purchaseId.cost)", "total").getRawOne();
     }
 
-    @Get('sales/total/:categoryId')
-    async getSalesTotalAmount(@Param('categoryId') categoryId: number) {
+    @Get('sales/customers/total/:categoryId')
+    async getCustomersSalesTotalAmount(@Param('categoryId') categoryId: number) {
         let query = await repo(SaleItemEntity)
             .createQueryBuilder('item')
             .leftJoinAndSelect('item.stockId', 'stockId')
@@ -161,6 +165,53 @@ export class FencesController {
             query = await query.where('stockId.categoryId = :categoryId', { categoryId: categoryId });
 
         return await query.select("SUM(saleId.totalAmount)", "total").getRawOne();
+    }
+
+    @Get('sales/premises/total/:categoryId')
+    async getDistrgetPremisesSalesTotalAmountibutionsTotalAmount(@Param('categoryId') categoryId: number) {
+        let distributionQuery = await repo(DistributionItemEntity)
+            .createQueryBuilder('item')
+            .leftJoinAndSelect('item.stockId', 'stockId')
+            .leftJoinAndSelect('item.distributionId', 'distributionId');
+        let returnQuery = await repo(PremiseReturnItemEntity)
+            .createQueryBuilder('item')
+            .leftJoinAndSelect('item.stockId', 'stockId')
+            .leftJoinAndSelect('item.premiseReturnId', 'premiseReturnId');
+
+        if (categoryId != 0)
+            distributionQuery = await distributionQuery.where('stockId.categoryId = :categoryId', { categoryId: categoryId });
+
+        if (categoryId != 0)
+            returnQuery = await returnQuery.where('stockId.categoryId = :categoryId', { categoryId: categoryId });
+
+        let totalDistribution = parseFloat((await distributionQuery.select("SUM(distributionId.totalAmount)", "total").getRawOne()).total);
+        let totalReturns = parseFloat((await returnQuery.select("SUM(premiseReturnId.totalAmount)", "total").getRawOne()).total);
+
+        return { total: totalDistribution - totalReturns };
+    }
+
+    @Get('batches/total/:categoryId')
+    async getBatchesTotalAmount(@Param('categoryId') categoryId: number) {
+        let query = await repo(BatchEntity)
+            .createQueryBuilder('batch')
+            .leftJoinAndSelect('batch.productId', 'productId');
+
+        if (categoryId != 0)
+            query = await query.where('productId.categoryId = :categoryId', { categoryId: categoryId });
+
+        let totalIngredients = (await query
+            .leftJoinAndSelect('batch.ingredients', 'ingredients')
+            .select('SUM(ingredients.amount) AS "total"')
+            .getRawOne()).total;
+
+        let totalItems = (await query.leftJoinAndSelect('batch.items', 'items')
+            .select('SUM(items.amount) AS "total"')
+            .getRawOne()).total;
+
+        return await {
+            totalItems: totalItems,
+            totalIngredients: totalIngredients,
+        }
     }
 
     @Get('stocks/total-quantity/:categoryId')
@@ -182,7 +233,7 @@ export class FencesController {
         if (categoryId != 0)
             query = await query.where('stock.categoryId = :categoryId', { categoryId: categoryId });
 
-        return await query.select("SUM(stock.quantity * stock.amount)", "total").getRawOne();
+        return await query.select("SUM(stock.quantity * stock.salePrice)", "total").getRawOne();
     }
 
     @Get('charges/total')
@@ -259,7 +310,8 @@ function queryAll() {
             'fence.inStockAmount',
             'fence.calculatedInStockQuantity',
             'fence.calculatedInStockAmount',
-            'fence.totalSaleAmount',
+            'fence.totalCustomersSaleAmount',
+            'fence.totalPremisesSaleAmount',
             'fence.totalPurchaseAmount',
             'fence.totalCharges',
             'fence.totalLosses',
@@ -267,6 +319,8 @@ function queryAll() {
             'fence.totalEmployeesDebts',
             'fence.totalSuppliersDebts',
             'fence.totalCustomersDebts',
+            'fence.totalBatchesStocksAmount',
+            'fence.totalBatchesIngredientsAmount',
             'fence.marginProfit',
             'fence.rawProfit',
             'fence.notes',

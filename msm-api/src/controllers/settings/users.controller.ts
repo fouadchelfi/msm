@@ -64,9 +64,9 @@ export class UsersController {
             password: await bcrypt.hash(body.password, config.saltOrRounds),
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbUser = await repo(UserEntity).save(creation);
 
@@ -95,7 +95,7 @@ export class UsersController {
             name: body.name,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
 
         await repo(UserEntity).update(update.id, update);
@@ -121,7 +121,7 @@ export class UsersController {
         await repo(UserEntity).update(id, {
             password: await bcrypt.hash(body.newPassword, config.saltOrRounds),
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {
