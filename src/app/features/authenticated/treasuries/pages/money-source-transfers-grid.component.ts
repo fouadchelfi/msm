@@ -40,7 +40,7 @@ import { MoneySourceTransferFormComponent } from './money-source-transfer-form.c
                     <form [formGroup]="transferFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <div class="inline-fields">
                         <my-form-field>
-                        <my-label>Source (Crédit)</my-label>
+                        <my-label [required]="true">Source (Crédit)</my-label>
                         <select formControlName="fromMoneySourceId" myInput>
                           <ng-container *ngFor="let source of sources">
                             <option [value]="source.id">{{ source.label }}</option>
@@ -48,10 +48,10 @@ import { MoneySourceTransferFormComponent } from './money-source-transfer-form.c
                         </select>
                       </my-form-field>
                       <div class="mt-9">
-                        <i class="ri-arrow-right-line text-xl text-blue-500"></i>
+                        <i class="ri-arrow-right-line text-xl text-primary font-medium"></i>
                       </div>
                       <my-form-field>
-                        <my-label>Source (Débit)</my-label>
+                        <my-label [required]="true">Source (Débit)</my-label>
                         <select formControlName="toMoneySourceId" myInput>
                           <ng-container *ngFor="let source of sources">
                             <option [value]="source.id">{{ source.label }}</option>
@@ -116,7 +116,7 @@ import { MoneySourceTransferFormComponent } from './money-source-transfer-form.c
                   <td mat-cell *matCellDef="let row">
                     <div class="font-medium">
                       {{ row.fromMoneySourceId.label }}
-                      <i class="ri-arrow-right-line text-sm text-blue-500"></i>
+                      <i class="ri-arrow-right-line text-sm text-primary font-medium"></i>
                       {{ row.toMoneySourceId.label }}
                     </div>
                   </td>
@@ -132,7 +132,7 @@ import { MoneySourceTransferFormComponent } from './money-source-transfer-form.c
                   <td mat-cell *matCellDef="let row">
                     <div class="font-medium">
                       {{ row.oldFromMoneySourceAmount }}
-                      <i class="ri-arrow-right-line text-sm text-blue-500"></i>
+                      <i class="ri-arrow-right-line text-sm text-primary font-medium"></i>
                       {{ row.newFromMoneySourceAmount }}
                     </div>
                   </td>
@@ -143,7 +143,7 @@ import { MoneySourceTransferFormComponent } from './money-source-transfer-form.c
                   <td mat-cell *matCellDef="let row">
                     <div class="font-medium">
                       {{ row.oldToMoneySourceAmount }}
-                      <i class="ri-arrow-right-line text-sm text-blue-500"></i>
+                      <i class="ri-arrow-right-line text-sm text-primary font-medium"></i>
                       {{ row.newToMoneySourceAmount }}
                     </div>
                   </td>
@@ -283,7 +283,6 @@ export class MoneySourceTransfersGridComponent implements OnInit {
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
     this.matDialog.open(MoneySourceTransferFormComponent, {
       data: { id: id, mode: action },
-      minWidth: '1000px',
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({

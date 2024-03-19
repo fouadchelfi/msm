@@ -1,8 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { AppDataSource } from 'src/data-source';
-import { EmployeeCreditEntity, EmployeeEntity, MoneySourceEntity } from 'src/entities';
+import { EmployeeCreditEntity } from 'src/entities';
 import { ManagerService } from 'src/services';
-import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
+import { AuthGuard, GetCurrentUser, code, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 @UseGuards(AuthGuard)
 @Controller('employee-credits')
@@ -35,12 +34,12 @@ export class EmployeeCreditsController {
             result = result.andWhere("credit.moneySourceId = :moneySourceId", { moneySourceId: query.moneySourceId });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('credit.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('credit.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(credit.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(credit.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('credit.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('credit.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(credit.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(credit.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`credit.id`, query.order)
@@ -73,9 +72,9 @@ export class EmployeeCreditsController {
             date: body.date,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbCredit = await repo(EmployeeCreditEntity).save(creation);
 
@@ -106,7 +105,7 @@ export class EmployeeCreditsController {
             date: body.date,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { SharedModule } from '../../../shared';
-import { UserFormComponent, UsersGridComponent } from './pages';
+import { ChangePasswordFormComponent, UserFormComponent, UsersGridComponent } from './pages';
 import { SettingsLayoutComponent } from './settings-layout.component';
 
-const COMPONENTS = [SettingsLayoutComponent, UsersGridComponent, UserFormComponent];
+const COMPONENTS = [SettingsLayoutComponent, UsersGridComponent, UserFormComponent, ChangePasswordFormComponent];
 
 @NgModule({
   declarations: [COMPONENTS],

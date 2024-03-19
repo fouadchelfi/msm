@@ -23,3 +23,4 @@ export * from './distributions-http.service';
 export * from './premise-returns-http.service';
 export * from './batches-http.service';
 export * from './fences-http.service';
+export * from './stats-http.service';

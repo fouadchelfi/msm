@@ -11,7 +11,8 @@ import { forkJoin } from 'rxjs';
       <div class="dialog-container">
         <div class="dialog-header">
           <div class="text-lg font-medium">
-            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} Lot
+            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }}
+            Lot
           </div>
           <button (click)="closeDialog()">
             <i class="ri-close-line text-2xl"></i>
@@ -28,7 +29,7 @@ import { forkJoin } from 'rxjs';
                   <input #firstFocused formControlName="code" type="text" myInput size="small">
                 </my-form-field>
                 <my-form-field>
-                  <my-label>Source d'argent</my-label>
+                  <my-label [required]="true">Source d'argent</my-label>
                   <select formControlName="moneySourceId" myInput size="small">
                     <ng-container *ngFor="let source of moneySources">
                       <option [value]="source.id">{{ source.label }}</option>
@@ -58,6 +59,28 @@ import { forkJoin } from 'rxjs';
                   </my-error>
                 </my-form-field>
               </div>
+              <div class="flex flex-col gap-y-2">
+                <my-form-field class="w-64">
+                  <my-label [required]="true">Produit</my-label>
+                  <select formControlName="productId" myInput size="small">
+                    <ng-container *ngFor="let product of stocks">
+                      <option [value]="product.id">{{ getStockInfo(product) }}</option>
+                    </ng-container>
+                  </select>
+                  <my-error
+                    *ngIf="batchFormGroup.get('productId')?.invalid && (batchFormGroup.get('productId')?.dirty || batchFormGroup.get('productId')?.touched) && batchFormGroup.get('productId')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
+                <my-form-field>
+                  <my-label [required]="true">Quantité produite</my-label>
+                  <input formControlName="quantity" type="number" myInput size="small">
+                  <my-error
+                    *ngIf="batchFormGroup.get('quantity')?.invalid && (batchFormGroup.get('quantity')?.dirty || batchFormGroup.get('quantity')?.touched) && batchFormGroup.get('quantity')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
+              </div>
               <my-form-field class="!-mt-1">
                 <my-label>Notes</my-label>
                 <textarea formControlName="notes" myTextarea type="text"></textarea>
@@ -74,7 +97,7 @@ import { forkJoin } from 'rxjs';
                         <input formControlName="mode" type="text" class="!hidden">
                         <input formControlName="oldMode" type="text" class="!hidden">
                         <my-form-field class="w-[450px]">
-                          <my-label>Stock</my-label>
+                          <my-label [required]="true">Stock</my-label>
                           <select formControlName="stockId" myInput size="small">
                             <ng-container *ngFor="let stock of stocks">
                               <option [value]="stock.id">{{ getStockInfo(stock) }}</option>
@@ -125,7 +148,7 @@ import { forkJoin } from 'rxjs';
                         <input formControlName="mode" type="text" class="!hidden">
                         <input formControlName="oldMode" type="text" class="!hidden">
                         <my-form-field class="w-[400px]">
-                          <my-label>Ingrédient</my-label>
+                          <my-label [required]="true">Ingrédient</my-label>
                           <select formControlName="ingredientId" myInput size="small">
                             <ng-container *ngFor="let ingredient of ingredientsArr">
                               <option [value]="ingredient.id">{{ ingredient.label }}</option>
@@ -207,8 +230,10 @@ export class BatchFormComponent implements OnInit, AfterViewInit {
       'id': [undefined],
       'code': [''],
       'totalQuantity': [{ value: 0, disabled: true }, [Validators.required]],
+      'quantity': [0, [Validators.required]],
       'totalAmount': [{ value: 0, disabled: true }, [Validators.required]],
       'moneySourceId': [undefined, [Validators.required]],
+      'productId': [undefined, [Validators.required]],
       'date': [currentDateForHtmlField(), [Validators.required]],
       'notes': [''],
       'items': this.fb.array([]),
@@ -243,9 +268,11 @@ export class BatchFormComponent implements OnInit, AfterViewInit {
           this.batchFormGroup.patchValue({
             'id': res.id,
             'code': res.code,
+            'quantity': res.quantity,
             'totalQuantity': res.totalQuantity,
             'totalAmount': res.totalAmount,
             'moneySourceId': res.moneySourceId.id,
+            'productId': res.productId.id,
             'date': dateForHtmlField(res.date),
             'notes': res.notes,
           });
@@ -326,9 +353,11 @@ export class BatchFormComponent implements OnInit, AfterViewInit {
     this.batchFormGroup.reset({
       'id': undefined,
       'code': '',
+      'quantity': 0,
       'totalQuantity': 0,
       'totalAmount': 0,
       'moneySourceId': 0,
+      'productId': 0,
       'date': currentDateForHtmlField(),
       'notes': '',
     }, { emitEvent: false });

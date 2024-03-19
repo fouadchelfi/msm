@@ -39,7 +39,7 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                     </div>
                     <form [formGroup]="stockFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <my-form-field>
-                        <my-label>Stock</my-label>
+                        <my-label [required]="true">Stock</my-label>
                         <select formControlName="freeStockId" myInput>
                           <ng-container *ngFor="let stock of stocks">
                             <option [value]="stock.id">{{ stock.label }}</option>
@@ -118,7 +118,7 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                   <td mat-cell *matCellDef="let row">
                     <div class="font-medium">
                       {{ row.oldFreeQuantity }}
-                      <i class="ri-arrow-right-line text-sm text-orange-500"></i>
+                      <i class="ri-arrow-right-line text-sm font-medium text-orange-500"></i>
                       {{ row.newFreeQuantity }}
                     </div>
                   </td>
@@ -129,7 +129,7 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                   <td mat-cell *matCellDef="let row">
                     <div class="font-medium">
                       {{ row.oldFrozenQuantity }}
-                      <i class="ri-arrow-right-line text-sm text-blue-500"></i>
+                      <i class="ri-arrow-right-line text-sm font-medium text-cyan-500"></i>
                       {{ row.newFrozenQuantity }}
                     </div>
                   </td>

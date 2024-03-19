@@ -126,7 +126,7 @@ export class LosseFormComponent implements OnInit, AfterViewInit {
             'id': res.id,
             'code': res.code,
             'label': res.label,
-            'losseNatureId': res.losseNatureId,
+            'losseNatureId': res.losseNatureId.id,
             'amount': res.amount,
             'date': dateForHtmlField(res.date),
             'notes': res.notes,

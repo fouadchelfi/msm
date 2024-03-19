@@ -29,7 +29,7 @@ import { forkJoin } from 'rxjs';
                   <input #firstFocused formControlName="code" type="text" myInput size="small">
                 </my-form-field>
                 <my-form-field>
-                  <my-label>Local</my-label>
+                  <my-label [required]="true">Local</my-label>
                   <select formControlName="premiseId" myInput size="small">
                     <ng-container *ngFor="let premise of premises">
                       <option [value]="premise.id">{{ premise.label }}</option>
@@ -37,18 +37,6 @@ import { forkJoin } from 'rxjs';
                   </select>
                   <my-error
                   *ngIf="distributionFormGroup.get('premiseId')?.invalid && (distributionFormGroup.get('premiseId')?.dirty || distributionFormGroup.get('premiseId')?.touched) && distributionFormGroup.get('premiseId')?.getError('required')">
-                  Veuillez remplir ce champ.
-                </my-error>
-                </my-form-field>
-                <my-form-field>
-                  <my-label>Source d'argent</my-label>
-                  <select formControlName="moneySourceId" myInput size="small">
-                    <ng-container *ngFor="let source of moneySources">
-                      <option [value]="source.id">{{ source.label }}</option>
-                    </ng-container>
-                  </select>
-                  <my-error
-                  *ngIf="distributionFormGroup.get('moneySourceId')?.invalid && (distributionFormGroup.get('moneySourceId')?.dirty || distributionFormGroup.get('moneySourceId')?.touched) && distributionFormGroup.get('moneySourceId')?.getError('required')">
                   Veuillez remplir ce champ.
                 </my-error>
                 </my-form-field>
@@ -61,6 +49,18 @@ import { forkJoin } from 'rxjs';
                     *ngIf="distributionFormGroup.get('cash')?.invalid && (distributionFormGroup.get('cash')?.dirty || distributionFormGroup.get('cash')?.touched) && distributionFormGroup.get('cash')?.getError('required')">
                     Veuillez remplir ce champ.
                   </my-error>
+                </my-form-field>
+                <my-form-field>
+                  <my-label [required]="true">Source d'argent</my-label>
+                  <select formControlName="moneySourceId" myInput size="small">
+                    <ng-container *ngFor="let source of moneySources">
+                      <option [value]="source.id">{{ source.label }}</option>
+                    </ng-container>
+                  </select>
+                  <my-error
+                  *ngIf="distributionFormGroup.get('moneySourceId')?.invalid && (distributionFormGroup.get('moneySourceId')?.dirty || distributionFormGroup.get('moneySourceId')?.touched) && distributionFormGroup.get('moneySourceId')?.getError('required')">
+                  Veuillez remplir ce champ.
+                </my-error>
                 </my-form-field>
               </div>
               <div class="flex flex-col gap-y-2 w-64">
@@ -97,7 +97,7 @@ import { forkJoin } from 'rxjs';
                 <input formControlName="mode" type="text" class="!hidden">
                 <input formControlName="oldMode" type="text" class="!hidden">
                 <my-form-field class="w-[400px]">
-                  <my-label>Stock</my-label>
+                  <my-label [required]="true">Stock</my-label>
                   <select formControlName="stockId" myInput size="small">
                     <ng-container *ngFor="let stock of stocks">
                       <option [value]="stock.id">{{ getStockInfo(stock) }}</option>
@@ -113,7 +113,7 @@ import { forkJoin } from 'rxjs';
                   </my-error>
                 </my-form-field>
                 <my-form-field class="w-48">
-                  <my-label [required]="true">Prix de distribution</my-label>
+                  <my-label [required]="true">Prix de vente</my-label>
                   <input formControlName="salePrice" type="number" myInput size="small">
                   <my-error
                     *ngIf="itemGroup.get('salePrice')?.invalid && (itemGroup.get('salePrice')?.dirty || itemGroup.get('salePrice')?.touched) && itemGroup.get('salePrice')?.getError('required')">
@@ -355,14 +355,15 @@ export class DistributionFormComponent implements OnInit, AfterViewInit {
   }
 
   handleFormChaged() {
-    this.items.valueChanges.subscribe({
-      next: (items: any[]) => {
+    this.distributionFormGroup.valueChanges.subscribe({
+      next: formData => {
+        let items = formData?.items;
         let totalQuantity = 0;
         let totalAmount = 0;
-        items.forEach((item, i) => {
+        items.forEach((item: any, i: number) => {
           this.items.at(i).get('amount')?.setValue(parseFloatOrZero(item.quantity) * parseFloatOrZero(item.salePrice), { emitEvent: false });
         });
-        items.forEach((item, i) => {
+        items.forEach((item: any, i: number) => {
           totalQuantity += parseFloatOrZero(item.quantity);
           totalAmount += parseFloatOrZero(this.items.at(i).get('amount')?.value);
         });

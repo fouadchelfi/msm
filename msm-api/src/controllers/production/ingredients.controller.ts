@@ -27,12 +27,12 @@ export class IngredientsController {
             result = result.where("TRIM(LOWER(ingredient.label)) LIKE :label", { label: `%${(<string>query.label).toLowerCase().trim()}%` });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('ingredient.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('ingredient.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(ingredient.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(ingredient.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('ingredient.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('ingredient.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(ingredient.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(ingredient.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`ingredient.id`, query.order)
@@ -62,9 +62,9 @@ export class IngredientsController {
             label: body.label,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbIngredient = await repo(IngredientEntity).save(creation);
 
@@ -88,7 +88,7 @@ export class IngredientsController {
             label: body.label,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

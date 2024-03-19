@@ -6,3 +6,4 @@ export * from './treasuries';
 export * from './production';
 export * from './distributions';
 export * from './hr';
+export * from './stats';

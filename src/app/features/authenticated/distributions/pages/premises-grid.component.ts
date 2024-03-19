@@ -93,20 +93,24 @@ import { appConfig } from '../../../../app.config';
                 </ng-container>
                 
                 <ng-container matColumnDef="code">
-                  <th mat-header-cell *matHeaderCellDef >Code </th>
+                  <th mat-header-cell *matHeaderCellDef>Code </th>
                   <td mat-cell *matCellDef="let row">{{ row.code }}</td>
                 </ng-container>
                 
                 <ng-container matColumnDef="label">
-                  <th mat-header-cell *matHeaderCellDef >Libellé </th>
+                  <th mat-header-cell *matHeaderCellDef>Libellé </th>
                   <td mat-cell *matCellDef="let row">{{ row.label }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="debt">
+                  <th mat-header-cell *matHeaderCellDef>Dette</th>
+                  <td mat-cell *matCellDef="let row">{{ row.debt }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="notes">
-                  <th mat-header-cell *matHeaderCellDef >Notes</th>
+                  <th mat-header-cell *matHeaderCellDef>Notes</th>
                   <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
                 </ng-container>
-
 
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
@@ -141,7 +145,7 @@ import { appConfig } from '../../../../app.config';
 export class PremisesGridComponent implements OnInit {
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['select', 'code', 'label', 'notes', 'actions'];
+  displayedColumns: string[] = ['select', 'code', 'label', 'debt', 'notes', 'actions'];
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
@@ -228,6 +232,7 @@ export class PremisesGridComponent implements OnInit {
   newItem(action: 'creation' | 'edit' = 'creation', id: number = 0): void {
     this.matDialog.open(PremiseFormComponent, {
       data: { id: id, mode: action },
+      minHeight: '70vh',
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({

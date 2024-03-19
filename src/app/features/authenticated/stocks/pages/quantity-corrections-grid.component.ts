@@ -39,7 +39,7 @@ import { QuantityCorrectionFormComponent } from './quantity-correction-form.comp
                     </div>
                     <form [formGroup]="stockFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                       <my-form-field>
-                        <my-label>Stock</my-label>
+                        <my-label [required]="true">Stock</my-label>
                         <select formControlName="stockId" myInput>
                           <ng-container *ngFor="let stock of stocks">
                             <option [value]="stock.id">{{ stock.label }}</option>

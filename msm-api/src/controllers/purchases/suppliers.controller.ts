@@ -27,12 +27,12 @@ export class SuppliersController {
             result = result.where("TRIM(LOWER(supplier.name)) LIKE :name", { name: `%${(<string>query.name).toLowerCase().trim()}%` });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('supplier.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('supplier.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(supplier.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(supplier.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('supplier.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('supplier.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(supplier.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(supplier.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`supplier.id`, query.order)
@@ -72,9 +72,9 @@ export class SuppliersController {
             website: body.website,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbSupplier = await repo(SupplierEntity).save(creation);
 
@@ -108,7 +108,7 @@ export class SuppliersController {
             website: body.website,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

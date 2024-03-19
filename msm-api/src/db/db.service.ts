@@ -2,14 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { UserEntity } from 'src/entities';
 import { currentDateTime, repo } from 'src/utils';
+import * as bcrypt from 'bcrypt';
+import { config } from 'src/app.config';
 
 @Injectable()
 export class DbService {
     constructor() { }
 
-    checkDb() {
-        this.checkTables();
-        this.checkAdminUser();
+    async checkDb() {
+        await this.checkTables();
+        await this.checkAdminUser();
     }
 
     async checkTables() {
@@ -19,7 +21,7 @@ export class DbService {
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
                 name VARCHAR(50),
-                password VARCHAR(20),
+                password VARCHAR(128),
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP,
                 "createdBy" INT,
@@ -193,7 +195,9 @@ export class DbService {
                 CONSTRAINT fk_family_id FOREIGN KEY("familyId") REFERENCES families(id),
                 CONSTRAINT fk_category_id FOREIGN KEY("categoryId") REFERENCES categories(id),
                 CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
-                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id),
+                -- Create a unique constraint on the composite 
+                CONSTRAINT unique_combination UNIQUE ("categoryId", "familyId", "status")
             );
         `);
 
@@ -326,6 +330,7 @@ export class DbService {
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
                 label VARCHAR(100),
+                debt NUMERIC(16,2),
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
                 "createdBy" INT,
@@ -569,12 +574,15 @@ export class DbService {
                 "totalQuantity" REAL,
                 "totalAmount" NUMERIC(16,2),
                 "moneySourceId" INT,
+                "productId" INT,
+                "quantity" REAL,
                 date DATE,
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
                 "createdBy" INT,
                 "lastUpdateAt" TIMESTAMP,
                 "lastUpdateBy" INT,
+                CONSTRAINT fk_product_id FOREIGN KEY("productId") REFERENCES stocks(id),
                 CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
                 CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
                 CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
@@ -604,16 +612,30 @@ export class DbService {
             CREATE TABLE IF NOT EXISTS fences (
                 id SERIAL PRIMARY KEY NOT NULL,
                 code VARCHAR(16),
-                "inStockQuantity" REAL,
-                "inStockQuantityAmount" NUMERIC(16,2),
-                "calculatedInStockQuantity" REAL,
-                "calculatedInStockQuantityAmount" NUMERIC(16,2),
-                "totalPurchaseAmount" NUMERIC(16,2),
-                "totalSaleAmount" NUMERIC(16,2),
-                "turnover" NUMERIC(16,2),
-                "marginProfit" NUMERIC(16,2),
                 "categoryId" INT,
                 date DATE,
+                
+                "inStockQuantity" REAL,
+                "inStockAmount" NUMERIC(16,2),
+                "calculatedInStockQuantity" NUMERIC(16,2),
+                "calculatedInStockAmount" NUMERIC(16,2),
+                
+                "totalCustomersSaleAmount" NUMERIC(16,2),
+                "totalPremisesSaleAmount" NUMERIC(16,2),
+                "totalPurchaseAmount" NUMERIC(16,2),
+                
+                "totalCharges" NUMERIC(16,2),
+                "totalLosses" NUMERIC(16,2),
+                "totalEmployeesPayments" NUMERIC(16,2),
+                "totalEmployeesDebts" NUMERIC(16,2),
+                "totalSuppliersDebts" NUMERIC(16,2),
+                "totalCustomersDebts" NUMERIC(16,2),
+                "totalBatchesStocksAmount" NUMERIC(16,2),
+                "totalBatchesIngredientsAmount" NUMERIC(16,2),
+                
+                "rawProfit" NUMERIC(16,2),
+                "marginProfit" NUMERIC(16,2),
+                
                 notes VARCHAR(300),
                 "createdAt" TIMESTAMP, 
                 "createdBy" INT,
@@ -631,15 +653,17 @@ export class DbService {
         if (!exists) {
             let creation = {
                 name: 'admin',
-                password: 'admin',
+                password: await bcrypt.hash('admin', config.saltOrRounds),
                 code: 'admin',
                 notes: 'Créé par défaut.',
                 createdAt: currentDateTime(),
-                createdBy: 1,
                 lastUpdateAt: currentDateTime(),
-                lastUpdateBy: 1
             };
-            await repo(UserEntity).save(creation);
+            let adminDb = await repo(UserEntity).save(creation);
+            await repo(UserEntity).update(adminDb.id, {
+                createdBy: adminDb.id,
+                lastUpdateBy: adminDb.id,
+            })
         }
     }
 }

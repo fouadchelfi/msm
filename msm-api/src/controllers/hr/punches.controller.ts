@@ -31,12 +31,12 @@ export class PunchesController {
             result = result.where("punche.employeeId = :employeeId", { employeeId: query.employeeId });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('punche.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('punche.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(punche.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(punche.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('punche.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('punche.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(punche.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(punche.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`punche.id`, query.order)
@@ -70,9 +70,9 @@ export class PunchesController {
             date: body.date,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbPunche = await repo(PuncheEntity).save(creation);
 
@@ -107,7 +107,7 @@ export class PunchesController {
             date: body.date,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

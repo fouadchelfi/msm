@@ -33,12 +33,12 @@ export class PremiseReturnsController {
             result = result.andWhere("premiseReturn.premiseId = :premiseId", { premiseId: query.premiseId });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('premiseReturn.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('premiseReturn.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(premiseReturn.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(premiseReturn.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('premiseReturn.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('premiseReturn.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(premiseReturn.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(premiseReturn.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`premiseReturn.id`, query.order)
@@ -73,9 +73,9 @@ export class PremiseReturnsController {
             date: body.date,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbPremiseReturn = await repo(PremiseReturnEntity).save(creation);
 
@@ -90,8 +90,8 @@ export class PremiseReturnsController {
         for (const item of (<any[]>body.items)) {
             await this.manager.updateStockQuantity(item.stockId, item.quantity, 'add');
         }
-        // this.manager.updatePremiseDebt(creation.premiseId, parseFloat(creation.cost) - parseFloat(creation.payment), 'add');
-        // this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.payment, 'add');
+        this.manager.updatePremiseDebt(creation.premiseId, -(parseFloat(creation.returnedCash) + parseFloat(creation.totalAmount)), 'add');
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, creation.returnedCash, 'add');
 
         return {
             success: true,
@@ -111,7 +111,7 @@ export class PremiseReturnsController {
             //...
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

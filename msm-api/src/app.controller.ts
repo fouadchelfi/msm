@@ -6,7 +6,7 @@ export class AppController {
   constructor(private dbSchema: DbService) { }
 
   @Get('check-at-startup')
-  checkAtStartup() {
-    this.dbSchema.checkDb();
+  async checkAtStartup() {
+    await this.dbSchema.checkDb();
   }
 }

@@ -33,12 +33,12 @@ export class SalesController {
             result = result.andWhere("sale.customerId = :customerId", { customerId: query.customerId });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('sale.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('sale.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(sale.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(sale.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('sale.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('sale.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(sale.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(sale.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`sale.id`, query.order)
@@ -74,9 +74,9 @@ export class SalesController {
             date: body.date,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbSale = await repo(SaleEntity).save(creation);
 
@@ -89,10 +89,10 @@ export class SalesController {
 
         //Sync database changes
         for (const item of (<any[]>body.items)) {
-            await this.manager.updateStockQuantity(item.stockId, item.quantity, 'add');
+            await this.manager.updateStockQuantity(item.stockId, -item.quantity, 'add');
         }
-        // this.manager.updateCustomerDebt(creation.customerId, parseFloat(creation.cost) - parseFloat(creation.payment), 'add');
-        this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.payment, 'add');
+        this.manager.updateCustomerDebt(creation.customerId, parseFloat(creation.totalAmount) - parseFloat(creation.payment), 'add');
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, creation.payment, 'add');
 
         return {
             success: true,
@@ -112,7 +112,7 @@ export class SalesController {
             //...
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

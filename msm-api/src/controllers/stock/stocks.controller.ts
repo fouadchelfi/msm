@@ -25,14 +25,18 @@ export class StocksController {
 
         if (isNotEmpty(query.label))
             result = result.where("TRIM(LOWER(stock.label)) LIKE :label", { label: `%${(<string>query.label).toLowerCase().trim()}%` });
-
+        if (isNotEmpty(query.categoryId))
+            result = result.andWhere("stock.categoryId = :categoryId", { categoryId: `${query.categoryId}` });
+        if (isNotEmpty(query.familyId))
+            result = result.andWhere("stock.familyId = :familyId", { familyId: `${query.familyId}` });
+        if (isNotEmpty(query.status))
+            result = result.andWhere("stock.status = :status", { status: `${query.status}` });
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('stock.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('stock.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
-
+            result = result.andWhere('DATE(stock.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(stock.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('stock.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('stock.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(stock.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(stock.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`stock.id`, query.order)
@@ -68,9 +72,9 @@ export class StocksController {
             status: body.status,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbStock = await repo(StockEntity).save(creation);
 
@@ -100,7 +104,7 @@ export class StocksController {
             status: body.status,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {
@@ -145,6 +149,15 @@ async function validateStock(stock) {
     let stockDbLabel = await repo(StockEntity).createQueryBuilder('stock').where("TRIM(LOWER(stock.label)) = :label", { label: `${(<string>stock.label)?.toLowerCase().trim()}` }).getOne();
     if (stockDbLabel && stockDbLabel.id != stock.id)
         errors.push("Libellé existe déjà");
+
+    let stockDb = await repo(StockEntity)
+        .createQueryBuilder('stock')
+        .where("stock.familyId = :familyId", { familyId: `${stock.familyId}` })
+        .andWhere("stock.categoryId = :categoryId", { categoryId: `${stock.categoryId}` })
+        .andWhere("stock.status = :status", { status: `${stock.status}` })
+        .getOne();
+    if (stockDb && stockDb.id != stock.id)
+        errors.push("Un stock avec la même famille, catégorie et état existe déjà.");
 
     return errors.length == 0 ? null : errors;
 }

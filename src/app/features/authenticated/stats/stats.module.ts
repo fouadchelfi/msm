@@ -4,8 +4,7 @@ import { StatsRoutingModule } from './stats-routing.module';
 import { SharedModule } from '../../../shared';
 import { TurnoverComponent } from './pages';
 
-const COMPONENTS = [TurnoverComponent];
-
+const COMPONENTS = [TurnoverComponent]
 
 @NgModule({
   declarations: [COMPONENTS],

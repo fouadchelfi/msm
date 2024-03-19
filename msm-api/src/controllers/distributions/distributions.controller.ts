@@ -33,12 +33,12 @@ export class DistributionsController {
             result = result.andWhere("distribution.premiseId = :premiseId", { premiseId: query.premiseId });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('distribution.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('distribution.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(distribution.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(distribution.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('distribution.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('distribution.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(distribution.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(distribution.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`distribution.id`, query.order)
@@ -73,9 +73,9 @@ export class DistributionsController {
             date: body.date,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbDistribution = await repo(DistributionEntity).save(creation);
 
@@ -88,10 +88,10 @@ export class DistributionsController {
 
         //Sync database changes
         for (const item of (<any[]>body.items)) {
-            await this.manager.updateStockQuantity(item.stockId, item.quantity, 'add');
+            await this.manager.updateStockQuantity(item.stockId, -item.quantity, 'add');
         }
-        // this.manager.updatePremiseDebt(creation.premiseId, parseFloat(creation.cost) - parseFloat(creation.payment), 'add');
-        // this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.payment, 'add');
+        this.manager.updatePremiseDebt(creation.premiseId, parseFloat(creation.cash) + parseFloat(creation.totalAmount), 'add');
+        this.manager.updateMoneySourceAmount(creation.moneySourceId, -creation.cash, 'add');
 
         return {
             success: true,
@@ -111,7 +111,7 @@ export class DistributionsController {
             //...
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

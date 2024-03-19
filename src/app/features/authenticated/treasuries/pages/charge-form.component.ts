@@ -126,7 +126,7 @@ export class ChargeFormComponent implements OnInit, AfterViewInit {
             'id': res.id,
             'code': res.code,
             'label': res.label,
-            'chargeNatureId': res.chargeNatureId,
+            'chargeNatureId': res.chargeNatureId.id,
             'amount': res.amount,
             'date': dateForHtmlField(res.date),
             'notes': res.notes,

@@ -3,6 +3,7 @@ import { UserEntity } from "../settings";
 import { MoneySourceEntity } from "../treasuries";
 import { BatchItemEntity } from "./batch-item.entity";
 import { BatchIngredientEntity } from "./batch-ingredient.entity";
+import { StockEntity } from "../stock";
 
 @Entity({ name: 'batches' })
 export class BatchEntity {
@@ -15,8 +16,16 @@ export class BatchEntity {
     @Column({ default: 0, type: 'real' })
     totalQuantity: number;
 
+    //Productive quantity
+    @Column({ default: 0, type: 'real' })
+    quantity: number;
+
     @Column({ default: 0, type: 'decimal' })
     totalAmount: number;
+
+    @ManyToOne(() => StockEntity, entity => entity.batches)
+    @JoinColumn({ name: "productId" })
+    productId: StockEntity;
 
     @ManyToOne(() => MoneySourceEntity, moneySource => moneySource.batches)
     @JoinColumn({ name: "moneySourceId" })
@@ -36,7 +45,7 @@ export class BatchEntity {
     createdBy: UserEntity;
     //#endregion
 
-    //#region Update Area
+    //#region Update Area 
     @Column({ nullable: true })
     lastUpdateAt: Date;
     @ManyToOne(() => UserEntity, user => user.updatedBatches)

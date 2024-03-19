@@ -5,7 +5,7 @@ import { Component, Input, OnInit } from '@angular/core';
   template: `
         <div class="flex flex-col space-y-2 p-3 rounded-sm bg-red-100">
           <ng-container *ngFor="let error of errors">
-            <li class="text-red-600 text-sm">{{ error }}</li>
+            <div class="text-red-600 text-sm">* {{ error }}</div>
           </ng-container>
         </div>
     `

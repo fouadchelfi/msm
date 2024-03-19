@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, map, merge, of as observableOf, startWith, switchMap } from 'rxjs';
-import { MoneySourcesHttpService, BatchesHttpService, TraceabilityService, isEmpty, isNotEmpty } from '../../../../shared';
+import { MoneySourcesHttpService, BatchesHttpService, TraceabilityService, isEmpty, isNotEmpty, StocksHttpService } from '../../../../shared';
 import { MatDialog } from '@angular/material/dialog';
 import { BatchFormComponent } from './batch-form.component';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -39,10 +39,18 @@ import { appConfig } from '../../../../app.config';
                   </div>
                   <form [formGroup]="batchFilterFormGroup" class="flex flex-col !text-sm gap-y-2 p-5">
                     <my-form-field>
-                      <my-label>Source d'argent</my-label>
+                      <my-label [required]="true">Source d'argent</my-label>
                       <select formControlName="moneySourceId" myInput size="small">
                         <ng-container *ngFor="let source of moneySources">
                           <option [value]="source.id">{{ source.label }}</option>
+                        </ng-container>
+                      </select>
+                    </my-form-field>
+                    <my-form-field>
+                      <my-label [required]="true">Produit</my-label>
+                      <select formControlName="productId" myInput size="small">
+                        <ng-container *ngFor="let product of stocks">
+                          <option [value]="product.id">{{ product.label }}</option>
                         </ng-container>
                       </select>
                     </my-form-field>
@@ -96,13 +104,23 @@ import { appConfig } from '../../../../app.config';
                   <td mat-cell *matCellDef="let row">{{ row.code }}</td>
                 </ng-container>
 
+                <ng-container matColumnDef="productId.label">
+                  <th mat-header-cell *matHeaderCellDef>Produit </th>
+                  <td mat-cell *matCellDef="let row">{{ row.productId.label }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                  <th mat-header-cell *matHeaderCellDef>Quantité Produite</th>
+                  <td mat-cell *matCellDef="let row">{{ row.quantity }}</td>
+                </ng-container>
+
                 <ng-container matColumnDef="moneySourceId.label">
                   <th mat-header-cell *matHeaderCellDef>Source d'argent </th>
                   <td mat-cell *matCellDef="let row">{{ row.moneySourceId.label }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="totalQuantity">
-                  <th mat-header-cell *matHeaderCellDef>Quantité</th>
+                  <th mat-header-cell *matHeaderCellDef>Quantité (Stock & Ingrédients)</th>
                   <td mat-cell *matCellDef="let row">{{ row.totalQuantity }}</td>
                 </ng-container>
 
@@ -153,7 +171,7 @@ import { appConfig } from '../../../../app.config';
 export class BatchesGridComponent implements OnInit {
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['select', 'code', 'moneySourceId.label', 'totalQuantity', 'totalAmount', 'date', 'actions'];
+  displayedColumns: string[] = ['select', 'code', 'moneySourceId.label', 'productId.label', 'quantity', 'totalQuantity', 'totalAmount', 'date', 'actions'];
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
@@ -169,6 +187,7 @@ export class BatchesGridComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   showFirstLastButtons: boolean = appConfig.pagination.showFirstLastButtons;
   moneySources: any[] = [];
+  stocks: any[] = [];
 
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -203,15 +222,22 @@ export class BatchesGridComponent implements OnInit {
     private matDialog: MatDialog,
     private traceability: TraceabilityService,
     private moneySourcesHttp: MoneySourcesHttpService,
+    private stocksHttp: StocksHttpService,
   ) {
     this.batchFilterFormGroup = this.fb.group({
       'moneySourceId': [undefined],
+      'productId': [undefined],
     });
   }
   ngOnInit() {
     this.moneySourcesHttp.getAll().subscribe({
       next: sources => {
         this.moneySources = sources;
+      }
+    });
+    this.stocksHttp.getAll().subscribe({
+      next: stocks => {
+        this.stocks = stocks;
       }
     });
   }
@@ -276,6 +302,7 @@ export class BatchesGridComponent implements OnInit {
   resetItemsFilterForm(): void {
     this.batchFilterFormGroup.reset({
       'moneySourceId': undefined,
+      'productId': undefined,
     });
     this.batchFilterChanged.emit();
   }
@@ -319,12 +346,14 @@ export class BatchesGridComponent implements OnInit {
       pageIndex: this.paginator.pageIndex,
       pageSize: this.pageSize,
       moneySourceId: this.batchFilterFormGroup.get('moneySourceId')?.value,
+      productId: this.batchFilterFormGroup.get('productId')?.value,
     }
 
     if (isNotEmpty(qry.pageIndex)) urlParams.append('pageIndex', qry.pageIndex.toString());
     if (isNotEmpty(qry.pageSize)) urlParams.append('pageSize', qry.pageSize.toString());
     urlParams.append('order', 'DESC');
     if (isNotEmpty(qry.moneySourceId)) urlParams.append('moneySourceId', qry.moneySourceId);
+    if (isNotEmpty(qry.productId)) urlParams.append('productId', qry.productId);
 
     return `?${urlParams.toString()}`;
   }

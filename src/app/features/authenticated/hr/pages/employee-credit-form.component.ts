@@ -41,7 +41,7 @@ import { forkJoin } from 'rxjs';
             </div>
             <div class="inline-fields">
             <my-form-field class="w-64">
-              <my-label>Source d'argent</my-label>
+              <my-label [required]="true">Source d'argent</my-label>
               <select formControlName="moneySourceId" myInput>
                 <ng-container *ngFor="let moneySource of moneySources">
                   <option [value]="moneySource.id">{{ moneySource.label }}</option>

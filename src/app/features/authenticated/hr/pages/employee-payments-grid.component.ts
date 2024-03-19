@@ -47,7 +47,7 @@ import { EmployeePaymentFormComponent } from './employee-payment-form.component'
                 </select>
               </my-form-field>
               <my-form-field>
-                <my-label>Source d'argent</my-label>
+                <my-label [required]="true">Source d'argent</my-label>
                 <select formControlName="moneySourceId" myInput>
                   <ng-container *ngFor="let moneySource of moneySources">
                     <option [value]="moneySource.id">{{ moneySource.label }}</option>

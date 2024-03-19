@@ -1,11 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AppDataSource } from 'src/data-source';
 import { MoneySourceEntity, MoneySourceTransferEntity, StockEntity } from 'src/entities';
+import { ManagerService } from 'src/services';
 import { AuthGuard, GetCurrentUser, code, currentDate, currentDateTime, isEmpty, isNotEmpty, repo } from 'src/utils';
 
 @UseGuards(AuthGuard)
 @Controller('money-source-transfers')
 export class MoneySourceTransfersController {
+
+    constructor(private manager: ManagerService) { }
 
     @Get('all')
     async getAllTransfers() {
@@ -30,12 +33,12 @@ export class MoneySourceTransfersController {
                 .andWhere("transfer.toMoneySourceId.id = :toMoneySourceId", { toMoneySourceId: `${query.toMoneySourceId}` });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('transfer.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('transfer.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(transfer.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(transfer.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('transfer.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('transfer.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(transfer.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(transfer.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`transfer.id`, query.order)
@@ -72,28 +75,17 @@ export class MoneySourceTransfersController {
             date: body.date,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbTransfer = await repo(MoneySourceTransferEntity).save(creation);
 
         if (isEmpty(dbTransfer.code)) await repo(MoneySourceTransferEntity).update(dbTransfer.id, { ...creation, code: code('TRA', dbTransfer.id) });
 
-        //Update amount for both Receiver and sender sources.
-        await AppDataSource
-            .createQueryBuilder()
-            .update(MoneySourceEntity)
-            .set({ amount: creation.newFromMoneySourceAmount })
-            .where("id = :id", { id: creation.fromMoneySourceId })
-            .execute();
-
-        await AppDataSource
-            .createQueryBuilder()
-            .update(MoneySourceEntity)
-            .set({ amount: creation.newToMoneySourceAmount })
-            .where("id = :id", { id: creation.toMoneySourceId })
-            .execute();
+        //Sync database changes
+        this.manager.updateMoneySourceAmount(creation.fromMoneySourceId, creation.newFromMoneySourceAmount, 'replace');
+        this.manager.updateMoneySourceAmount(creation.toMoneySourceId, creation.newToMoneySourceAmount, 'replace');
 
         return {
             success: true,
@@ -120,7 +112,7 @@ export class MoneySourceTransfersController {
             date: body.date,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {

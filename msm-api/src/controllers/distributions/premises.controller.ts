@@ -27,12 +27,12 @@ export class PremisesController {
             result = result.where("TRIM(LOWER(premise.label)) LIKE :label", { label: `%${(<string>query.label).toLowerCase().trim()}%` });
 
         if (isNotEmpty(query.fromCreatedAt) && isNotEmpty(query.toCreatedAt))
-            result = result.where('premise.createdAt >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
-                .andWhere('premise.createdAt <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
+            result = result.andWhere('DATE(premise.createdAt) >= :fromCreatedAt', { fromCreatedAt: query.fromCreatedAt })
+                .andWhere('DATE(premise.createdAt) <= :toCreatedAt', { toCreatedAt: query.toCreatedAt });
 
         if (isNotEmpty(query.fromLastUpdateAt) && isNotEmpty(query.toLastUpdateAt))
-            result = result.where('premise.lastUpdateAt >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
-                .andWhere('premise.lastUpdateAt <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
+            result = result.andWhere('DATE(premise.lastUpdateAt) >= :fromLastUpdateAt', { fromLastUpdateAt: query.fromLastUpdateAt })
+                .andWhere('DATE(premise.lastUpdateAt) <= :toLastUpdateAt', { toLastUpdateAt: query.toLastUpdateAt });
 
         result = await result
             .orderBy(`premise.id`, query.order)
@@ -60,11 +60,12 @@ export class PremisesController {
         let creation = {
             code: body.code,
             label: body.label,
+            debt: body.debt,
             notes: body.notes,
             createdAt: currentDateTime(),
-            createdBy: 1,
+            createdBy: currentUser?.id,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         };
         let dbPremise = await repo(PremiseEntity).save(creation);
 
@@ -86,9 +87,10 @@ export class PremisesController {
             id: body.id,
             code: isEmpty(body.code) ? code('LCL', id) : body.code,
             label: body.label,
+            debt: body.debt,
             notes: body.notes,
             lastUpdateAt: currentDateTime(),
-            lastUpdateBy: 1
+            lastUpdateBy: currentUser?.id,
         });
 
         return {
@@ -125,5 +127,5 @@ function queryAll() {
         .createQueryBuilder('premise')
         .leftJoinAndSelect('premise.createdBy', 'createdBy')
         .leftJoinAndSelect('premise.lastUpdateBy', 'lastUpdateBy')
-        .select(['premise.id', 'premise.code', 'premise.label', 'premise.notes', 'premise.createdAt', 'premise.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
+        .select(['premise.id', 'premise.code', 'premise.label', 'premise.debt', 'premise.notes', 'premise.createdAt', 'premise.lastUpdateAt', 'createdBy', 'lastUpdateBy']);
 }

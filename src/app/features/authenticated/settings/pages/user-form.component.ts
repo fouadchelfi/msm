@@ -10,8 +10,7 @@ import { UsersHttpService } from '../../../../shared';
       <div class="dialog-container">
         <div class="dialog-header">
           <div class="text-lg font-medium">
-            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }}
-            utilisateur
+            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} utilisateur
           </div>
           <button (click)="closeDialog()">
             <i class="ri-close-line text-2xl"></i>
@@ -23,24 +22,24 @@ import { UsersHttpService } from '../../../../shared';
             <input formControlName="id" type="number" class="!hidden">
               <my-form-field class="min-w-72"> 
                 <my-label [required]="true">Nom</my-label>
-                <input #firstFocused formControlName="name" type="text" myInput>
+                <input #firstFocused formControlName="name" type="text" myInput autocomplete="username">
                 <my-error
                   *ngIf="userFormGroup.get('name')?.invalid && (userFormGroup.get('name')?.dirty || userFormGroup.get('name')?.touched) && userFormGroup.get('name')?.getError('required')">
                   Veuillez remplir ce champ.
                 </my-error>
               </my-form-field>
-              <div class="inline-fields">
-                <my-form-field class="w-72" [style.display]="data.mode == 'edit' ? 'none' : 'block'">
+              <div *ngIf="passwordFieldsVisible" class="inline-fields">
+                <my-form-field class="w-72">
                 <my-label [required]="true">Mot de passe</my-label>
-                <input formControlName="password" type="password" myInput>
+                <input formControlName="password" type="password" myInput autocomplete="new-password">
                 <my-error
                   *ngIf="userFormGroup.get('password')?.invalid && (userFormGroup.get('password')?.dirty || userFormGroup.get('password')?.touched) && userFormGroup.get('password')?.getError('required')">
                   Veuillez remplir ce champ.
                 </my-error>
               </my-form-field>
-              <my-form-field class="w-72" [style.display]="data.mode == 'edit' ? 'none' : 'block'">
+              <my-form-field class="w-72">
                 <my-label [required]="true">Confirmation</my-label>
-                <input formControlName="confirmPassword" type="password" myInput>
+                <input formControlName="confirmPassword" type="password" myInput autocomplete="new-password">
                 <my-error
                   *ngIf="userFormGroup.get('confirmPassword')?.invalid && (userFormGroup.get('confirmPassword')?.dirty || userFormGroup.get('confirmPassword')?.touched) && userFormGroup.get('confirmPassword')?.getError('required')">
                   Veuillez remplir ce champ.
@@ -68,6 +67,7 @@ export class UserFormComponent implements OnInit, AfterViewInit {
   userFormGroup: FormGroup;
   @ViewChild('firstFocused') firstFocused: ElementRef;
   errors: any[] = [];
+  passwordFieldsVisible = true;
 
   constructor(
     private fb: FormBuilder,
@@ -88,6 +88,7 @@ export class UserFormComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     //Load form data
     if (this.data.mode == 'edit') {
+      this.passwordFieldsVisible = false;
       this.loadData(this.data.id);
     }
   }
@@ -122,10 +123,7 @@ export class UserFormComponent implements OnInit, AfterViewInit {
             next: (res) => {
               if (res.success) {
                 this.snackBar.open("Opération réussie", '✔', { duration: 7000 });
-                this.data = {
-                  'id': res.data.id,
-                  'mode': 'edit'
-                };
+                this.changeMode('edit', res.data.id)
                 this.loadData(res.data.id);
               } else {
                 this.errors = res.errors;
@@ -160,8 +158,8 @@ export class UserFormComponent implements OnInit, AfterViewInit {
     this.userFormGroup.reset({
       'id': undefined,
       'name': '',
-      'confirmPassword': '',
       'password': '',
+      'confirmPassword': '',
       'notes': '',
     }, { emitEvent: false });
   }
@@ -172,10 +170,7 @@ export class UserFormComponent implements OnInit, AfterViewInit {
     this.userFormGroup.markAsUntouched();
     this.userFormGroup.clearValidators();
     this.userFormGroup.clearAsyncValidators();
-    this.data = {
-      'id': 0,
-      'mode': 'creation'
-    };
+    this.changeMode('creation', 0);
   }
 
   getCreation() {
@@ -201,6 +196,18 @@ export class UserFormComponent implements OnInit, AfterViewInit {
       confirmPasswordControl?.setErrors(null);
     } else {
       confirmPasswordControl?.setErrors({ passwordMismatch: true });
+    }
+  }
+
+  changeMode(mode: 'creation' | 'edit', id: number) {
+    this.data = {
+      'id': id,
+      'mode': mode
+    };
+    if (mode == 'edit') {
+      this.passwordFieldsVisible = false;
+    } else {
+      this.passwordFieldsVisible = true;
     }
   }
 }
