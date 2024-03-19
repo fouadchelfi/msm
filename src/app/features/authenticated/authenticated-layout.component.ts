@@ -20,7 +20,7 @@ import { AuthService, LocalStorageService } from '../../core';
                   <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/stocks/stocks" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Stocks</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/stocks/status-transfers"
-                      [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Transferts d'étate</a>
+                      [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Transferts d'état</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/stocks/quantity-corrections"
                       [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Corrections quantité</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/stocks/categories" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Catégories</a>
@@ -78,7 +78,7 @@ import { AuthService, LocalStorageService } from '../../core';
                   <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/hr/punches" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Pointages</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/hr/employees" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Employées</a>
-                    <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/hr/credits" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Accounts</a>
+                    <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/hr/credits" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Acomptes</a>
                     <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/hr/payments" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Paiements</a>
                   </nav>
                 </div>
@@ -100,7 +100,7 @@ import { AuthService, LocalStorageService } from '../../core';
                       Perte</a>
                   </nav>
                 </div>
-                <div class="relative group">
+                <!-- <div class="relative group">
                   <button [routerLinkActive]="['!text-white', '!bg-slate-700', '!border-l-2', '!border-l-primary']" routerLink="/authenticated/stats" 
                     class="flex flex-col items-center justify-center w-full px-1 py-2 text-base hover:bg-slate-700 border-x-2 border-x-transparent hover:border-l-primary text-slate-400 hover:text-white focus:text-white">
                     <i class="ri-bar-chart-box-line text-lg"></i>
@@ -108,7 +108,7 @@ import { AuthService, LocalStorageService } from '../../core';
                     <nav class="absolute left-[110px] group-hover:flex hidden top-0 min-w-60 w-fit !z-[1000] bg-slate-800 flex-col overflow-hidden shadow-md gap-y-1 p-3 rounded-r">
                       <a class="px-4 py-1 text-sm text-slate-400 hover:text-white border-l-2 hover:border-l-primary border-l-slate-600 hover:bg-slate-700 rounded-sm cursor-pointer" routerLink="/authenticated/stats/turnover" [routerLinkActive]="['!text-white','!bg-slate-700', '!border-l-2', '!border-l-primary']">Chiffre d'affaires</a>
                     </nav>
-                </div>
+                </div> -->
               </div>
               <div class="relative group">
                 <button [routerLinkActive]="['!text-white', '!bg-slate-700', '!border-l-2', '!border-l-primary']" routerLink="/authenticated/settings/users"

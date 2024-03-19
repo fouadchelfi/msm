@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoriesHttpService, FamiliesHttpService, StocksHttpService, amount } from '../../../../shared';
 import { forkJoin, Observable, of } from 'rxjs';
 import { FamilyFormComponent } from './family-form.component';
+import { CategoryFormComponent } from './category-form.component';
 
 @Component({
   selector: 'app-stock-form',
@@ -62,11 +63,12 @@ import { FamilyFormComponent } from './family-form.component';
                   *ngIf="stockFormGroup.get('categoryId')?.invalid && (stockFormGroup.get('categoryId')?.dirty || stockFormGroup.get('categoryId')?.touched) && stockFormGroup.get('categoryId')?.getError('required')">
                   Veuillez remplir ce champ.
                 </my-error>
+                <button (click)="newCategory()" class="absolute right-1 top-1 text-sm text-primary">Nouveau</button>
               </my-form-field>
               <my-form-field>
                 <my-label [required]="true">État</my-label>
                 <select formControlName="status" myInput>
-                  <option value="free">Free</option>
+                  <option value="free">Frais</option>
                   <option value="frozen">Congelée</option>
                 </select>
                 <my-error
@@ -123,8 +125,8 @@ export class StockFormComponent implements OnInit, AfterViewInit {
   stockFormGroup: FormGroup;
   @ViewChild('firstFocused') firstFocused: ElementRef;
   errors: any[] = [];
-  categories: Observable<any[]> = of([]);
-  families: Observable<any[]> = of([]);
+  categories = of([] as any[]);
+  families = of([] as any[]);
 
   constructor(
     private fb: FormBuilder,
@@ -151,21 +153,12 @@ export class StockFormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    //Load form data
-    // forkJoin([this.categoriesHttp.getAll(), this.familiesHttp.getAll()]).subscribe({
-    //   next: ([categories, families]) => {
-    //     this.families = families;
-    //     this.categories = categories;  
-    //     if (this.data.mode == 'edit') {
-    //       this.loadData(this.data.id);
-    //     }
-    //   }
-    // });
-
     this.categories = this.categoriesHttp.getAll();
     this.families = this.familiesHttp.getAll();
-    this.loadData(this.data.id);
-
+    //Load form data
+    if (this.data.mode == 'edit') {
+      this.loadData(this.data.id);
+    }
     this.handleFormChanged();
   }
 
@@ -286,6 +279,15 @@ export class StockFormComponent implements OnInit, AfterViewInit {
       autoFocus: false,
     }).afterClosed().subscribe({
       next: res => this.families = this.familiesHttp.getAll()
+    });
+  }
+  newCategory() {
+    this.matDialog.open(CategoryFormComponent, {
+      data: { id: 0, mode: 'creation' },
+      disableClose: true,
+      autoFocus: false,
+    }).afterClosed().subscribe({
+      next: res => this.families = this.categoriesHttp.getAll()
     });
   }
 

@@ -5,7 +5,8 @@ const SOURCE_NATURES: { [key: string]: string } = {
     'crate': 'Caisse',
     'bank': 'Banque',
     'poste': 'Poste',
-}
+    'consumption': 'Consommation',
+};
 
 @Pipe({
     name: 'mySourceNature'

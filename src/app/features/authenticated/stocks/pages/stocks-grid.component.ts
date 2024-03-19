@@ -61,7 +61,7 @@ import { appConfig } from '../../../../app.config';
                     <my-form-field>
                       <my-label>État</my-label>
                       <select formControlName="status" myInput>
-                        <option value="free">Free</option>
+                        <option value="free">Frais</option>
                         <option value="frozen">Congelée</option>
                       </select>
                     </my-form-field>
@@ -159,10 +159,10 @@ import { appConfig } from '../../../../app.config';
                 </ng-container>
 
                 <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef>Étate</th>
+                  <th mat-header-cell *matHeaderCellDef>État</th>
                   <td mat-cell *matCellDef="let row">
                     <div *ngIf="row.status == 'free'"
-                      class="px-2 py-1 rounded !text-xs font-medium w-fit bg-orange-100 text-orange-500">Free</div>
+                      class="px-2 py-1 rounded !text-xs font-medium w-fit bg-orange-100 text-orange-500">Frais</div>
                     <div *ngIf="row.status == 'frozen'"
                       class="px-2 py-1 rounded !text-xs font-medium w-fit bg-blue-100 text-blue-500">Congelée</div>
                   </td>
@@ -318,7 +318,10 @@ export class StocksGridComponent implements OnInit {
       disableClose: true,
       autoFocus: false,
     }).afterClosed().subscribe({
-      next: res => this.refreshGrid.emit()
+      next: res => {
+        this.refreshGrid.emit();
+        this.selection.clear();
+      }
     });
   }
 

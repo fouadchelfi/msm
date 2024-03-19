@@ -11,7 +11,7 @@ import { forkJoin } from 'rxjs';
       <div class="dialog-container">
         <div class="dialog-header">
           <div class="text-lg font-medium">
-            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} Account
+            {{ data.mode == 'creation' ? 'Nouveau ' : 'Modifier ' }} Acompte
           </div>
           <button (click)="closeDialog()">
             <i class="ri-close-line text-2xl"></i>

@@ -36,7 +36,7 @@ import { StatusTransfersHttpService, StocksHttpService, currentDateForHtmlField,
             </div>
             <div class="inline-fields">
               <my-form-field>
-                <my-label [required]="true">Stock (Free)</my-label>
+                <my-label [required]="true">Stock (Frais)</my-label>
                 <select formControlName="freeStockId" myInput>
                   <ng-container *ngFor="let stock of freeStocks">
                     <option [value]="stock.id">{{ stock.label }}</option>
@@ -65,7 +65,7 @@ import { StatusTransfersHttpService, StocksHttpService, currentDateForHtmlField,
             </div>
             <div class="inline-fields">
               <my-form-field>
-                <my-label [required]="true">Ancienne quantité (Free)</my-label>
+                <my-label [required]="true">Quantité actuelle (Frais)</my-label>
                 <input formControlName="oldFreeQuantity" type="number" myInput myCalculableField>
                 <my-error
                   *ngIf="statusTransferFormGroup.get('oldFreeQuantity')?.invalid && (statusTransferFormGroup.get('oldFreeQuantity')?.dirty || statusTransferFormGroup.get('oldFreeQuantity')?.touched) && statusTransferFormGroup.get('oldFreeQuantity')?.getError('required')">
@@ -97,7 +97,7 @@ import { StatusTransfersHttpService, StocksHttpService, currentDateForHtmlField,
             </div>
             <div class="inline-fields">
               <my-form-field>
-                <my-label [required]="true">Nouvelle quantité (Free)</my-label>
+                <my-label [required]="true">Nouvelle quantité (Frais)</my-label>
                 <input formControlName="newFreeQuantity" type="number" myInput myCalculableField>
                 <my-error
                   *ngIf="statusTransferFormGroup.get('newFreeQuantity')?.invalid && (statusTransferFormGroup.get('newFreeQuantity')?.dirty || statusTransferFormGroup.get('newFreeQuantity')?.touched) && statusTransferFormGroup.get('newFreeQuantity')?.getError('required')">
@@ -308,7 +308,7 @@ export class StatusTransferFormComponent implements OnInit, AfterViewInit {
                     this.statusTransferFormGroup.get('newFreeQuantity')?.setValue(freeStock.quantity);
                     this.statusTransferFormGroup.get('newFrozenQuantity')?.setValue(frozenStock.quantity);
                   } else {
-                    alert("Vous n'avez pas de produit en étate congelé");
+                    alert("Vous n'avez pas de produit en état congelé");
                   }
                 }
               });

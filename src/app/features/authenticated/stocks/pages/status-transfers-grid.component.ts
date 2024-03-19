@@ -99,7 +99,7 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                 </ng-container>
                 
                 <ng-container matColumnDef="freeStockId.label">
-                  <th mat-header-cell *matHeaderCellDef >Stock (Free) </th>
+                  <th mat-header-cell *matHeaderCellDef >Stock (Frais) </th>
                   <td mat-cell *matCellDef="let row">{{ row.freeStockId?.label|myLimitTextLength:30 }}</td>
                 </ng-container>
 
@@ -114,7 +114,7 @@ import { StatusTransferFormComponent } from './status-transfer-form.component';
                 </ng-container>
       
                 <ng-container matColumnDef="freeQuantity">
-                  <th mat-header-cell *matHeaderCellDef >Quantité (Free) </th>
+                  <th mat-header-cell *matHeaderCellDef >Quantité (Frais) </th>
                   <td mat-cell *matCellDef="let row">
                     <div class="font-medium">
                       {{ row.oldFreeQuantity }}

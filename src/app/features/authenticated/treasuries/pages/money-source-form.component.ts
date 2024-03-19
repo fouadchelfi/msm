@@ -42,6 +42,7 @@ import { MoneySourcesHttpService } from '../../../../shared';
                   <option value="crate">Caisse</option>
                   <option value="bank">Banque</option>
                   <option value="poste">Poste</option>
+                  <option value="consumption">Consommation</option>
                 </select>
                 <my-error
                   *ngIf="sourceFormGroup.get('nature')?.invalid && (sourceFormGroup.get('nature')?.dirty || sourceFormGroup.get('nature')?.touched) && sourceFormGroup.get('nature')?.getError('required')">

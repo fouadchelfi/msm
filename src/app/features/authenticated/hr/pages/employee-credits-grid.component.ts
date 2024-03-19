@@ -16,7 +16,7 @@ import { EmployeeCreditFormComponent } from './employee-credit-form.component';
   template: `
   <div class="flex flex-1 flex-col p-3 bg-secondary-50 gap-y-2">
     <div class="flex flex-col">
-      <h3>RH / Accounts</h3>
+      <h3>RH / Acomptes</h3>
     </div>
     <div class="flex flex-row justify-between items-center ">
       <div class="relative">
@@ -73,7 +73,7 @@ import { EmployeeCreditFormComponent } from './employee-credit-form.component';
         <button mat-flat-button color="primary" (click)="newItem()">
           <div class="!flex !flex-row !items-center !space-x-2">
             <i class="ri-add-line text-lg"></i>
-            <span class="text-white">Acount</span>
+            <span class="text-white">Acompte</span>
           </div>
         </button>
       </div>

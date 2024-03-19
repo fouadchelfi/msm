@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FamiliesHttpService } from '../../../../shared';
+import { StockFormComponent } from './stock-form.component';
 
 @Component({
   selector: 'app-family-form',
@@ -12,6 +13,7 @@ import { FamiliesHttpService } from '../../../../shared';
                 <div class="text-lg font-medium">
                     {{data.mode == 'creation' ? 'Nouvelle' : 'Modifier'}} famille
                 </div>
+                <button (click)="callStock()">Call Stock form</button>
                 <button (click)="closeDialog()">
                   <i class="ri-close-line text-2xl"></i>
                 </button>
@@ -42,6 +44,9 @@ import { FamiliesHttpService } from '../../../../shared';
 })
 
 export class FamilyFormComponent implements OnInit, AfterViewInit {
+  callStock() {
+    this.matDialog.open(StockFormComponent, { data: { id: 0, mode: 'creation' }, });
+  }
 
   familyFormGroup: FormGroup;
   @ViewChild('firstFocused') firstFocused: ElementRef;
@@ -53,6 +58,7 @@ export class FamilyFormComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private familiesHttp: FamiliesHttpService,
     private snackBar: MatSnackBar,
+    private matDialog: MatDialog,
   ) {
     this.familyFormGroup = this.fb.group({//Initialize the form and it's validations.
       'id': [undefined],

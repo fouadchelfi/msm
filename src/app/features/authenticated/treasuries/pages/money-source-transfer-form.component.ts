@@ -65,7 +65,7 @@ import { MoneySourcesHttpService, MoneySourceTransfersHttpService, StocksHttpSer
             </div>
             <div class="inline-fields">
               <my-form-field>
-                <my-label [required]="true">Ancien solde (Crédit)</my-label>
+                <my-label [required]="true">Solde actuel (Crédit)</my-label>
                 <input formControlName="oldFromMoneySourceAmount" type="number" myInput myCalculableField>
                 <my-error
                   *ngIf="transferFormGroup.get('oldFromMoneySourceAmount')?.invalid && (transferFormGroup.get('oldFromMoneySourceAmount')?.dirty || transferFormGroup.get('oldFromMoneySourceAmount')?.touched) && transferFormGroup.get('oldFromMoneySourceAmount')?.getError('required')">
@@ -87,7 +87,7 @@ import { MoneySourcesHttpService, MoneySourceTransfersHttpService, StocksHttpSer
                 <i class="ri-arrow-right-line text-xl"></i>
               </div>
               <my-form-field>
-                <my-label [required]="true">Ancien solde (Débit)</my-label>
+                <my-label [required]="true">Solde actuel (Débit)</my-label>
                 <input formControlName="oldToMoneySourceAmount" type="number" myInput myCalculableField>
                 <my-error
                   *ngIf="transferFormGroup.get('oldToMoneySourceAmount')?.invalid && (transferFormGroup.get('oldToMoneySourceAmount')?.dirty || transferFormGroup.get('oldToMoneySourceAmount')?.touched) && transferFormGroup.get('oldToMoneySourceAmount')?.getError('required')">
