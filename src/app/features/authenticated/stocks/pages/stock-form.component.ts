@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoriesHttpService, FamiliesHttpService, StocksHttpService, amount } from '../../../../shared';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
+import { FamilyFormComponent } from './family-form.component';
 
 @Component({
   selector: 'app-stock-form',
@@ -40,7 +41,7 @@ import { forkJoin } from 'rxjs';
               <my-form-field>
                 <my-label [required]="true">Famille</my-label>
                 <select formControlName="familyId" myInput>
-                  <ng-container *ngFor="let family of families">
+                  <ng-container *ngFor="let family of families|async">
                     <option [value]="family.id">{{ family.label }}</option>
                   </ng-container>
                 </select>
@@ -48,11 +49,12 @@ import { forkJoin } from 'rxjs';
                   *ngIf="stockFormGroup.get('familyId')?.invalid && (stockFormGroup.get('familyId')?.dirty || stockFormGroup.get('familyId')?.touched) && stockFormGroup.get('familyId')?.getError('required')">
                   Veuillez remplir ce champ.
                 </my-error>
+                <button (click)="newFamily()" class="absolute right-1 top-1 text-sm text-primary">Nouveau</button>
               </my-form-field>
               <my-form-field>
                 <my-label [required]="true">Catégorie</my-label>
                 <select formControlName="categoryId" myInput>
-                  <ng-container *ngFor="let category of categories">
+                  <ng-container *ngFor="let category of categories|async">
                     <option [value]="category.id">{{ category.label }}</option>
                   </ng-container>
                 </select>
@@ -121,8 +123,8 @@ export class StockFormComponent implements OnInit, AfterViewInit {
   stockFormGroup: FormGroup;
   @ViewChild('firstFocused') firstFocused: ElementRef;
   errors: any[] = [];
-  families: any[] = [];
-  categories: any[] = [];
+  categories: Observable<any[]> = of([]);
+  families: Observable<any[]> = of([]);
 
   constructor(
     private fb: FormBuilder,
@@ -132,6 +134,7 @@ export class StockFormComponent implements OnInit, AfterViewInit {
     private stocksHttp: StocksHttpService,
     private categoriesHttp: CategoriesHttpService,
     private familiesHttp: FamiliesHttpService,
+    private matDialog: MatDialog,
   ) {
     this.stockFormGroup = this.fb.group({//Initialize the form and it's validations.
       'id': [undefined],
@@ -149,15 +152,19 @@ export class StockFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     //Load form data
-    forkJoin([this.categoriesHttp.getAll(), this.familiesHttp.getAll()]).subscribe({
-      next: ([categories, families]) => {
-        this.families = families;
-        this.categories = categories;
-        if (this.data.mode == 'edit') {
-          this.loadData(this.data.id);
-        }
-      }
-    });
+    // forkJoin([this.categoriesHttp.getAll(), this.familiesHttp.getAll()]).subscribe({
+    //   next: ([categories, families]) => {
+    //     this.families = families;
+    //     this.categories = categories;  
+    //     if (this.data.mode == 'edit') {
+    //       this.loadData(this.data.id);
+    //     }
+    //   }
+    // });
+
+    this.categories = this.categoriesHttp.getAll();
+    this.families = this.familiesHttp.getAll();
+    this.loadData(this.data.id);
 
     this.handleFormChanged();
   }
@@ -270,6 +277,16 @@ export class StockFormComponent implements OnInit, AfterViewInit {
 
   closeDialog() {
     this.dialogRef.close();
+  }
+
+  newFamily() {
+    this.matDialog.open(FamilyFormComponent, {
+      data: { id: 0, mode: 'creation' },
+      disableClose: true,
+      autoFocus: false,
+    }).afterClosed().subscribe({
+      next: res => this.families = this.familiesHttp.getAll()
+    });
   }
 
   handleFormChanged() {
