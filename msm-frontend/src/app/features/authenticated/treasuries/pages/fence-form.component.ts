@@ -71,24 +71,24 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
                   </my-error>
                 </my-form-field>
                 <my-form-field class="w-64">
-                    <my-label [required]="true">Bénéfice brut</my-label>
-                    <input formControlName="rawProfit" type="number" myInput size="small" myCalculableField>
-                    <my-error
-                      *ngIf="fenceFormGroup.get('rawProfit')?.invalid && (fenceFormGroup.get('rawProfit')?.dirty || fenceFormGroup.get('rawProfit')?.touched) && fenceFormGroup.get('rawProfit')?.getError('required')">
-                      Veuillez remplir ce champ.
-                    </my-error>
-                  </my-form-field>
-              <my-form-field class="w-64">
-                    <my-label [required]="true">Bénéfice net</my-label>
-                    <input formControlName="marginProfit" type="number" myInput size="small" myCalculableField>
-                    <my-error
-                      *ngIf="fenceFormGroup.get('marginProfit')?.invalid && (fenceFormGroup.get('marginProfit')?.dirty || fenceFormGroup.get('marginProfit')?.touched) && fenceFormGroup.get('marginProfit')?.getError('required')">
-                      Veuillez remplir ce champ.
-                    </my-error>
-                  </my-form-field>
+                  <my-label [required]="true">Bénéfice brut</my-label>
+                  <input formControlName="rawProfit" type="number" myInput size="small" myCalculableField>
+                  <my-error
+                    *ngIf="fenceFormGroup.get('rawProfit')?.invalid && (fenceFormGroup.get('rawProfit')?.dirty || fenceFormGroup.get('rawProfit')?.touched) && fenceFormGroup.get('rawProfit')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
+                <my-form-field class="w-64">
+                  <my-label [required]="true">Bénéfice net</my-label>
+                  <input formControlName="marginProfit" type="number" myInput size="small" myCalculableField>
+                  <my-error
+                    *ngIf="fenceFormGroup.get('marginProfit')?.invalid && (fenceFormGroup.get('marginProfit')?.dirty || fenceFormGroup.get('marginProfit')?.touched) && fenceFormGroup.get('marginProfit')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
               </div>
               <div class="flex flex-col gap-y-2">
-                 <my-form-field class="w-64">
+                <my-form-field class="w-64">
                   <my-label [required]="true">Quantité au stock (Calculée)</my-label>
                   <input formControlName="calculatedInStockQuantity" type="number" myInput myCalculableField
                     size="small">
@@ -106,32 +106,51 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
                   </my-error>
                 </my-form-field>
                 <my-form-field class="w-64">
-                    <my-label [required]="true">Total ventes (Clients)</my-label>
-                    <input formControlName="totalCustomersSaleAmount" type="number" myInput size="small" myCalculableField>
-                    <my-error
-                      *ngIf="fenceFormGroup.get('totalCustomersSaleAmount')?.invalid && (fenceFormGroup.get('totalCustomersSaleAmount')?.dirty || fenceFormGroup.get('totalCustomersSaleAmount')?.touched) && fenceFormGroup.get('totalCustomersSaleAmount')?.getError('required')">
-                      Veuillez remplir ce champ.
-                    </my-error>
-                  </my-form-field>
+                  <my-label [required]="true">Total ventes (Clients)</my-label>
+                  <input formControlName="totalCustomersSaleAmount" type="number" myInput size="small"
+                    myCalculableField>
+                  <my-error
+                    *ngIf="fenceFormGroup.get('totalCustomersSaleAmount')?.invalid && (fenceFormGroup.get('totalCustomersSaleAmount')?.dirty || fenceFormGroup.get('totalCustomersSaleAmount')?.touched) && fenceFormGroup.get('totalCustomersSaleAmount')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
                 <my-form-field class="w-64">
-                    <my-label [required]="true">Total ventes (Locaux)</my-label>
-                    <input formControlName="totalPremisesSaleAmount" type="number" myInput size="small" myCalculableField>
-                    <my-error
-                      *ngIf="fenceFormGroup.get('totalPremisesSaleAmount')?.invalid && (fenceFormGroup.get('totalPremisesSaleAmount')?.dirty || fenceFormGroup.get('totalPremisesSaleAmount')?.touched) && fenceFormGroup.get('totalPremisesSaleAmount')?.getError('required')">
-                      Veuillez remplir ce champ.
-                    </my-error>
-                  </my-form-field>
+                  <my-label [required]="true">Total ventes (Locaux)</my-label>
+                  <input formControlName="totalPremisesSaleAmount" type="number" myInput size="small" myCalculableField>
+                  <my-error
+                    *ngIf="fenceFormGroup.get('totalPremisesSaleAmount')?.invalid && (fenceFormGroup.get('totalPremisesSaleAmount')?.dirty || fenceFormGroup.get('totalPremisesSaleAmount')?.touched) && fenceFormGroup.get('totalPremisesSaleAmount')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
                 <my-form-field class="w-64">
-                    <my-label [required]="true">Total achats</my-label>
-                    <input formControlName="totalPurchaseAmount" type="number" myInput size="small" myCalculableField>
-                    <my-error
-                      *ngIf="fenceFormGroup.get('totalPurchaseAmount')?.invalid && (fenceFormGroup.get('totalPurchaseAmount')?.dirty || fenceFormGroup.get('totalPurchaseAmount')?.touched) && fenceFormGroup.get('totalPurchaseAmount')?.getError('required')">
-                      Veuillez remplir ce champ.
-                    </my-error>
-                  </my-form-field>
+                  <my-label [required]="true">Total achats</my-label>
+                  <input formControlName="totalPurchaseAmount" type="number" myInput size="small" myCalculableField>
+                  <my-error
+                    *ngIf="fenceFormGroup.get('totalPurchaseAmount')?.invalid && (fenceFormGroup.get('totalPurchaseAmount')?.dirty || fenceFormGroup.get('totalPurchaseAmount')?.touched) && fenceFormGroup.get('totalPurchaseAmount')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
+                <my-form-field class="w-64">
+                  <my-label [required]="true">Total lots (Stocks)</my-label>
+                  <input formControlName="totalBatchesStocksAmount" type="number" myInput size="small"
+                    myCalculableField>
+                  <my-error
+                    *ngIf="fenceFormGroup.get('totalBatchesStocksAmount')?.invalid && (fenceFormGroup.get('totalBatchesStocksAmount')?.dirty || fenceFormGroup.get('totalBatchesStocksAmount')?.touched) && fenceFormGroup.get('totalBatchesStocksAmount')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
+                <my-form-field class="w-64">
+                  <my-label [required]="true">Total lots (Ingrédients)</my-label>
+                  <input formControlName="totalBatchesIngredientsAmount" type="number" myInput size="small"
+                    myCalculableField>
+                  <my-error
+                    *ngIf="fenceFormGroup.get('totalBatchesIngredientsAmount')?.invalid && (fenceFormGroup.get('totalBatchesIngredientsAmount')?.dirty || fenceFormGroup.get('totalBatchesIngredientsAmount')?.touched) && fenceFormGroup.get('totalBatchesIngredientsAmount')?.getError('required')">
+                    Veuillez remplir ce champ.
+                  </my-error>
+                </my-form-field>
               </div>
               <div class="flex flex-col gap-y-2">
-               <div class="flex flex-row gap-x-5">
+                <div class="flex flex-row gap-x-5">
                   <my-form-field class="w-64">
                     <my-label [required]="true">Total charges</my-label>
                     <input formControlName="totalCharges" type="number" myInput size="small" myCalculableField>
@@ -188,26 +207,6 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
                     <input formControlName="totalCustomersDebts" type="number" myInput size="small" myCalculableField>
                     <my-error
                       *ngIf="fenceFormGroup.get('totalCustomersDebts')?.invalid && (fenceFormGroup.get('totalCustomersDebts')?.dirty || fenceFormGroup.get('totalCustomersDebts')?.touched) && fenceFormGroup.get('totalCustomersDebts')?.getError('required')">
-                      Veuillez remplir ce champ.
-                    </my-error>
-                  </my-form-field>
-                </div>
-                <div class="flex flex-row gap-x-5">
-                  <my-form-field class="w-64">
-                    <my-label [required]="true">Total lots (Stocks)</my-label>
-                    <input formControlName="totalBatchesStocksAmount" type="number" myInput size="small" myCalculableField>
-                    <my-error
-                      *ngIf="fenceFormGroup.get('totalBatchesStocksAmount')?.invalid && (fenceFormGroup.get('totalBatchesStocksAmount')?.dirty || fenceFormGroup.get('totalBatchesStocksAmount')?.touched) && fenceFormGroup.get('totalBatchesStocksAmount')?.getError('required')">
-                      Veuillez remplir ce champ.
-                    </my-error>
-                  </my-form-field>
-                </div>
-                <div class="flex flex-row gap-x-5">
-                  <my-form-field class="w-64">
-                    <my-label [required]="true">Total lots (Ingrédients)</my-label>
-                    <input formControlName="totalBatchesIngredientsAmount" type="number" myInput size="small" myCalculableField>
-                    <my-error
-                      *ngIf="fenceFormGroup.get('totalBatchesIngredientsAmount')?.invalid && (fenceFormGroup.get('totalBatchesIngredientsAmount')?.dirty || fenceFormGroup.get('totalBatchesIngredientsAmount')?.touched) && fenceFormGroup.get('totalBatchesIngredientsAmount')?.getError('required')">
                       Veuillez remplir ce champ.
                     </my-error>
                   </my-form-field>

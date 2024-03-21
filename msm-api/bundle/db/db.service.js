@@ -1,0 +1,631 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DbService = void 0;
+const common_1 = require("@nestjs/common");
+const data_source_1 = require("../data-source");
+const entities_1 = require("../entities");
+const utils_1 = require("../utils");
+const bcrypt = require("bcrypt");
+const app_config_1 = require("../app.config");
+let DbService = class DbService {
+    constructor() { }
+    async checkDb() {
+        await this.checkTables();
+        await this.checkAdminUser();
+    }
+    async checkTables() {
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                name VARCHAR(50),
+                password VARCHAR(128),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP,
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS categories (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS families (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS suppliers (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                name VARCHAR(100),
+                debt NUMERIC(16, 2),
+                address VARCHAR(200),
+                "postalCode" VARCHAR(30),
+                province VARCHAR(30),
+                city VARCHAR(30),
+                "phoneNumberOne" VARCHAR(30),
+                "phoneNumberTow" VARCHAR(30),
+                fax VARCHAR(100),
+                email VARCHAR(100),
+                website VARCHAR(150),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS customers (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                name VARCHAR(100),
+                debt NUMERIC(16, 2),
+                address VARCHAR(200),
+                "postalCode" VARCHAR(30),
+                province VARCHAR(30),
+                city VARCHAR(30),
+                "phoneNumberOne" VARCHAR(30),
+                "phoneNumberTow" VARCHAR(30),
+                fax VARCHAR(100),
+                email VARCHAR(100),
+                website VARCHAR(150),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS employees (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                name VARCHAR(100),
+                salary NUMERIC(16, 2),
+                debt NUMERIC(16, 2),
+                address VARCHAR(200),
+                "postalCode" VARCHAR(30),
+                province VARCHAR(30),
+                city VARCHAR(30),
+                "phoneNumberOne" VARCHAR(30),
+                "phoneNumberTow" VARCHAR(30),
+                fax VARCHAR(100),
+                email VARCHAR(100),
+                website VARCHAR(150),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS charge_natures (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS losse_natures (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS stocks (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                "familyId" INT,
+                "categoryId" INT,
+                "salePrice" NUMERIC(16, 2),
+                "quantity" REAL,
+                "amount" NUMERIC(16, 2),
+                "status" VARCHAR(10),                
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_family_id FOREIGN KEY("familyId") REFERENCES families(id),
+                CONSTRAINT fk_category_id FOREIGN KEY("categoryId") REFERENCES categories(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id),
+                -- Create a unique constraint on the composite 
+                CONSTRAINT unique_combination UNIQUE ("categoryId", "familyId", "status")
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS ingredients (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS money_sources (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                nature VARCHAR(100),
+                amount NUMERIC(16,2),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS charges (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                "chargeNatureId" INT,
+                "moneySourceId" INT,
+                amount NUMERIC(16,2),
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_charge_nature_id FOREIGN KEY("chargeNatureId") REFERENCES charge_natures(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS losses (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                "losseNatureId" INT,
+                "moneySourceId" INT,
+                amount NUMERIC(16,2),
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_losse_nature_id FOREIGN KEY("losseNatureId") REFERENCES losse_natures(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS quantity_corrections (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "stockId" INT,
+                "oldQuantity" REAL,
+                "newQuantity" REAL,
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT, 
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_stock_id FOREIGN KEY("stockId") REFERENCES stocks(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS status_transfers (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "freeStockId" INT,
+                "frozenStockId" INT,
+                "transferedQuantity" REAL,
+                "oldFreeQuantity" REAL,
+                "newFreeQuantity" REAL,
+                "oldFrozenQuantity" REAL,
+                "newFrozenQuantity" REAL,
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_free_stock_id FOREIGN KEY("freeStockId") REFERENCES stocks(id),
+                CONSTRAINT fk_frozen_stock_id FOREIGN KEY("frozenStockId") REFERENCES stocks(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS premises (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                label VARCHAR(100),
+                debt NUMERIC(16,2),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS punches (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "employeeId" INT,
+                date DATE,
+                "salary" NUMERIC(10,2),
+                "hourlyCoefficient" REAL,
+                "amount" NUMERIC(10,2),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_employee_id FOREIGN KEY("employeeId") REFERENCES employees(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS employee_credits (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "employeeId" INT,
+                "moneySourceId" INT,
+                amount NUMERIC(16,2),
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_employee_id FOREIGN KEY("employeeId") REFERENCES employees(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS employee_payments (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "employeeId" INT,
+                "moneySourceId" INT,
+                "moneySourceAmount" NUMERIC(16,2),
+                date DATE,
+                "calculatedPayment" NUMERIC(16,2),
+                "payment" NUMERIC(16,2),
+                "restPayment" NUMERIC(16,2),
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_employee_id FOREIGN KEY("employeeId") REFERENCES employees(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS money_source_transfers (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "fromMoneySourceId" INT,
+                "toMoneySourceId" INT,
+                amount NUMERIC(16,2),
+                "oldFromMoneySourceAmount" NUMERIC(16,2),
+                "newFromMoneySourceAmount" NUMERIC(16,2),
+                "oldToMoneySourceAmount" NUMERIC(16,2),
+                "newToMoneySourceAmount" NUMERIC(16,2),
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_from_money_source_id FOREIGN KEY("fromMoneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_to_money_source_id FOREIGN KEY("toMoneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS purchases (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "totalQuantity" REAL,
+                "totalAmount" NUMERIC(16,2),
+                cost NUMERIC(16,2),
+                payment NUMERIC(16,2),
+                "moneySourceId" INT,
+                "supplierId" INT,
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_supplier_id FOREIGN KEY("supplierId") REFERENCES suppliers(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+            CREATE TABLE IF NOT EXISTS purchase_items (
+                id SERIAL PRIMARY KEY NOT NULL,
+                "stockId" INT,
+                quantity REAL,
+                "salePrice" NUMERIC(16,2),
+                amount NUMERIC(16,2),
+                "purchaseId" INT,
+                CONSTRAINT fk_stock_id FOREIGN KEY("stockId") REFERENCES stocks(id),
+                CONSTRAINT fk_purchase_id FOREIGN KEY("purchaseId") REFERENCES purchases(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS sales (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "totalQuantity" REAL,
+                "totalAmount" NUMERIC(16,2),
+                payment NUMERIC(16,2),
+                "deliveryAmount" NUMERIC(16,2),
+                "moneySourceId" INT,
+                "customerId" INT,
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_customer_id FOREIGN KEY("customerId") REFERENCES customers(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+            CREATE TABLE IF NOT EXISTS sale_items (
+                id SERIAL PRIMARY KEY NOT NULL,
+                "stockId" INT,
+                quantity REAL,
+                "salePrice" NUMERIC(16,2),
+                amount NUMERIC(16,2),
+                "saleId" INT,
+                CONSTRAINT fk_stock_id FOREIGN KEY("stockId") REFERENCES stocks(id),
+                CONSTRAINT fk_sale_id FOREIGN KEY("saleId") REFERENCES sales(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS distributions (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "totalQuantity" REAL,
+                "totalAmount" NUMERIC(16,2),
+                cash NUMERIC(16,2),
+                "moneySourceId" INT,
+                "premiseId" INT,
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_premise_id FOREIGN KEY("premiseId") REFERENCES premises(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+            CREATE TABLE IF NOT EXISTS distribution_items (
+                id SERIAL PRIMARY KEY NOT NULL,
+                "stockId" INT,
+                quantity REAL,
+                "salePrice" NUMERIC(16,2),
+                amount NUMERIC(16,2),
+                "distributionId" INT,
+                CONSTRAINT fk_stock_id FOREIGN KEY("stockId") REFERENCES stocks(id),
+                CONSTRAINT fk_distribution_id FOREIGN KEY("distributionId") REFERENCES distributions(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS premise_returns (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "totalQuantity" REAL,
+                "totalAmount" NUMERIC(16,2),
+                "returnedCash" NUMERIC(16,2),
+                "moneySourceId" INT,
+                "premiseId" INT,
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_premise_id FOREIGN KEY("premiseId") REFERENCES premises(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+            CREATE TABLE IF NOT EXISTS premise_return_items (
+                id SERIAL PRIMARY KEY NOT NULL,
+                "stockId" INT,
+                quantity REAL,
+                "salePrice" NUMERIC(16,2),
+                amount NUMERIC(16,2),
+                "premiseReturnId" INT,
+                CONSTRAINT fk_stock_id FOREIGN KEY("stockId") REFERENCES stocks(id),
+                CONSTRAINT fk_premise_return_id FOREIGN KEY("premiseReturnId") REFERENCES premise_returns(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS batches (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "totalQuantity" REAL,
+                "totalAmount" NUMERIC(16,2),
+                "moneySourceId" INT,
+                "productId" INT,
+                "quantity" REAL,
+                date DATE,
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_product_id FOREIGN KEY("productId") REFERENCES stocks(id),
+                CONSTRAINT fk_money_source_id FOREIGN KEY("moneySourceId") REFERENCES money_sources(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+            CREATE TABLE IF NOT EXISTS batch_items (
+                id SERIAL PRIMARY KEY NOT NULL,
+                "stockId" INT,
+                quantity REAL,
+                amount NUMERIC(16,2),
+                "batchId" INT,
+                CONSTRAINT fk_stock_id FOREIGN KEY("stockId") REFERENCES stocks(id),
+                CONSTRAINT fk_batch_id FOREIGN KEY("batchId") REFERENCES batches(id)
+            );
+            CREATE TABLE IF NOT EXISTS batch_ingredients (
+                id SERIAL PRIMARY KEY NOT NULL,
+                "ingredientId" INT,
+                quantity REAL,
+                amount NUMERIC(16,2),
+                "batchId" INT,
+                CONSTRAINT fk_ingredient_id FOREIGN KEY("ingredientId") REFERENCES ingredients(id),
+                CONSTRAINT fk_batch_id FOREIGN KEY("batchId") REFERENCES batches(id)
+            );
+        `);
+        await data_source_1.AppDataSource.manager.query(`
+            CREATE TABLE IF NOT EXISTS fences (
+                id SERIAL PRIMARY KEY NOT NULL,
+                code VARCHAR(16),
+                "categoryId" INT,
+                date DATE,
+                
+                "inStockQuantity" REAL,
+                "inStockAmount" NUMERIC(16,2),
+                "calculatedInStockQuantity" NUMERIC(16,2),
+                "calculatedInStockAmount" NUMERIC(16,2),
+                
+                "totalCustomersSaleAmount" NUMERIC(16,2),
+                "totalPremisesSaleAmount" NUMERIC(16,2),
+                "totalPurchaseAmount" NUMERIC(16,2),
+                
+                "totalCharges" NUMERIC(16,2),
+                "totalLosses" NUMERIC(16,2),
+                "totalEmployeesPayments" NUMERIC(16,2),
+                "totalEmployeesDebts" NUMERIC(16,2),
+                "totalSuppliersDebts" NUMERIC(16,2),
+                "totalCustomersDebts" NUMERIC(16,2),
+                "totalBatchesStocksAmount" NUMERIC(16,2),
+                "totalBatchesIngredientsAmount" NUMERIC(16,2),
+                
+                "rawProfit" NUMERIC(16,2),
+                "marginProfit" NUMERIC(16,2),
+                
+                notes VARCHAR(300),
+                "createdAt" TIMESTAMP, 
+                "createdBy" INT,
+                "lastUpdateAt" TIMESTAMP,
+                "lastUpdateBy" INT,
+                CONSTRAINT fk_category_id FOREIGN KEY("categoryId") REFERENCES categories(id),
+                CONSTRAINT fk_created_by FOREIGN KEY("createdBy") REFERENCES users(id),
+                CONSTRAINT fk_last_updated_by FOREIGN KEY("lastUpdateBy") REFERENCES users(id)
+            );
+        `);
+    }
+    async checkAdminUser() {
+        let exists = await (0, utils_1.repo)(entities_1.UserEntity).createQueryBuilder('user').where('user.name = :name', { name: 'admin' }).getExists();
+        if (!exists) {
+            let creation = {
+                name: 'admin',
+                password: await bcrypt.hash('admin', app_config_1.config.saltOrRounds),
+                code: 'admin',
+                notes: 'Créé par défaut.',
+                createdAt: (0, utils_1.currentDateTime)(),
+                lastUpdateAt: (0, utils_1.currentDateTime)(),
+            };
+            let adminDb = await (0, utils_1.repo)(entities_1.UserEntity).save(creation);
+            await (0, utils_1.repo)(entities_1.UserEntity).update(adminDb.id, {
+                createdBy: adminDb.id,
+                lastUpdateBy: adminDb.id,
+            });
+        }
+    }
+};
+exports.DbService = DbService;
+exports.DbService = DbService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [])
+], DbService);
+//# sourceMappingURL=db.service.js.map

@@ -1,0 +1,30 @@
+import { UserEntity } from "../settings";
+import { CategoryEntity } from "../stock";
+export declare class FenceEntity {
+    id: number;
+    code: string;
+    categoryId: CategoryEntity;
+    date: Date;
+    inStockQuantity: number;
+    inStockAmount: number;
+    calculatedInStockQuantity: number;
+    calculatedInStockAmount: number;
+    totalCustomersSaleAmount: number;
+    totalPremisesSaleAmount: number;
+    totalPurchaseAmount: number;
+    totalCharges: number;
+    totalLosses: number;
+    totalEmployeesPayments: number;
+    totalEmployeesDebts: number;
+    totalSuppliersDebts: number;
+    totalCustomersDebts: number;
+    totalBatchesStocksAmount: number;
+    totalBatchesIngredientsAmount: number;
+    marginProfit: number;
+    rawProfit: number;
+    notes: string;
+    createdAt: Date;
+    createdBy: UserEntity;
+    lastUpdateAt: Date;
+    lastUpdateBy: UserEntity;
+}

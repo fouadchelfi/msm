@@ -1,0 +1,34 @@
+import { UserEntity } from "../settings";
+import { CategoryEntity } from "./category.entity";
+import { FamilyEntity } from "./family.entity";
+import { QuantityCorrectionEntity } from "./quantity-correction.entity";
+import { StatusTransferEntity } from "./status-transfer.entity";
+import { PurchaseItemEntity } from "../purchases";
+import { SaleItemEntity } from "../sales";
+import { DistributionItemEntity, PremiseReturnItemEntity } from "../distributions";
+import { BatchEntity, BatchItemEntity } from "../production";
+export declare class StockEntity {
+    id: number;
+    code: string;
+    label: string;
+    salePrice: number;
+    quantity: number;
+    amount: number;
+    status: string;
+    notes: string;
+    categoryId: CategoryEntity;
+    familyId: FamilyEntity;
+    createdAt: Date;
+    createdBy: UserEntity;
+    lastUpdateAt: Date;
+    lastUpdateBy: UserEntity;
+    quantityCorrections: QuantityCorrectionEntity[];
+    freeStocks: StatusTransferEntity[];
+    frozenStocks: StatusTransferEntity[];
+    purchaseItems: PurchaseItemEntity[];
+    saleItems: SaleItemEntity[];
+    distributionItems: DistributionItemEntity[];
+    premiseReturnItems: PremiseReturnItemEntity[];
+    batches: BatchEntity[];
+    batchStockItems: BatchItemEntity[];
+}

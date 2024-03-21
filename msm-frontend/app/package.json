@@ -1,0 +1,32 @@
+{
+  "name": "msm",
+  "version": "2.5.0",
+  "description": "App clients side",
+  "main": "main.js",
+  "scripts": {
+    "ele:start" : "electron .",
+    "ele:build": "electron-builder"
+  },
+  "author": "Bigosnet",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.1.4"
+  },
+  "build": {
+    "appId": "MSM",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "logo.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "installerIcon": "logo.ico",
+      "uninstallerIcon": "logo.ico",
+      "uninstallDisplayName": "MSM Uninstaller",
+      "allowToChangeInstallationDirectory": false,
+      "displayLanguageSelector": true
+    }
+  }
+}
